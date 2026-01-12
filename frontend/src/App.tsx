@@ -1,9 +1,7 @@
-import { useState } from 'react'
+import LoginPage from './pages/LoginPage'
 
 function App() {
-  return (
-      <h1>SiSati</h1>
-  )
+  return <LoginPage />
 }
 
 export default App

@@ -1,6 +1,11 @@
 package mx.sisati.sisatibackend.usuarios.politicas.dto;
 
+import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
+
 public record UsuarioLoginResponseDTO(
-        String noseXD
+        String token
 ) {
+    public UsuarioLoginResponseDTO(String token) {
+        this.token = token;
+    }
 }

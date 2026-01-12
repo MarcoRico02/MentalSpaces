@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 @Getter
 @NoArgsConstructor
 @Table(name = "usuarios")
-public class Usuario implements UserDetails {
+public class Usuario{
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"); //No lo se hacer a mano, pero hey, aqui esta;
 
@@ -136,33 +136,5 @@ public class Usuario implements UserDetails {
     private void validateUsername(String username) {
         if (username.isBlank()) throw new DomainException(this.getClass(), "El nombre de usuario debe llenarse");
         if (username.length() < 3) throw new DomainException(this.getClass(), "El nombre de usuario debe contener almenos 3 letras");
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-//        return UserDetails.super.isAccountNonExpired();
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-        //return UserDetails.super.isAccountNonLocked();
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-        //return UserDetails.super.isCredentialsNonExpired();
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.isActive;
     }
 }

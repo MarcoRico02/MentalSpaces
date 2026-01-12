@@ -21,7 +21,7 @@ public class GlobalErrorHandler {
     }
 
     @ExceptionHandler(DomainException.class)
-    public ResponseEntity<ErrorResponse> DomainExceptionHandler(UsernameNotFoundException exception){
+    public ResponseEntity<ErrorResponse> DomainExceptionHandler(DomainException exception){
         return BuilderResponse.build(HttpStatus.BAD_REQUEST, "Los campos no fueron llenados correctamente", exception.getMessage());
     }
 

@@ -4,7 +4,6 @@ package mx.sisati.sisatibackend.seguridad;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
-public class JwtService {
+public class JwtService  {
 
     private final SecretKey signingKey;
     private final long expiration;
@@ -27,7 +26,7 @@ public class JwtService {
         this.expiration = expiration;
     }
 
-    public String generateToken(Usuario usuario) {
+    public String generateToken(UsuarioDetails usuario) {
         return Jwts.builder()
                 .subject(usuario.getUsername())
                 .issuedAt(new Date())

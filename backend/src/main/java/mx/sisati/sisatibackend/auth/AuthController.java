@@ -2,6 +2,7 @@ package mx.sisati.sisatibackend.auth;
 
 import mx.sisati.sisatibackend.seguridad.CustomUserDetailsService;
 import mx.sisati.sisatibackend.seguridad.JwtService;
+import mx.sisati.sisatibackend.seguridad.UsuarioDetails;
 import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
 import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioLoginDTO;
 import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioLoginResponseDTO;
@@ -48,10 +49,10 @@ public class AuthController {
                 )
         );
 
-        Usuario usuario = (Usuario) authentication.getPrincipal();
+        UsuarioDetails usuarioDetails = (UsuarioDetails) authentication.getPrincipal();
 
-        String token = jwtService.generateToken(usuario);
+        String token = jwtService.generateToken(usuarioDetails);
 
-        return ResponseEntity.ok(new AuthResponse(token));
+        return ResponseEntity.ok(new UsuarioLoginResponseDTO(token));
     }
 }
