@@ -19,10 +19,13 @@ public class UsuarioDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER")); // rol base para todos
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + usuario.getRole().name())); // rol específico
-        return authorities;
+        return usuario.getRoles().stream()
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getNombre()))
+                .toList();
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
     }
 
     @Override

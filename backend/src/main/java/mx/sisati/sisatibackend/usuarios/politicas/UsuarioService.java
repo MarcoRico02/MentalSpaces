@@ -23,7 +23,7 @@ public class UsuarioService {
     public Usuario saveUser(UsuarioRegisterDTO nuevoUsuario){
         if(usuarioRepository.existsByUsername(nuevoUsuario.username())) throw new ServiceException(this.getClass(), "Ya existe ese nombre de usuario");
         if(usuarioRepository.existsByEmail(nuevoUsuario.email())) throw new ServiceException(this.getClass(), "Ya existe un usuario con ese correo");
-        Usuario usuario = new Usuario(nuevoUsuario.username(), passwordEncoder.encode(nuevoUsuario.password()), nuevoUsuario.fullName(), nuevoUsuario.professionalType(), nuevoUsuario.email());
+        Usuario usuario = new Usuario(nuevoUsuario.username(), passwordEncoder.encode(nuevoUsuario.password()), nuevoUsuario.fullName(), nuevoUsuario.email());
         usuarioRepository.save(usuario);
         return usuario;
     }

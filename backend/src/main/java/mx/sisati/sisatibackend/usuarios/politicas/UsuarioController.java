@@ -2,6 +2,7 @@ package mx.sisati.sisatibackend.usuarios.politicas;
 
 import mx.sisati.sisatibackend.seguridad.UsuarioDetails;
 import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioLoginResponseDTO;
+import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioMeResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,9 +25,7 @@ public class UsuarioController {
 
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Usuario> listarUsuarios(@AuthenticationPrincipal UsuarioDetails usuario){
-        System.out.println("Roles en SecurityContext: " + usuario.getAuthorities());
-        return ResponseEntity.ok(usuarioService.findByUserName(usuario.getUsername()));
+    public ResponseEntity<UsuarioMeResponseDTO> listarUsuarios(@AuthenticationPrincipal UsuarioDetails usuario){
+        return ResponseEntity.ok(new UsuarioMeResponseDTO(usuario.getUsuario()));
     }
 }

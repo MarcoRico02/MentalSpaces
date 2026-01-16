@@ -4,7 +4,6 @@ public record UsuarioRegisterDTO(
         String username,
         String password,
         String fullName,
-        String professionalType,
         String email
 ) {
 }

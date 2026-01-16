@@ -1,14 +1,9 @@
 package mx.sisati.sisatibackend.auth;
 
-import mx.sisati.sisatibackend.seguridad.CustomUserDetailsService;
 import mx.sisati.sisatibackend.seguridad.JwtService;
 import mx.sisati.sisatibackend.seguridad.UsuarioDetails;
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
 import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioLoginDTO;
 import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioLoginResponseDTO;
-import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioRegisterDTO;
-import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioRegisterResponseDTO;
-import mx.sisati.sisatibackend.usuarios.politicas.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,28 +13,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
-
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    private final UsuarioService usuarioService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public AuthController(UsuarioService usuarioService, AuthenticationManager authenticationManager, JwtService jwtService) {
-        this.usuarioService = usuarioService;
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<UsuarioRegisterResponseDTO> saveUser(@RequestBody UsuarioRegisterDTO usuarioRegisterDTO){
-        Usuario usuario = usuarioService.saveUser(usuarioRegisterDTO);
-        UsuarioRegisterResponseDTO respuesta = new UsuarioRegisterResponseDTO(usuario);
-        return ResponseEntity.created(URI.create("/usuarios/" + respuesta.id())).body(respuesta);
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(@RequestBody boolean bool){
+        return ResponseEntity.ok().build();
     }
-
     @PostMapping("/login")
     public ResponseEntity<UsuarioLoginResponseDTO> login(@RequestBody UsuarioLoginDTO login){
         Authentication authentication = authenticationManager.authenticate(

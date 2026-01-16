@@ -4,15 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mx.sisati.sisatibackend.excepciones.DomainException;
+import mx.sisati.sisatibackend.roles.Rol;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 @Entity
@@ -37,23 +35,13 @@ public class Usuario{
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role = Role.STANDARD;
-
-    @Column(name = "professional_type", nullable = false)
-    private String professionalType;
-
-    @Column(name = "identification_url")
-    private String identificationUrl;
-
-    @Column(name = "diploma_url")
-    private String diplomaUrl;
-
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "documentation_status", nullable = false)
-    private DocumentationStatus documentationStatus = DocumentationStatus.NONE;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "usuarios_roles",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "rol_id")
+    )
+    private Set<Rol> roles = new HashSet<>();
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -75,23 +63,17 @@ public class Usuario{
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public Usuario(String username, String password, String fullName, String professionalType, String email) {
-        validate(username, password, fullName, professionalType, email);
+    public Usuario(String username, String password, String fullName, String email) {
+        validate(username, password, fullName, email);
         this.username = username;
         this.password = password;
         this.fullName = fullName;
-        this.professionalType = professionalType;
         this.email = email;
     }
 
     public void changeUsername(String newUsername){
         validateUsername(newUsername);
         this.username = newUsername;
-    }
-
-    public void changeProfessionalType(String newProfessionalType){
-        validateProfessionalType(newProfessionalType);
-        this.professionalType = newProfessionalType;
     }
 
     public void activateUser(){
@@ -107,9 +89,8 @@ public class Usuario{
         }
         this.isActive = false;
     }
-    private void validate(String username, String password, String fullName, String professionalType, String email){
+    private void validate(String username, String password, String fullName, String email){
         validateUsername(username);
-        validateProfessionalType(professionalType);
         validatePassword(password);
         validateFullName(fullName);
         validateEmail(email);

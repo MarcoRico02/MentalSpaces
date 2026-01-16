@@ -1,4 +1,4 @@
-package mx.sisati.sisatibackend.usuarios.politicas;
+package mx.sisati.sisatibackend.psicologos;
 
 public enum DocumentationStatus {
     NONE,
