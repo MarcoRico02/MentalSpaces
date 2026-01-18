@@ -1,17 +1,12 @@
-package mx.sisati.sisatibackend.usuarios.politicas;
+package mx.sisati.sisatibackend.identidad.usuarios;
 
 import mx.sisati.sisatibackend.seguridad.UsuarioDetails;
-import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioLoginResponseDTO;
-import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioMeResponseDTO;
+import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioMeResponseDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -25,7 +20,7 @@ public class UsuarioController {
 
 
     @GetMapping("/me")
-    public ResponseEntity<UsuarioMeResponseDTO> listarUsuarios(@AuthenticationPrincipal UsuarioDetails usuario){
+    public ResponseEntity<UsuarioMeResponseDTO> me(@AuthenticationPrincipal UsuarioDetails usuario){
         return ResponseEntity.ok(new UsuarioMeResponseDTO(usuario.getUsuario()));
     }
 }

@@ -1,13 +1,13 @@
-package mx.sisati.sisatibackend.psicologos.aplicacion;
+package mx.sisati.sisatibackend.identidad.psicologos.aplicacion;
 
 import jakarta.transaction.Transactional;
-import mx.sisati.sisatibackend.psicologos.Psicologo;
-import mx.sisati.sisatibackend.psicologos.PsicologoService;
-import mx.sisati.sisatibackend.psicologos.dto.PsicologoRegisterRequestDTO;
+import mx.sisati.sisatibackend.identidad.psicologos.Psicologo;
+import mx.sisati.sisatibackend.identidad.psicologos.PsicologoService;
+import mx.sisati.sisatibackend.identidad.psicologos.dto.PsicologoRegisterRequestDTO;
 import mx.sisati.sisatibackend.roles.Rol;
 import mx.sisati.sisatibackend.roles.RolService;
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
-import mx.sisati.sisatibackend.usuarios.politicas.UsuarioService;
+import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
+import mx.sisati.sisatibackend.identidad.usuarios.UsuarioService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +25,7 @@ public class RegistrarPsicologo {
     @Transactional
     public Psicologo execute(PsicologoRegisterRequestDTO dto) {
         Usuario usuario = usuarioService.saveUser(dto.usuarioRegisterDTO());
-        Rol rol = rolService.getByNombre("PSICOLOGO");
+        Rol rol = rolService.psicologo();
         return psicologoService.savePsychologist(usuario, dto, rol);
     }
 }

@@ -1,8 +1,7 @@
 package mx.sisati.sisatibackend.seguridad;
 
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
-import mx.sisati.sisatibackend.usuarios.politicas.UsuarioRepository;
-import mx.sisati.sisatibackend.usuarios.politicas.UsuarioService;
+import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
+import mx.sisati.sisatibackend.identidad.usuarios.UsuarioRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

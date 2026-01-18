@@ -1,8 +1,7 @@
-package mx.sisati.sisatibackend.psicologos.dto;
+package mx.sisati.sisatibackend.identidad.psicologos.dto;
 
-import mx.sisati.sisatibackend.psicologos.Psicologo;
-import mx.sisati.sisatibackend.psicologos.PsicologoService;
-import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioRegisterResponseDTO;
+import mx.sisati.sisatibackend.identidad.psicologos.Psicologo;
+import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioRegisterResponseDTO;
 
 public record PsicologoRegisterResponseDTO(
         UsuarioRegisterResponseDTO usuarioRegisterResponseDTO,

@@ -1,10 +1,9 @@
-package mx.sisati.sisatibackend.usuarios.politicas.dto;
+package mx.sisati.sisatibackend.identidad.usuarios.dto;
 
 import mx.sisati.sisatibackend.roles.Rol;
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
+import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 public record UsuarioMeResponseDTO(

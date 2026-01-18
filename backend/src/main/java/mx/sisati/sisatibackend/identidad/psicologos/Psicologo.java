@@ -1,10 +1,10 @@
-package mx.sisati.sisatibackend.psicologos;
+package mx.sisati.sisatibackend.identidad.psicologos;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mx.sisati.sisatibackend.excepciones.DomainException;
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
+import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 
 @Entity
 @Getter

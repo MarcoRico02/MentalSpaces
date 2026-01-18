@@ -1,10 +1,6 @@
 package mx.sisati.sisatibackend.roles;
 
-import jakarta.transaction.Transactional;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
-import mx.sisati.sisatibackend.psicologos.Psicologo;
-import mx.sisati.sisatibackend.psicologos.dto.PsicologoRegisterRequestDTO;
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,13 +12,24 @@ public class RolService {
         this.rolRepository = rolRepository;
     }
 
-    @Transactional
-    public Rol getRol(Long id){
-        return rolRepository.getReferenceById(id);
+    private Rol getRequiredRol(RolNombre nombre) {
+        return rolRepository.findByNombre(nombre)
+                .orElseThrow(() -> new ServiceException(
+                        this.getClass(),
+                        "No existe el rol requerido en la base de datos: " + nombre
+                ));
     }
 
-    @Transactional
-    public Rol getByNombre(String nombre){
-        return rolRepository.findByNombre(nombre).orElseThrow(() -> new ServiceException(this.getClass(), "No Existe el Rol que se quiete buscar"));
+    public Rol admin() {
+        return getRequiredRol(RolNombre.ADMIN);
     }
+
+    public Rol psicologo() {
+        return getRequiredRol(RolNombre.PSICOLOGO);
+    }
+
+    public Rol propietario() {
+        return getRequiredRol(RolNombre.PROPIETARIO);
+    }
+
 }

@@ -1,13 +1,10 @@
-package mx.sisati.sisatibackend.usuarios.politicas;
+package mx.sisati.sisatibackend.identidad.usuarios;
 
 import jakarta.transaction.Transactional;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
-import mx.sisati.sisatibackend.usuarios.politicas.dto.UsuarioRegisterDTO;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioRegisterDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UsuarioService {

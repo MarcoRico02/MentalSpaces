@@ -1,4 +1,4 @@
-package mx.sisati.sisatibackend.usuarios.politicas.dto;
+package mx.sisati.sisatibackend.identidad.usuarios.dto;
 
 public record UsuarioRegisterDTO(
         String username,

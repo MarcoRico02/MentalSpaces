@@ -1,9 +1,6 @@
 package mx.sisati.sisatibackend.roles;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +13,7 @@ public class Rol {
     @Id
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private String nombre;
+    private RolNombre nombre;
 }

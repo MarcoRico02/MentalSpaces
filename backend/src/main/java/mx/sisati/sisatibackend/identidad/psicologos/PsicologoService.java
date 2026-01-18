@@ -1,11 +1,11 @@
-package mx.sisati.sisatibackend.psicologos;
+package mx.sisati.sisatibackend.identidad.psicologos;
 
 import jakarta.transaction.Transactional;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
-import mx.sisati.sisatibackend.psicologos.dto.PsicologoRegisterRequestDTO;
+import mx.sisati.sisatibackend.identidad.psicologos.dto.PsicologoRegisterRequestDTO;
 import mx.sisati.sisatibackend.roles.Rol;
 import mx.sisati.sisatibackend.roles.RolService;
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
+import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 import org.springframework.stereotype.Service;
 
 @Service

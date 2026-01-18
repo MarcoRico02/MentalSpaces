@@ -1,14 +1,9 @@
-package mx.sisati.sisatibackend.psicologos;
+package mx.sisati.sisatibackend.identidad.psicologos;
 
-import mx.sisati.sisatibackend.psicologos.aplicacion.RegistrarPsicologo;
-import mx.sisati.sisatibackend.psicologos.dto.PsicologoRegisterRequestDTO;
-import mx.sisati.sisatibackend.psicologos.dto.PsicologoRegisterResponseDTO;
-import mx.sisati.sisatibackend.seguridad.UsuarioDetails;
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
-import mx.sisati.sisatibackend.usuarios.politicas.UsuarioService;
+import mx.sisati.sisatibackend.identidad.psicologos.aplicacion.RegistrarPsicologo;
+import mx.sisati.sisatibackend.identidad.psicologos.dto.PsicologoRegisterRequestDTO;
+import mx.sisati.sisatibackend.identidad.psicologos.dto.PsicologoRegisterResponseDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;

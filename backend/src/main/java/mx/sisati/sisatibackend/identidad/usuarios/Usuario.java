@@ -1,4 +1,4 @@
-package mx.sisati.sisatibackend.usuarios.politicas;
+package mx.sisati.sisatibackend.identidad.usuarios;
 
 import jakarta.persistence.*;
 import lombok.Getter;

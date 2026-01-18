@@ -1,6 +1,6 @@
-package mx.sisati.sisatibackend.usuarios.politicas.dto;
+package mx.sisati.sisatibackend.identidad.usuarios.dto;
 
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
+import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 
 public record UsuarioRegisterResponseDTO(
         Long id,

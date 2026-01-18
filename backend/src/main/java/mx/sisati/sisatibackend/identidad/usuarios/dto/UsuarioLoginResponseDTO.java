@@ -1,6 +1,4 @@
-package mx.sisati.sisatibackend.usuarios.politicas.dto;
-
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
+package mx.sisati.sisatibackend.identidad.usuarios.dto;
 
 public record UsuarioLoginResponseDTO(
         String token

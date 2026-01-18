@@ -1,13 +1,11 @@
 package mx.sisati.sisatibackend.seguridad;
 
-import mx.sisati.sisatibackend.usuarios.politicas.Usuario;
+import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class UsuarioDetails implements UserDetails {
 
