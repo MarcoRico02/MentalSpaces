@@ -1,7 +1,7 @@
-import LoginPage from './pages/LoginPage'
+import getUser  from "@/shared/api/axios"
 
 function App() {
-  return <LoginPage />
+  getUser()
 }
 
-export default App
+export default App;

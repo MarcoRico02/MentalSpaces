@@ -6,6 +6,8 @@ import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioRegisterDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
@@ -32,5 +34,9 @@ public class UsuarioService {
 
     public Usuario findById(Long id){
         return usuarioRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(), "No se encontro el usuario"));
+    }
+
+    public List<Usuario> listAll(){
+        return usuarioRepository.findAll();
     }
 }

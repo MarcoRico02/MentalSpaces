@@ -2,11 +2,14 @@ package mx.sisati.sisatibackend.identidad.psicologos;
 
 import jakarta.transaction.Transactional;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
+import mx.sisati.sisatibackend.identidad.propietarios.Propietario;
 import mx.sisati.sisatibackend.identidad.psicologos.dto.PsicologoRegisterRequestDTO;
 import mx.sisati.sisatibackend.roles.Rol;
 import mx.sisati.sisatibackend.roles.RolService;
 import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class PsicologoService {
@@ -29,5 +32,13 @@ public class PsicologoService {
 
         psicologoRepository.save(psicologo);
         return psicologo;
+    }
+
+    public Psicologo getByUsuarioIdOrThrow(Long id){
+        return psicologoRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(), "No se encontro el psicologo"));
+    }
+
+    public Optional<Psicologo> getByUsuarioId(Long id) {
+        return psicologoRepository.findById(id);
     }
 }

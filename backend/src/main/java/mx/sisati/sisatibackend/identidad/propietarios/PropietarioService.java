@@ -6,6 +6,8 @@ import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 import mx.sisati.sisatibackend.roles.Rol;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PropietarioService {
 
@@ -25,5 +27,13 @@ public class PropietarioService {
 
         propietarioRepository.save(propietario);
         return propietario;
+    }
+
+    public Propietario getByUsuarioIdOrThrow(Long id) {
+        return propietarioRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(), "No se encontro el psicologo"));
+    }
+
+    public Optional<Propietario> getByUsuarioId(Long id) {
+        return propietarioRepository.findById(id);
     }
 }
