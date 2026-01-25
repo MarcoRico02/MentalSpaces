@@ -3,6 +3,9 @@ package mx.sisati.sisatibackend.identidad.usuarios;
 import jakarta.transaction.Transactional;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
 import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioRegisterDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +39,9 @@ public class UsuarioService {
         return usuarioRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(), "No se encontro el usuario"));
     }
 
-    public List<Usuario> listAll(){
-        return usuarioRepository.findAll();
+    public Page<Usuario> listAll(int page, int size){
+        size = Math.max(5, Math.min(20, size));
+        Pageable pageable = PageRequest.of(page, size);
+        return usuarioRepository.findAllWithRoles(pageable);
     }
 }

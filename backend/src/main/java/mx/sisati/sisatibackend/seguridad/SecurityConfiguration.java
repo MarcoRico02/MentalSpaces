@@ -27,10 +27,10 @@ public class SecurityConfiguration {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
+                .addFilterBefore(new SecurityHeadersFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((autorize) -> autorize
                         .requestMatchers(HttpMethod.POST, "/auth/login","/psicologos","/propietarios").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/usuarios/all").permitAll()
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"

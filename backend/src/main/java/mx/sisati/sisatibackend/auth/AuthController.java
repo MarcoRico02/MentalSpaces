@@ -1,9 +1,11 @@
 package mx.sisati.sisatibackend.auth;
 
+
 import mx.sisati.sisatibackend.seguridad.JwtService;
 import mx.sisati.sisatibackend.seguridad.UsuarioDetails;
 import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioLoginDTO;
 import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioLoginResponseDTO;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,8 +27,18 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Object> logout(@RequestBody boolean bool){
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> logout() {
+        ResponseCookie cookie = ResponseCookie.from("jwt_token", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Lax")
+                .build();
+        
+        return ResponseEntity.ok()
+                .header("Set-Cookie", cookie.toString())
+                .build();
     }
     @PostMapping("/login")
     public ResponseEntity<UsuarioLoginResponseDTO> login(@RequestBody UsuarioLoginDTO login){
@@ -41,6 +53,16 @@ public class AuthController {
 
         String token = jwtService.generateToken(usuarioDetails);
 
-        return ResponseEntity.ok(new UsuarioLoginResponseDTO(token));
+        ResponseCookie cookie = ResponseCookie.from("jwt_token", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(7 * 24 * 60 * 60)
+                .sameSite("Lax")
+                .build();
+
+        return ResponseEntity.ok()
+                .header("Set-Cookie", cookie.toString())
+                .body(new UsuarioLoginResponseDTO(token));
     }
 }

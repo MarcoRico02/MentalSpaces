@@ -35,7 +35,7 @@ public class Usuario{
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "usuarios_roles",
             joinColumns = @JoinColumn(name = "usuario_id"),

@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --primary: 59 130 246; /* blue-500 */
+  }
+}
+
+@layer utilities {
+  .text-primary {
+    color: rgb(var(--primary));
+  }
+  .bg-primary {
+    background-color: rgb(var(--primary));
+  }
+  .from-primary\/50 {
+    background: linear-gradient(
+      to var(--tw-gradient-to-position),
+      rgb(var(--primary) / 0.5),
+      var(--tw-gradient-stops)
+    );
+  }
+  .to-primary {
+    background-color: rgb(var(--primary));
+  }
+}
