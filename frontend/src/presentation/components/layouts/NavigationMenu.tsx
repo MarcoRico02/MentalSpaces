@@ -19,18 +19,18 @@ export const NavigationMenu: React.FC = () => {
       </NavItem>
 
       <NavItem to="/my-bookings" icon={Calendar}>
-        My Bookings
+        Mis Reservas
       </NavItem>
 
       <NavItem to="/profile" icon={FileText}>
-        My Profile
+        Mi Perfil
       </NavItem>
 
       <AuthenticatedNavigation />
 
       {/* Help */}
       <NavItem to="/chat" icon={HelpCircle}>
-        Help & Support
+        Ayuda y Soporte
       </NavItem>
     </nav>
   );
@@ -44,11 +44,11 @@ const AuthenticatedNavigation: React.FC = () => {
   return (
     <>
       <NavItem to="/documents" icon={FileDown}>
-        My Documents
+        Mis Documentos
       </NavItem>
 
       <NavItem to="/my-payments" icon={CreditCard}>
-        My Payments
+        Mis Pagos
       </NavItem>
     </>
   );

@@ -30,52 +30,56 @@ export const AdminNavigation: React.FC = () => {
     <>
       <div className="mt-6 mb-2">
         <h3 className="text-xs uppercase font-semibold text-muted-foreground px-3">
-          Administration
+          Administración
         </h3>
       </div>
 
       <NavItem to="/admin/logs" icon={ClipboardList}>
-        Audit Logs
+        Registro de Auditoría
+      </NavItem>
+
+      <NavItem to="/locations" icon={Building}>
+        Gestionar Locaciones
       </NavItem>
 
       <NavItem to="/admin/rooms" icon={Building}>
-        Manage Rooms
+        Gestionar Consultorios
       </NavItem>
 
       <NavItem to="/admin/users" icon={Users}>
-        Manage Users
+        Gestionar Usuarios
       </NavItem>
 
       <NavItem to="/admin/config" icon={Settings}>
-        Booking Rules & Services
+        Reglas de Reserva y Servicios
       </NavItem>
 
       <NavItem to="/admin/trust-level" icon={ShieldCheck}>
-        Trust Levels
+        Niveles de Confianza
       </NavItem>
 
       <NavItem to="/admin/monitoring" icon={Activity}>
-        Monitoring & Alerts
+        Monitoreo y Alertas
       </NavItem>
 
       <NavItem to="/admin/config-full" icon={Cog}>
-        Booking Rules (Complete)
+        Reglas de Reserva (Completas)
       </NavItem>
 
       <NavItem to="/admin/bookings" icon={Calendar}>
-        Calendar
+        Calendario
       </NavItem>
 
       <NavItem to="/admin/reports" icon={BarChart3}>
-        Reports
+        Reportes
       </NavItem>
 
       <NavItem to="/admin/payments" icon={CreditCard}>
-        Payments
+        Pagos
       </NavItem>
 
       <NavItem to="/admin/access" icon={Lock}>
-        Access
+        Acceso
       </NavItem>
     </>
   );

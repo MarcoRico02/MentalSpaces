@@ -9,6 +9,8 @@ import {
   type LoginFormData,
 } from "../../../core/dominio/tipos/schemas";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
+import { PsicologoRegisterForm } from "./PsicologoRegisterForm";
+import { PropietarioRegisterForm } from "./PropietarioRegisterForm";
 
 export const LoginForm: React.FC = () => {
   const navigate = useNavigate();
@@ -33,14 +35,6 @@ export const LoginForm: React.FC = () => {
     }
   };
 
-  const handlePsicologoRegister = async () => {
-    alert("Psychologist registration - coming soon");
-  };
-
-  const handlePropietarioRegister = async () => {
-    alert("Owner registration - coming soon");
-  };
-
   return (
     <div className="w-full max-w-md">
       <div className="space-y-8">
@@ -53,7 +47,7 @@ export const LoginForm: React.FC = () => {
                   ${selected ? "bg-white shadow" : "text-blue-100 hover:bg-white/[0.12] hover:text-blue-600"}`
               }
             >
-              Login
+              Iniciar sesión
             </Tab>
             <Tab
               className={({ selected }) =>
@@ -61,7 +55,7 @@ export const LoginForm: React.FC = () => {
                   ${selected ? "bg-white shadow" : "text-blue-100 hover:bg-white/[0.12] hover:text-blue-600"}`
               }
             >
-              Register
+              Registrarse
             </Tab>
           </Tab.List>
 
@@ -79,11 +73,11 @@ export const LoginForm: React.FC = () => {
                 <div className="space-y-4">
                   {/* Username */}
                   <div>
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="username">Usuario</Label>
                     <Input
                       id="username"
                       type="text"
-                      placeholder="your_username"
+                      placeholder="tu_usuario"
                       {...register("username")}
                       error={errors.username?.message}
                     />
@@ -91,11 +85,11 @@ export const LoginForm: React.FC = () => {
 
                   {/* Password */}
                   <div>
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">Contraseña</Label>
                     <Input
                       id="password"
                       type="password"
-                      placeholder="Your password"
+                      placeholder="Tu contraseña"
                       {...register("password")}
                       error={errors.password?.message}
                     />
@@ -114,7 +108,7 @@ export const LoginForm: React.FC = () => {
                       htmlFor="please-remember-me"
                       className="ml-2 block text-sm text-gray-900"
                     >
-                      Remember me
+                      Recordarme
                     </label>
                   </div>
 
@@ -123,7 +117,7 @@ export const LoginForm: React.FC = () => {
                       href="#"
                       className="font-medium text-blue-600 hover:text-blue-500"
                     >
-                      Forgot your password?
+                      ¿Olvidaste tu contraseña?
                     </a>
                   </div>
                 </div>
@@ -135,7 +129,7 @@ export const LoginForm: React.FC = () => {
                     isLoading={isLoading}
                     disabled={isLoading}
                   >
-                    {isLoading ? "Signing in..." : "Sign In"}
+                    {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
                   </Button>
                 </div>
               </form>
@@ -153,7 +147,7 @@ export const LoginForm: React.FC = () => {
                           ${selected ? "bg-white shadow" : "text-blue-100 hover:bg-white/[0.12] hover:text-blue-600"}`
                       }
                     >
-                      Psychologist
+                      Psicólogo
                     </Tab>
                     <Tab
                       className={({ selected }) =>
@@ -161,41 +155,35 @@ export const LoginForm: React.FC = () => {
                           ${selected ? "bg-white shadow" : "text-blue-100 hover:bg-white/[0.12] hover:text-blue-600"}`
                       }
                     >
-                      Owner
+                      Propietario
                     </Tab>
                   </Tab.List>
 
                   <Tab.Panels className="mt-6">
                     <Tab.Panel>
-                      <div className="text-center py-8">
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">
-                          Psychologist Registration
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-4">
-                          Join as a mental health professional
-                        </p>
-                        <Button
-                          variant="primary"
-                          onClick={handlePsicologoRegister}
-                        >
-                          Register as Psychologist
-                        </Button>
+                      <div className="space-y-4">
+                        <div className="text-center">
+                          <h3 className="text-lg font-medium text-gray-900 mb-2">
+                            Registro de Psicólogo
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            Regístrate como profesional de la salud mental
+                          </p>
+                        </div>
+                        <PsicologoRegisterForm />
                       </div>
                     </Tab.Panel>
                     <Tab.Panel>
-                      <div className="text-center py-8">
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">
-                          Owner Registration
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-4">
-                          Publish your consulting rooms for bookings
-                        </p>
-                        <Button
-                          variant="primary"
-                          onClick={handlePropietarioRegister}
-                        >
-                          Register as Owner
-                        </Button>
+                      <div className="space-y-4">
+                        <div className="text-center">
+                          <h3 className="text-lg font-medium text-gray-900 mb-2">
+                            Registro de Propietario
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            Publica tus consultorios para reservas
+                          </p>
+                        </div>
+                        <PropietarioRegisterForm />
                       </div>
                     </Tab.Panel>
                   </Tab.Panels>

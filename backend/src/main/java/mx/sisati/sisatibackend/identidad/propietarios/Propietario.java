@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mx.sisati.sisatibackend.excepciones.DomainException;
 import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
+import mx.sisati.sisatibackend.espacios.locations.Location;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -25,6 +29,13 @@ public class Propietario {
 
     @Column(nullable = false)
     private boolean facturacionHabilitada = false;
+
+    @OneToMany(
+            mappedBy = "propietario",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Location> locations = new ArrayList<>();
 
     public Propietario(Usuario usuario) {
         validate(usuario);

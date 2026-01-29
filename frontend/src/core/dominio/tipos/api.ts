@@ -91,6 +91,25 @@ export const DocumentationStatus = {
 export type DocumentationStatus =
   (typeof DocumentationStatus)[keyof typeof DocumentationStatus];
 
+// Locations Module
+export interface LocationCreateRequestDTO {
+  name: string;
+  description?: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface LocationResponseDTO {
+  id: number;
+  name: string;
+  description: string | null;
+  address: string;
+  latitude: number;
+  longitude: number;
+  active: boolean;
+}
+
 // Paginación
 export interface Page<T> {
   content: T[];

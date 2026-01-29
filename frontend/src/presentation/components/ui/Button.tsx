@@ -28,7 +28,7 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled || isLoading}
       {...props}
     >
-      {isLoading && "Loading..."}
+      {isLoading && "Cargando..."}
       {children}
     </button>
   );

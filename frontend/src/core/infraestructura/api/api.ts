@@ -18,9 +18,48 @@ export const authAPI = {
 
   // Endpoints de registro
   psicologos: {
-    register: (data: any) => apiClient.post("/psicologos", data),
+    register: (
+      data: import("../../dominio/tipos/api").PsicologoRegisterRequestDTO,
+    ) =>
+      apiClient.post<
+        import("../../dominio/tipos/api").PsicologoRegisterResponseDTO
+      >("/psicologos", data),
   },
   propietarios: {
-    register: (data: any) => apiClient.post("/propietarios", data),
+    register: (
+      data: import("../../dominio/tipos/api").PropietarioRegisterRequestDTO,
+    ) =>
+      apiClient.post<
+        import("../../dominio/tipos/api").PropietarioRegisterResponseDTO
+      >("/propietarios", data),
+  },
+
+  // Locations endpoints
+  locations: {
+    getAll: () =>
+      apiClient.get<import("../../dominio/tipos/api").LocationResponseDTO[]>(
+        "/locations",
+      ),
+    getById: (id: number) =>
+      apiClient.get<import("../../dominio/tipos/api").LocationResponseDTO>(
+        `/locations/${id}`,
+      ),
+    create: (
+      data: import("../../dominio/tipos/api").LocationCreateRequestDTO,
+    ) =>
+      apiClient.post<import("../../dominio/tipos/api").LocationResponseDTO>(
+        "/locations",
+        data,
+      ),
+    update: (
+      id: number,
+      data: import("../../dominio/tipos/api").LocationCreateRequestDTO,
+    ) =>
+      apiClient.put<import("../../dominio/tipos/api").LocationResponseDTO>(
+        `/locations/${id}`,
+        data,
+      ),
+    deactivate: (id: number) => apiClient.patch(`/locations/${id}/deactivate`),
+    activate: (id: number) => apiClient.patch(`/locations/${id}/activate`),
   },
 };

@@ -1,25 +1,26 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import path from 'path';
-
+import path from "path";
 
 export default defineConfig({
-  plugins: [
-      react(),
-      tailwindcss()
-      ],
+  plugins: [react(), tailwindcss()],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
+      "/api": {
+        target: "http://localhost:8080",
         changeOrigin: true,
+      },
+      "/nominatim": {
+        target: "https://nominatim.openstreetmap.org",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/nominatim/, ""),
       },
     },
   },
   resolve: {
-      alias: {
-        '@': path.resolve(__dirname, 'src'),
-      },
+    alias: {
+      "@": path.resolve(__dirname, "src"),
     },
-})
+  },
+});

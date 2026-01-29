@@ -41,7 +41,7 @@ export const DashboardPage: React.FC = () => {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">
-                Appointments Today
+                Citas para hoy
               </p>
               <p className="text-2xl font-bold text-gray-900">12</p>
             </div>
@@ -67,7 +67,7 @@ export const DashboardPage: React.FC = () => {
               </svg>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Patients</p>
+              <p className="text-sm font-medium text-gray-600">Pacientes</p>
               <p className="text-2xl font-bold text-gray-900">156</p>
             </div>
           </div>
@@ -91,9 +91,7 @@ export const DashboardPage: React.FC = () => {
               </svg>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">
-                Consulting Rooms
-              </p>
+              <p className="text-sm font-medium text-gray-600">Consultorios</p>
               <p className="text-2xl font-bold text-gray-900">8</p>
             </div>
           </div>
@@ -119,7 +117,7 @@ export const DashboardPage: React.FC = () => {
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">
-                Income This Month
+                Ingresos este mes
               </p>
               <p className="text-2xl font-bold text-gray-900">$45.2k</p>
             </div>
@@ -130,22 +128,22 @@ export const DashboardPage: React.FC = () => {
       {/* Quick actions specific by role */}
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Quick Actions
+          Acciones Rápidas
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {isPsicologo() && (
             <>
               <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-                New Appointment
+                Nueva Cita
               </button>
               <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
-                View Patients
+                Ver Pacientes
               </button>
               <button className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
-                History
+                Historial
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">
-                Configuration
+                Configuración
               </button>
             </>
           )}
@@ -153,16 +151,16 @@ export const DashboardPage: React.FC = () => {
           {isPropietario() && (
             <>
               <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-                Manage Rooms
+                Gestionar Consultorios
               </button>
               <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
-                View Bookings
+                Ver Reservas
               </button>
               <button className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
-                Reports
+                Reportes
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">
-                Settings
+                Configuración
               </button>
             </>
           )}
@@ -170,16 +168,16 @@ export const DashboardPage: React.FC = () => {
           {!isPsicologo() && !isPropietario() && (
             <>
               <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-                Appointments
+                Citas
               </button>
               <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
-                Consulting Rooms
+                Consultorios
               </button>
               <button className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
-                Users
+                Usuarios
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">
-                Settings
+                Configuración
               </button>
             </>
           )}

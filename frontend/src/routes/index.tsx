@@ -5,6 +5,7 @@ import { AppLayout } from "../presentation/components/layouts/AppLayout";
 import { ProtectedRoute } from "../presentation/components/common/ProtectedRoute";
 import { LoginPage } from "../presentation/pages/auth/LoginPage";
 import { DashboardPage } from "../presentation/pages/dashboard/DashboardPage";
+import { LocationsPage } from "../presentation/pages/locations/LocationsPage";
 
 export const AppRoutes: React.FC = () => {
   const { isLoading } = useAuth();
@@ -30,6 +31,15 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/locations"
+          element={
+            <ProtectedRoute>
+              <LocationsPage />
             </ProtectedRoute>
           }
         />
