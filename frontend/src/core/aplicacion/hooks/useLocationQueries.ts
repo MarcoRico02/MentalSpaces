@@ -7,7 +7,7 @@ export const useLocationsQuery = () => {
     queryKey: ["locations"],
     queryFn: async (): Promise<LocationResponseDTO[]> => {
       const response = await authAPI.locations.getAll();
-      return response.data;
+      return response.data.content;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
   });

@@ -1,5 +1,8 @@
 package mx.sisati.sisatibackend.espacios.cubiculo.dto;
 
+import mx.sisati.sisatibackend.espacios.disponibilidad.dto.DisponibilidadCreateRequestDTO;
+
+import java.util.List;
 import java.util.Set;
 
 public record CubiculoCreateRequestDTO(
@@ -8,5 +11,6 @@ public record CubiculoCreateRequestDTO(
         String descripcion,
         Double precio,
         String imageUrl,
-        Set<Long> caracteristicasIds
+        Set<Long> caracteristicasIds,
+        List<DisponibilidadCreateRequestDTO> disponibilidadCreateRequestDTO
 ) {}

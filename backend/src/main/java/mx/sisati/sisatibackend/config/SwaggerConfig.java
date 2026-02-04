@@ -2,8 +2,10 @@ package mx.sisati.sisatibackend.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,5 +28,18 @@ public class SwaggerConfig {
                                         .bearerFormat("JWT")
                         )
                 );
+    }
+
+    @Bean
+    public OpenApiCustomizer localTimeAsStringCustomizer() {
+        return openApi -> {
+            Schema<?> localTimeSchema = new Schema<>()
+                    .type("string")
+                    .example("09:00")
+                    .description("Hora en formato HH:mm");
+
+            openApi.getComponents()
+                    .addSchemas("LocalTime", localTimeSchema);
+        };
     }
 }

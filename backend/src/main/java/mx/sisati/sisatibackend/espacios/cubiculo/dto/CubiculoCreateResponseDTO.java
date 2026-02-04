@@ -4,6 +4,7 @@ import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 import mx.sisati.sisatibackend.espacios.locations.Location;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,7 @@ public record CubiculoCreateResponseDTO(
         String descripcion,
         Double precio,
         String imageUrl,
-        Set<CaracteristicaDTO> caracteristicas,
+        List<CaracteristicaDTO> caracteristicas,
         boolean active
 ) {
     public CubiculoCreateResponseDTO(Cubiculo cubiculo, Long locationId) {
@@ -27,7 +28,7 @@ public record CubiculoCreateResponseDTO(
                 cubiculo.getImageUrl(),
                 cubiculo.getCaracteristicas().stream()
                         .map(caracteristica -> new CaracteristicaDTO(caracteristica.getId(), caracteristica.getNombre()))
-                        .collect(Collectors.toSet()),
+                        .collect(Collectors.toList()),
                 cubiculo.isActive()
         );
     }

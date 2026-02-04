@@ -3,6 +3,7 @@ package mx.sisati.sisatibackend.espacios.cubiculo.dto;
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -12,7 +13,7 @@ public record CubiculoUpdateResponseDTO(
         String descripcion,
         Double precio,
         String imageUrl,
-        Set<CaracteristicaDTO> caracteristicas,
+        List<CaracteristicaDTO> caracteristicas,
         boolean active
 ) {
     public CubiculoUpdateResponseDTO(Cubiculo cubiculo) {
@@ -24,7 +25,7 @@ public record CubiculoUpdateResponseDTO(
                 cubiculo.getImageUrl(),
                 cubiculo.getCaracteristicas().stream()
                         .map(caracteristica -> new CaracteristicaDTO(caracteristica.getId(), caracteristica.getNombre()))
-                        .collect(Collectors.toSet()),
+                        .collect(Collectors.toList()),
                 cubiculo.isActive()
         );
     }

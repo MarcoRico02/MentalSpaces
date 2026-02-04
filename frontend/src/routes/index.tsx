@@ -6,6 +6,7 @@ import { ProtectedRoute } from "../presentation/components/common/ProtectedRoute
 import { LoginPage } from "../presentation/pages/auth/LoginPage";
 import { DashboardPage } from "../presentation/pages/dashboard/DashboardPage";
 import { LocationsPage } from "../presentation/pages/locations/LocationsPage";
+import { CubiculosPage } from "../presentation/pages/cubiculos/CubiculosPage";
 
 export const AppRoutes: React.FC = () => {
   const { isLoading } = useAuth();
@@ -40,6 +41,15 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <LocationsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/cubiculos"
+          element={
+            <ProtectedRoute>
+              <CubiculosPage />
             </ProtectedRoute>
           }
         />

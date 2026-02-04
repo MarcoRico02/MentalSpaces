@@ -110,7 +110,41 @@ export interface LocationResponseDTO {
   active: boolean;
 }
 
-// Paginación
+// Paginación extendida del backend
+export interface BackendPage<T> {
+  content: T[];
+  pageable: {
+    paged: boolean;
+    pageNumber: number;
+    pageSize: number;
+    unpaged: boolean;
+    offset: number;
+    sort: Array<{
+      direction: string;
+      nullHandling: string;
+      ascending: boolean;
+      property: string;
+      ignoreCase: boolean;
+    }>;
+  };
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  sort: Array<{
+    direction: string;
+    nullHandling: string;
+    ascending: boolean;
+    property: string;
+    ignoreCase: boolean;
+  }>;
+  numberOfElements: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
+
+// Paginación simple para frontend
 export interface Page<T> {
   content: T[];
   totalElements: number;
@@ -143,4 +177,81 @@ export interface ApiResponse<T = any> {
   data: T;
   message?: string;
   status: number;
+}
+
+// Cubículos Module
+export const CaracteristicaNombre = {
+  REFRIGERADO: "REFRIGERADO",
+  SIN_VENTANAS_EXTERNAS: "SIN_VENTANAS_EXTERNAS",
+  CLIMATIZACION: "CLIMATIZACION",
+  VENTILACION_NATURAL: "VENTILACION_NATURAL",
+  ILUMINACION_CALIDA: "ILUMINACION_CALIDA",
+  ILUMINACION_REGULABLE: "ILUMINACION_REGULABLE",
+  TEMPERATURA_CONTROLABLE: "TEMPERATURA_CONTROLABLE",
+  SILLON_PARA_PACIENTE: "SILLON_PARA_PACIENTE",
+  SILLON_PARA_PSICOLOGO: "SILLON_PARA_PSICOLOGO",
+  ESCRITORIO: "ESCRITORIO",
+  MESA_AUXILIAR: "MESA_AUXILIAR",
+  LIBRERO: "LIBRERO",
+  SOFA: "SOFA",
+  RELOJ_SILENCIOSO: "RELOJ_SILENCIOSO",
+  PIZARRON: "PIZARRON",
+  CONEXION_INTERNET: "CONEXION_INTERNET",
+  CAMARA_SEGURIDAD_EXTERNA: "CAMARA_SEGURIDAD_EXTERNA",
+  ENCHUFES_DISPONIBLES: "ENCHUFES_DISPONIBLES",
+} as const;
+
+export type CaracteristicaNombre =
+  (typeof CaracteristicaNombre)[keyof typeof CaracteristicaNombre];
+
+export interface CaracteristicaDTO {
+  id: number;
+  nombre: CaracteristicaNombre;
+}
+
+export interface CubiculoCreateRequestDTO {
+  locationId: number;
+  nombre: string;
+  descripcion?: string;
+  precio: number;
+  imageUrl?: string;
+  caracteristicasIds?: number[];
+}
+
+export interface CubiculoUpdateRequestDTO {
+  nombre?: string;
+  descripcion?: string;
+  precio?: number;
+  imageUrl?: string;
+  caracteristicasIds?: number[] | null;
+}
+
+export interface CubiculoResponse {
+  id: number;
+  locationId: number;
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  imageUrl: string;
+  caracteristicas: CaracteristicaDTO[];
+  isActive: boolean;
+}
+
+// Para la paginación extendida de cubículos
+export interface CubiculoPage extends Page<CubiculoResponse> {
+  content: CubiculoResponse[];
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
+    sort: {
+      sorted: boolean;
+      unsorted: boolean;
+    };
+  };
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
 }

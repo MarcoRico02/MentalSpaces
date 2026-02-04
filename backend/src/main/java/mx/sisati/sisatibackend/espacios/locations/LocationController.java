@@ -3,12 +3,13 @@ package mx.sisati.sisatibackend.espacios.locations;
 import mx.sisati.sisatibackend.espacios.locations.aplicacion.GestionarLocations;
 import mx.sisati.sisatibackend.espacios.locations.dto.LocationCreateRequestDTO;
 import mx.sisati.sisatibackend.espacios.locations.dto.LocationResponseDTO;
-import mx.sisati.sisatibackend.seguridad.UsuarioDetails;
+import mx.sisati.sisatibackend.auth.UsuarioDetails;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -22,11 +23,12 @@ public class LocationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LocationResponseDTO>> findAll(
-            @AuthenticationPrincipal UsuarioDetails usuarioDetails) {
+    public ResponseEntity<Page<LocationResponseDTO>> findAll(
+            @AuthenticationPrincipal UsuarioDetails usuarioDetails,
+            @PageableDefault(size = 10) Pageable pageable) {
 
         return ResponseEntity.ok(
-                gestionarLocations.findByPropietario(usuarioDetails.getUsuario().getId())
+                gestionarLocations.findByPropietario(usuarioDetails.getUsuario().getId(), pageable)
         );
     }
 

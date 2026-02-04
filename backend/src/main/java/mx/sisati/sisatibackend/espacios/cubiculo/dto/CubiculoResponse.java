@@ -8,7 +8,7 @@ public record CubiculoResponse(
         String nombre,
         String descripcion,
         Double precio,
-        String imagenUrl,
+        String imageUrl,
         List<CaracteristicaDTO> caracteristicas,
         boolean isActive
 ) {}

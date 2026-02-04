@@ -1,7 +1,7 @@
 package mx.sisati.sisatibackend.espacios.caracteristicas;
 
 public enum CaracteristicaNombre {
-    REFIGERADO,
+    REFRIGERADO,
     SIN_VENTANAS_EXTERNAS,
     CLIMATIZACION,
     VENTILACION_NATURAL,

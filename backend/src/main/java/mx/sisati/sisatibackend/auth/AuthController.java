@@ -2,7 +2,6 @@ package mx.sisati.sisatibackend.auth;
 
 
 import mx.sisati.sisatibackend.seguridad.JwtService;
-import mx.sisati.sisatibackend.seguridad.UsuarioDetails;
 import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioLoginDTO;
 import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioLoginResponseDTO;
 import org.springframework.http.ResponseCookie;

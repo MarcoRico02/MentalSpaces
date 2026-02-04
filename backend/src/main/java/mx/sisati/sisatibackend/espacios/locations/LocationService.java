@@ -4,6 +4,8 @@ import mx.sisati.sisatibackend.espacios.cubiculo.CubiculoService;
 import mx.sisati.sisatibackend.espacios.locations.dto.LocationCreateRequestDTO;
 import mx.sisati.sisatibackend.identidad.propietarios.Propietario;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,8 +59,8 @@ public class LocationService {
         return location;
     }
 
-    public List<Location> findByPropietario(Propietario propietario) {
-        return locationRepository.findByPropietarioId(propietario.getId());
+    public Page<Location> findByPropietario(Propietario propietario, Pageable pageable) {
+        return locationRepository.findByPropietarioId(propietario.getId(), pageable);
     }
 
     public List<Location> findByPropietarioAndActive(Propietario propietario) {

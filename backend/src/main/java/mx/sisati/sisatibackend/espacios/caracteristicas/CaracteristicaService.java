@@ -17,7 +17,7 @@ public class CaracteristicaService {
     }
 
 
-    private CaracteristicaNombre getRequiredCaracteristica(CaracteristicaNombre nombre) {
+    private Caracteristica getRequiredCaracteristica(CaracteristicaNombre nombre) {
         return caracteristicaRepository.findByNombre(nombre)
                 .orElseThrow(() -> new ServiceException(
                         this.getClass(),

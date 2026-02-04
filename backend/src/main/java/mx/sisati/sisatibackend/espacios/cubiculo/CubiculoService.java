@@ -6,9 +6,13 @@ import mx.sisati.sisatibackend.espacios.cubiculo.dto.CubiculoCreateRequestDTO;
 import mx.sisati.sisatibackend.espacios.cubiculo.dto.CubiculoUpdateRequestDTO;
 import mx.sisati.sisatibackend.espacios.locations.Location;
 import mx.sisati.sisatibackend.espacios.locations.LocationService;
+import mx.sisati.sisatibackend.excepciones.DomainException;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
 import mx.sisati.sisatibackend.identidad.propietarios.Propietario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -30,12 +34,7 @@ public class CubiculoService {
             throw new ServiceException(this.getClass(), "No se puede crear un cubículo en una location inactiva");
         }
 
-        Set<Caracteristica> caracteristicas = dto.caracteristicasIds() != null 
-                ? dto.caracteristicasIds().stream()
-                        .map(id -> caracteristicaRepository.findById(id)
-                                .orElseThrow(() -> new ServiceException(this.getClass(), "Característica no encontrada con ID: " + id)))
-                        .collect(Collectors.toSet())
-                : Set.of();
+        Set<Caracteristica> caracteristicas = validateAndResolveCaracteristicas(dto.caracteristicasIds());
 
         Cubiculo cubiculo = new Cubiculo(
                 location,
@@ -52,12 +51,13 @@ public class CubiculoService {
     public Cubiculo updateCubiculo(Long cubiculoId, CubiculoUpdateRequestDTO dto, Propietario propietario) {
         Cubiculo cubiculo = findCubiculoByIdAndValidateOwnership(cubiculoId, propietario);
 
-        Set<Caracteristica> caracteristicas = dto.caracteristicasIds() != null 
-                ? dto.caracteristicasIds().stream()
-                        .map(id -> caracteristicaRepository.findById(id)
-                                .orElseThrow(() -> new ServiceException(this.getClass(), "Característica no encontrada con ID: " + id)))
-                        .collect(Collectors.toSet())
-                : cubiculo.getCaracteristicas();
+        // Validar y resolver características (null = no modificar, vacío = eliminar todas)
+        Set<Caracteristica> caracteristicas = validateAndResolveCaracteristicas(dto.caracteristicasIds());
+        
+        // Si es null, mantener las características actuales
+        if (caracteristicas == null) {
+            caracteristicas = cubiculo.getCaracteristicas();
+        }
 
         cubiculo.update(
                 dto.nombre(),
@@ -87,12 +87,12 @@ public class CubiculoService {
         cubiculoRepository.save(cubiculo);
     }
 
-    public List<Cubiculo> findCubiculosByLocation(Location location) {
-        return cubiculoRepository.findByLocation(location);
+    public Page<Cubiculo> findCubiculosByLocation(Location location, Pageable pageable) {
+        return cubiculoRepository.findByLocationId(location.getId(), pageable);
     }
 
-    public List<Cubiculo> findActiveCubiculosByLocation(Location location, boolean active) {
-        return cubiculoRepository.findByLocationIdAndActive(location.getId(), active);
+    public Page<Cubiculo> findActiveCubiculosByLocation(Location location, boolean active, Pageable pageable) {
+        return cubiculoRepository.findByLocationIdAndActive(location.getId(), active, pageable);
     }
 
     public Cubiculo findCubiculoByIdAndValidateOwnership(Long cubiculoId, Propietario propietario) {
@@ -107,15 +107,101 @@ public class CubiculoService {
     }
 
     public void deactivateAllCubiculosByLocation(Location location) {
-        List<Cubiculo> cubiculos = cubiculoRepository.findByLocation(location);
+        Page<Cubiculo> cubiculosPage;
+        int page = 0;
+        int size = 100;
         
-        for (Cubiculo cubiculo : cubiculos) {
-            if (cubiculo.isActive()) {
-                cubiculo.deactivate();
+        do {
+            Pageable pageable = Pageable.ofSize(size).withPage(page);
+            cubiculosPage = cubiculoRepository.findByLocationId(location.getId(), pageable);
+            
+            for (Cubiculo cubiculo : cubiculosPage.getContent()) {
+                if (cubiculo.isActive()) {
+                    cubiculo.deactivate();
+                }
             }
+            
+            cubiculoRepository.saveAll(cubiculosPage.getContent());
+            page++;
+        } while (cubiculosPage.hasNext());
+    }
+
+    /**
+     * Obtiene un cubículo por ID con sus características cargadas mediante JOIN FETCH.
+     * Optimiza el performance evitando el problema N+1 al obtener características.
+     * 
+     * @param cubiculoId ID del cubículo a buscar
+     * @return Cubiculo con sus características cargadas
+     * @throws ServiceException si el cubículo no existe
+     */
+    @Transactional(readOnly = true)
+    public Cubiculo findCubiculoByIdWithCaracteristicas(Long cubiculoId) {
+        return cubiculoRepository.findByIdWithCaracteristicas(cubiculoId)
+                .orElseThrow(() -> new ServiceException(this.getClass(), "Cubículo no encontrado con ID: " + cubiculoId));
+    }
+
+    /**
+     * Obtiene un cubículo por ID con validación de ownership y características optimizada.
+     * 
+     * @param cubiculoId ID del cubículo a buscar
+     * @param propietario Propietario para validar ownership
+     * @return Cubiculo con sus características cargadas
+     * @throws ServiceException si el cubículo no existe o no pertenece al propietario
+     */
+    @Transactional(readOnly = true)
+    public Cubiculo findCubiculoByIdWithOwnershipAndCaracteristicas(Long cubiculoId, Propietario propietario) {
+        Cubiculo cubiculo = findCubiculoByIdWithCaracteristicas(cubiculoId);
+        
+        if (!cubiculo.getLocation().getPropietario().getId().equals(propietario.getId())) {
+            throw new ServiceException(this.getClass(), "El cubículo no pertenece al propietario autenticado");
         }
         
-        cubiculoRepository.saveAll(cubiculos);
+        return cubiculo;
+    }
+
+    /**
+     * Valida y resuelve las características para un cubículo.
+     * 
+     * Comportamiento de caracteristicasIds:
+     * - null → "no modificar características" (solo en update)
+     * - Set vacío → "eliminar todas las características del cubículo"
+     * - Set con IDs → "asignar estas características" (todos deben existir)
+     * 
+     * Performance: Usa findAllById para evitar N+1 queries
+     * 
+     * @param caracteristicasIds Set de IDs de características (puede ser null o vacío)
+     * @return Set<Caracteristica> características validadas, o null si no se debe modificar
+     * @throws DomainException si hay IDs inexistentes
+     */
+    private Set<Caracteristica> validateAndResolveCaracteristicas(Set<Long> caracteristicasIds) {
+        // null = no modificar características (solo en update)
+        if (caracteristicasIds == null) {
+            return null;
+        }
+        
+        // Set vacío = eliminar todas las características
+        if (caracteristicasIds.isEmpty()) {
+            return Set.of();
+        }
+        
+        // Optimización de performance: usar findAllById en lugar de findById individual
+        // Esto resuelve el problema N+1 haciendo una sola query
+        List<Caracteristica> foundCaracteristicas = caracteristicaRepository.findAllById(caracteristicasIds);
+        
+        // Validar que todos los IDs solicitados existen
+        if (foundCaracteristicas.size() != caracteristicasIds.size()) {
+            Set<Long> foundIds = foundCaracteristicas.stream()
+                    .map(Caracteristica::getId)
+                    .collect(Collectors.toSet());
+            
+            Set<Long> missingIds = caracteristicasIds.stream()
+                    .filter(id -> !foundIds.contains(id))
+                    .collect(Collectors.toSet());
+                    
+            throw new DomainException("Características no encontradas con IDs: " + missingIds);
+        }
+        
+        return foundCaracteristicas.stream().collect(Collectors.toSet());
     }
 
     public Location getLocationByCubiculoIdOrThrow(Long cubiculoId) {

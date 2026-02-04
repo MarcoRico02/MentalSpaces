@@ -1,5 +1,7 @@
 package mx.sisati.sisatibackend.espacios.locations;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,5 +13,5 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
 
     Optional<Location> findByIdAndPropietarioId(Long id, Long propietarioId);
 
-    List<Location> findByPropietarioId(Long propietarioId);
+    Page<Location> findByPropietarioId(Long propietarioId, Pageable pageable);
 }

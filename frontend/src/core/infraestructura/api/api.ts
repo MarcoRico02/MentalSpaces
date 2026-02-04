@@ -36,10 +36,12 @@ export const authAPI = {
 
   // Locations endpoints
   locations: {
-    getAll: () =>
-      apiClient.get<import("../../dominio/tipos/api").LocationResponseDTO[]>(
-        "/locations",
-      ),
+    getAll: (params?: { page?: number; size?: number; sort?: string[] }) =>
+      apiClient.get<
+        import("../../dominio/tipos/api").BackendPage<
+          import("../../dominio/tipos/api").LocationResponseDTO
+        >
+      >("/locations", { params }),
     getById: (id: number) =>
       apiClient.get<import("../../dominio/tipos/api").LocationResponseDTO>(
         `/locations/${id}`,
@@ -61,5 +63,62 @@ export const authAPI = {
       ),
     deactivate: (id: number) => apiClient.patch(`/locations/${id}/deactivate`),
     activate: (id: number) => apiClient.patch(`/locations/${id}/activate`),
+  },
+
+  // Cubículos endpoints
+  cubiculos: {
+    getAllByLocation: (
+      locationId: number,
+      params?: {
+        page?: number;
+        size?: number;
+        sort?: string;
+      },
+    ) =>
+      apiClient.get<import("../../dominio/tipos/api").CubiculoPage>(
+        `/cubiculos/location/${locationId}`,
+        { params },
+      ),
+    getActiveByLocation: (
+      locationId: number,
+      params?: {
+        page?: number;
+        size?: number;
+        sort?: string;
+      },
+    ) =>
+      apiClient.get<import("../../dominio/tipos/api").CubiculoPage>(
+        `/cubiculos/location/${locationId}/active`,
+        { params },
+      ),
+    getById: (id: number) =>
+      apiClient.get<import("../../dominio/tipos/api").CubiculoResponse>(
+        `/cubiculos/${id}`,
+      ),
+    create: (
+      data: import("../../dominio/tipos/api").CubiculoCreateRequestDTO,
+    ) =>
+      apiClient.post<import("../../dominio/tipos/api").CubiculoResponse>(
+        "/cubiculos",
+        data,
+      ),
+    update: (
+      id: number,
+      data: import("../../dominio/tipos/api").CubiculoUpdateRequestDTO,
+    ) =>
+      apiClient.put<import("../../dominio/tipos/api").CubiculoResponse>(
+        `/cubiculos/${id}`,
+        data,
+      ),
+    activate: (id: number) => apiClient.patch(`/cubiculos/${id}/activate`),
+    deactivate: (id: number) => apiClient.patch(`/cubiculos/${id}/deactivate`),
+  },
+
+  // Características endpoints
+  caracteristicas: {
+    getAll: () =>
+      apiClient.get<import("../../dominio/tipos/api").CaracteristicaDTO[]>(
+        "/caracteristicas",
+      ),
   },
 };

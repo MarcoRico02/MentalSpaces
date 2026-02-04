@@ -1,4 +1,4 @@
-package mx.sisati.sisatibackend.seguridad;
+package mx.sisati.sisatibackend.auth;
 
 import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 import org.springframework.security.core.GrantedAuthority;

@@ -3,11 +3,15 @@ package mx.sisati.sisatibackend.espacios.cubiculo.aplicacion;
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 import mx.sisati.sisatibackend.espacios.cubiculo.CubiculoService;
 import mx.sisati.sisatibackend.espacios.cubiculo.dto.*;
+import mx.sisati.sisatibackend.espacios.disponibilidad.Disponibilidad;
+import mx.sisati.sisatibackend.espacios.disponibilidad.DisponibilidadService;
 import mx.sisati.sisatibackend.espacios.locations.Location;
 import mx.sisati.sisatibackend.espacios.locations.LocationService;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
 import mx.sisati.sisatibackend.identidad.propietarios.Propietario;
 import mx.sisati.sisatibackend.identidad.propietarios.PropietarioService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +23,13 @@ public class GestionarCubiculos {
     private final CubiculoService cubiculoService;
     private final LocationService locationService;
     private final PropietarioService propietarioService;
+    private final DisponibilidadService disponibilidadService;
 
-    public GestionarCubiculos(CubiculoService cubiculoService, LocationService locationService, PropietarioService propietarioService) {
+    public GestionarCubiculos(CubiculoService cubiculoService, LocationService locationService, PropietarioService propietarioService, DisponibilidadService disponibilidadService) {
         this.cubiculoService = cubiculoService;
         this.locationService = locationService;
         this.propietarioService = propietarioService;
+        this.disponibilidadService = disponibilidadService;
     }
 
 
@@ -32,7 +38,7 @@ public class GestionarCubiculos {
         Propietario propietario = propietarioService.getByUsuarioIdOrThrow(usuarioId);
         Location location = locationService.findByIdOrThrow(dto.locationId(), propietario);
         Cubiculo cubiculo = cubiculoService.createCubiculo(dto, location);
-
+        disponibilidadService.createDisponibilidades(dto.disponibilidadCreateRequestDTO(), cubiculo);
         return new CubiculoCreateResponseDTO(cubiculo, location.getId());
     }
 
@@ -47,14 +53,12 @@ public class GestionarCubiculos {
         return new CubiculoUpdateResponseDTO(cubiculo);
     }
 
-    public List<CubiculoResponse> findCubiculosByLocation(Long locationId, Long id) {
+    public Page<CubiculoResponse> findCubiculosByLocation(Long locationId, Long id, Pageable pageable) {
         Propietario propietario = propietarioService.getByUsuarioIdOrThrow(id);
         Location location = locationService.findByIdOrThrow(locationId, propietario);
-        List<Cubiculo> cubiculos = cubiculoService.findCubiculosByLocation(location);
+        Page<Cubiculo> cubiculos = cubiculoService.findCubiculosByLocation(location, pageable);
 
-        return cubiculos.stream()
-                .map(c -> toResponse(c, location.getId()))
-                .toList();
+        return cubiculos.map(c -> toResponse(c, location.getId()));
     }
 
     private CubiculoResponse toResponse(Cubiculo cubiculo, Long locationId) {
@@ -74,14 +78,12 @@ public class GestionarCubiculos {
         );
     }
 
-    public List<CubiculoResponse> findActivedCubiculosByLocation(Long locationId, Long id) {
+    public Page<CubiculoResponse> findActivedCubiculosByLocation(Long locationId, Long id, Pageable pageable) {
         Propietario propietario = propietarioService.getByUsuarioIdOrThrow(id);
         Location location = locationService.findByIdOrThrow(locationId, propietario);
-        List<Cubiculo> cubiculos = cubiculoService.findActiveCubiculosByLocation(location, true);
+        Page<Cubiculo> cubiculos = cubiculoService.findActiveCubiculosByLocation(location, true, pageable);
 
-        return cubiculos.stream()
-                .map(c -> toResponse(c, location.getId()))
-                .toList();
+        return cubiculos.map(c -> toResponse(c, location.getId()));
     }
 
     public void activateCubiculo(Long cubiculoId, Long id) {
@@ -93,5 +95,14 @@ public class GestionarCubiculos {
         Propietario propietario = propietarioService.getByUsuarioIdOrThrow(id);
 
         cubiculoService.desactivateCubiculo(cubiculoId, propietario);
+    }
+
+    public CubiculoResponse findById(Long cubiculoId, Long usuarioId) {
+        Propietario propietario = propietarioService.getByUsuarioIdOrThrow(usuarioId);
+        
+        // Usar método optimizado con JOIN FETCH y validación de ownership
+        Cubiculo cubiculo = cubiculoService.findCubiculoByIdWithOwnershipAndCaracteristicas(cubiculoId, propietario);
+        
+        return toResponse(cubiculo, cubiculo.getLocation().getId());
     }
 }

@@ -9,6 +9,8 @@ import mx.sisati.sisatibackend.espacios.locations.dto.LocationCreateRequestDTO;
 import mx.sisati.sisatibackend.espacios.locations.dto.LocationResponseDTO;
 import mx.sisati.sisatibackend.identidad.propietarios.Propietario;
 import mx.sisati.sisatibackend.identidad.propietarios.PropietarioService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,12 +60,10 @@ public class GestionarLocations {
     }
 
     @Transactional(readOnly = true)
-    public List<LocationResponseDTO> findByPropietario(Long usuarioId) {
+    public Page<LocationResponseDTO> findByPropietario(Long usuarioId, Pageable pageable) {
         Propietario propietario = propietarioService.getByUsuarioIdOrThrow(usuarioId);
-        return locationService.findByPropietario(propietario)
-                .stream()
-                .map(this::toResponseDTO)
-                .toList();
+        return locationService.findByPropietario(propietario, pageable)
+                .map(this::toResponseDTO);
     }
 
     @Transactional(readOnly = true)

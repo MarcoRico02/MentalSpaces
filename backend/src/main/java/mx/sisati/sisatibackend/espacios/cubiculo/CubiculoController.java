@@ -2,12 +2,13 @@ package mx.sisati.sisatibackend.espacios.cubiculo;
 
 import mx.sisati.sisatibackend.espacios.cubiculo.aplicacion.GestionarCubiculos;
 import mx.sisati.sisatibackend.espacios.cubiculo.dto.*;
-import mx.sisati.sisatibackend.seguridad.UsuarioDetails;
+import mx.sisati.sisatibackend.auth.UsuarioDetails;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/cubiculos")
@@ -38,20 +39,22 @@ public class CubiculoController {
     }
 
     @GetMapping("/location/{locationId}")
-    public ResponseEntity<List<CubiculoResponse>> findByLocation(
+    public ResponseEntity<Page<CubiculoResponse>> findByLocation(
             @PathVariable Long locationId,
-            @AuthenticationPrincipal UsuarioDetails usuarioDetails) {
+            @AuthenticationPrincipal UsuarioDetails usuarioDetails,
+            @PageableDefault(size = 10) Pageable pageable) {
 
-        List<CubiculoResponse> cubiculos = gestionarCubiculo.findCubiculosByLocation(locationId, usuarioDetails.getUsuario().getId());
+        Page<CubiculoResponse> cubiculos = gestionarCubiculo.findCubiculosByLocation(locationId, usuarioDetails.getUsuario().getId(), pageable);
         return ResponseEntity.ok(cubiculos);
     }
 
     @GetMapping("/location/{locationId}/active")
-    public ResponseEntity<List<CubiculoResponse>> findActiveByLocation(
+    public ResponseEntity<Page<CubiculoResponse>> findActiveByLocation(
             @PathVariable Long locationId,
-            @AuthenticationPrincipal UsuarioDetails usuarioDetails) {
+            @AuthenticationPrincipal UsuarioDetails usuarioDetails,
+            @PageableDefault(size = 10) Pageable pageable) {
 
-        List<CubiculoResponse> cubiculos = gestionarCubiculo.findActivedCubiculosByLocation(locationId, usuarioDetails.getUsuario().getId());
+        Page<CubiculoResponse> cubiculos = gestionarCubiculo.findActivedCubiculosByLocation(locationId, usuarioDetails.getUsuario().getId(), pageable);
         return ResponseEntity.ok(cubiculos);
     }
 
@@ -71,5 +74,14 @@ public class CubiculoController {
 
         gestionarCubiculo.desactivateCubiculo(id, usuarioDetails.getUsuario().getId());
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CubiculoResponse> findById(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UsuarioDetails usuarioDetails) {
+
+        CubiculoResponse cubiculo = gestionarCubiculo.findById(id, usuarioDetails.getUsuario().getId());
+        return ResponseEntity.ok(cubiculo);
     }
 }
