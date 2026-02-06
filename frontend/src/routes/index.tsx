@@ -34,6 +34,8 @@ import { AdminLogsPage } from "../presentation/pages/admin/AdminLogsPage";
 import { AdminMonitoringPage } from "../presentation/pages/admin/AdminMonitoringPage";
 import { AdminRoomsPage } from "../presentation/pages/admin/AdminRoomsPage";
 import { AdminUsersListPage } from "../presentation/pages/admin/AdminUsersListPage";
+import { AdminConfigPage } from "../presentation/pages/admin/AdminConfigPage";
+import { AdminTrustLevelRulesPage } from "../presentation/pages/admin/AdminTrustLevelRulesPage";
 
 export const AppRoutes: React.FC = () => {
   const { isLoading } = useAuth();
@@ -268,6 +270,21 @@ export const AppRoutes: React.FC = () => {
           }
         />
 
+        <Route
+          path="/admin/config"
+          element={
+            <ProtectedRoute requiredRole="ADMIN">
+              <AdminConfigPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Alias legacy: /admin/config-full (placeholder futuro) */}
+        <Route
+          path="/admin/config-full"
+          element={<Navigate to="/admin/config" replace />}
+        />
+
         {/* Alias: ruta previa del sidebar */}
         <Route
           path="/admin/users"
@@ -314,6 +331,21 @@ export const AppRoutes: React.FC = () => {
         <Route
           path="/admin/rooms-management"
           element={<Navigate to="/admin/rooms" replace />}
+        />
+
+        <Route
+          path="/admin/trust-level-rules"
+          element={
+            <ProtectedRoute requiredRole="ADMIN">
+              <AdminTrustLevelRulesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Alias: ruta del sidebar existente */}
+        <Route
+          path="/admin/trust-level"
+          element={<Navigate to="/admin/trust-level-rules" replace />}
         />
 
         {/* Redirect to dashboard */}
