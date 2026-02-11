@@ -200,15 +200,11 @@ export const DashboardPage: React.FC = () => {
     : isPropietario()
       ? [
           { label: "Calendario", href: "/bookings" },
-          { label: "Salas", href: "/admin/rooms" },
           { label: "Pagos (admin)", href: "/admin/payments" },
           { label: "Configuración", href: "/settings" },
         ]
       : [
-          { label: "Monitoreo", href: "/admin/monitoring" },
-          { label: "Usuarios", href: "/admin/users-list" },
           { label: "Pagos", href: "/admin/payments" },
-          { label: "Logs", href: "/admin/logs" },
         ];
 
   return (

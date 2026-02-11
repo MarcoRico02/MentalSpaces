@@ -10,7 +10,11 @@ import {
 import { LocationCard } from "../../components/locations/LocationCard";
 import { LocationModal } from "../../components/locations/LocationModal";
 import { Button } from "../../components/ui";
-import type { LocationResponseDTO } from "../../../core/dominio/tipos/api";
+import type {
+  LocationCreateRequestDTO,
+  LocationResponseDTO,
+} from "../../../core/dominio/tipos/api";
+import type { LocationCreateFormData } from "../../../core/dominio/tipos/schemas";
 
 export const LocationsPage: React.FC = () => {
   const { isPropietario } = useAuth();
@@ -41,23 +45,39 @@ export const LocationsPage: React.FC = () => {
     );
   }
 
-  const handleCreateLocation = (data: any) => {
-    createMutation.mutate(data, {
+  const handleCreateLocation = (form: LocationCreateFormData) => {
+    const payload: LocationCreateRequestDTO = {
+      name: form.name,
+      description: form.description?.trim() ? form.description.trim() : undefined,
+      address: form.address,
+      latitude: form.latitude,
+      longitude: form.longitude,
+    };
+
+    createMutation.mutate(payload, {
       onSuccess: () => {
         setShowForm(false);
       },
     });
   };
 
-  const handleUpdateLocation = (data: any) => {
-    if (editingLocation) {
-      updateMutation.mutate(data, {
-        onSuccess: () => {
-          setEditingLocation(undefined);
-          setShowForm(false);
-        },
-      });
-    }
+  const handleUpdateLocation = (form: LocationCreateFormData) => {
+    if (!editingLocation) return;
+
+    const payload: LocationCreateRequestDTO = {
+      name: form.name,
+      description: form.description?.trim() ? form.description.trim() : undefined,
+      address: form.address,
+      latitude: form.latitude,
+      longitude: form.longitude,
+    };
+
+    updateMutation.mutate(payload, {
+      onSuccess: () => {
+        setEditingLocation(undefined);
+        setShowForm(false);
+      },
+    });
   };
 
   const handleEditLocation = (location: LocationResponseDTO) => {

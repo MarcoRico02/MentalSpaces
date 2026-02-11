@@ -28,14 +28,6 @@ import { TutorialPage } from "../presentation/pages/tutorial/TutorialPage";
 import { TherapistsPage } from "../presentation/pages/therapists/TherapistsPage";
 import { TherapistProfilePage } from "../presentation/pages/therapists/TherapistProfilePage";
 import { SystemConfigPage } from "../presentation/pages/system/SystemConfigPage";
-import { AdminAccessPage } from "../presentation/pages/admin/AdminAccessPage";
-import { AdminBookingsListPage } from "../presentation/pages/admin/AdminBookingsListPage";
-import { AdminLogsPage } from "../presentation/pages/admin/AdminLogsPage";
-import { AdminMonitoringPage } from "../presentation/pages/admin/AdminMonitoringPage";
-import { AdminRoomsPage } from "../presentation/pages/admin/AdminRoomsPage";
-import { AdminUsersListPage } from "../presentation/pages/admin/AdminUsersListPage";
-import { AdminConfigPage } from "../presentation/pages/admin/AdminConfigPage";
-import { AdminTrustLevelRulesPage } from "../presentation/pages/admin/AdminTrustLevelRulesPage";
 
 export const AppRoutes: React.FC = () => {
   const { isLoading } = useAuth();
@@ -252,101 +244,23 @@ export const AppRoutes: React.FC = () => {
           }
         />
 
-        <Route
-          path="/admin/access"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AdminAccessPage />
-            </ProtectedRoute>
-          }
-        />
+        {/* Rutas admin eliminadas (carpeta admin removida) */}
+        {/* Se conserva /admin/payments porque vive en PaymentsPage.tsx */}
 
-        <Route
-          path="/admin/bookings-list"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AdminBookingsListPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/admin/config"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AdminConfigPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Alias legacy: /admin/config-full (placeholder futuro) */}
-        <Route
-          path="/admin/config-full"
-          element={<Navigate to="/admin/config" replace />}
-        />
-
-        {/* Alias: ruta previa del sidebar */}
-        <Route
-          path="/admin/users"
-          element={<Navigate to="/admin/users-list" replace />}
-        />
-
-        <Route
-          path="/admin/users-list"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AdminUsersListPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/admin/logs"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AdminLogsPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/admin/monitoring"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AdminMonitoringPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/admin/rooms"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AdminRoomsPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Alias: ruta antigua /admin/rooms ya coincide; mantenemos también /admin/rooms-management */}
-        <Route
-          path="/admin/rooms-management"
-          element={<Navigate to="/admin/rooms" replace />}
-        />
-
-        <Route
-          path="/admin/trust-level-rules"
-          element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AdminTrustLevelRulesPage />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Alias: ruta del sidebar existente */}
-        <Route
-          path="/admin/trust-level"
-          element={<Navigate to="/admin/trust-level-rules" replace />}
-        />
+        {/* ELIMINAR TODO ESTE BLOQUE DE RUTAS:
+            /admin/access
+            /admin/bookings-list
+            /admin/config
+            /admin/config-full
+            /admin/users
+            /admin/users-list
+            /admin/logs
+            /admin/monitoring
+            /admin/rooms
+            /admin/rooms-management
+            /admin/trust-level-rules
+            /admin/trust-level
+        */}
 
         {/* Redirect to dashboard */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
