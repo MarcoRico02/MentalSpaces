@@ -34,7 +34,7 @@ export const AdminNavigation: React.FC = () => {
         </h3>
       </div>
 
-      <NavItem to="/admin/logs" icon={ClipboardList}>
+      <NavItem to="/logs" icon={ClipboardList}>
         Registro de Auditoría
       </NavItem>
 
@@ -42,43 +42,43 @@ export const AdminNavigation: React.FC = () => {
         Gestionar Locaciones
       </NavItem>
 
-      <NavItem to="/admin/rooms" icon={Building}>
+      <NavItem to="/rooms" icon={Building}>
         Gestionar Consultorios
       </NavItem>
 
-      <NavItem to="/admin/users" icon={Users}>
+      <NavItem to="/users" icon={Users}>
         Gestionar Usuarios
       </NavItem>
 
-      <NavItem to="/admin/config" icon={Settings}>
+      <NavItem to="/config" icon={Settings}>
         Reglas de Reserva y Servicios
       </NavItem>
 
-      <NavItem to="/admin/trust-level" icon={ShieldCheck}>
+      <NavItem to="/trust-level" icon={ShieldCheck}>
         Niveles de Confianza
       </NavItem>
 
-      <NavItem to="/admin/monitoring" icon={Activity}>
+      <NavItem to="/monitoring" icon={Activity}>
         Monitoreo y Alertas
       </NavItem>
 
-      <NavItem to="/admin/config-full" icon={Cog}>
+      <NavItem to="/bookings-rules" icon={Cog}>
         Reglas de Reserva (Completas)
       </NavItem>
 
-      <NavItem to="/admin/bookings" icon={Calendar}>
+      <NavItem to="/bookings" icon={Calendar}>
         Calendario
       </NavItem>
 
-      <NavItem to="/admin/reports" icon={BarChart3}>
+      <NavItem to="/reports" icon={BarChart3}>
         Reportes
       </NavItem>
 
-      <NavItem to="/admin/payments" icon={CreditCard}>
-        Pagos
+      <NavItem to="/payments-record" icon={CreditCard}>
+        Historial de pagos
       </NavItem>
 
-      <NavItem to="/admin/access" icon={Lock}>
+      <NavItem to="/access" icon={Lock}>
         Acceso
       </NavItem>
     </>

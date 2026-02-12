@@ -9,10 +9,7 @@ import { LocationsPage } from "../presentation/pages/locations/LocationsPage";
 import { CubiculosPage } from "../presentation/pages/cubiculos/CubiculosPage";
 import { AccountSummaryPage } from "../presentation/pages/account/AccountSummaryPage";
 import { AccountHistoryPage } from "../presentation/pages/account/AccountHistoryPage";
-import {
-  PaymentsPage,
-  AdminPaymentsPage,
-} from "../presentation/pages/account/PaymentsPage";
+import {PaymentsPage} from "../presentation/pages/account/PaymentsPage";
 import { FaqPage } from "../presentation/pages/faq/FaqPage";
 import { SettingsPage } from "../presentation/pages/settings/SettingsPage";
 import { NotFoundPage } from "../presentation/pages/not-found/NotFoundPage";
@@ -28,6 +25,10 @@ import { TutorialPage } from "../presentation/pages/tutorial/TutorialPage";
 import { TherapistsPage } from "../presentation/pages/therapists/TherapistsPage";
 import { TherapistProfilePage } from "../presentation/pages/therapists/TherapistProfilePage";
 import { SystemConfigPage } from "../presentation/pages/system/SystemConfigPage";
+import { UsersListPage } from "../presentation/pages/users/UsersManagementPage";
+import { LogsPage } from "../presentation/pages/logs/LogsPage";
+import { MonitoringPage} from "@/presentation/pages/system/SystemMonitoringPage.tsx";
+import { TrustLevelPage} from "@/presentation/pages/trust-level/TrustLevelPage.tsx";
 
 export const AppRoutes: React.FC = () => {
   const { isLoading } = useAuth();
@@ -95,13 +96,66 @@ export const AppRoutes: React.FC = () => {
         />
 
         <Route
-          path="/admin/payments"
+          path="/payments-record"
           element={
-            <ProtectedRoute requiredRole="ADMIN">
-              <AdminPaymentsPage />
+            <ProtectedRoute>
+              <PaymentsPage />
             </ProtectedRoute>
           }
         />
+
+        {/* Logs de auditoría (reorganizado) */}
+        <Route
+          path="/logs"
+          element={
+            <ProtectedRoute>
+              <LogsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Configuraciones (alias usado por el menú) */}
+        <Route
+          path="/config"
+          element={
+          <ProtectedRoute>
+            <SystemConfigPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/bookings-rules"
+          element={
+            <ProtectedRoute>
+                <SystemConfigPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Usuarios (alias usado por el menú) */}
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute>
+              <UsersListPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Compat legacy /admin/* */}
+        <Route path="/logs"
+               element={
+                    <ProtectedRoute>
+                        <LogsPage />
+                    </ProtectedRoute>
+               } />
+        <Route path="/users"
+               element={
+                    <ProtectedRoute>
+                        <UsersListPage />
+                    </ProtectedRoute>
+               } />
 
         <Route
           path="/settings"
@@ -238,29 +292,38 @@ export const AppRoutes: React.FC = () => {
         <Route
           path="/system-config"
           element={
-            <ProtectedRoute requiredRole="ADMIN">
+            <ProtectedRoute>
               <SystemConfigPage />
             </ProtectedRoute>
           }
         />
 
-        {/* Rutas admin eliminadas (carpeta admin removida) */}
-        {/* Se conserva /admin/payments porque vive en PaymentsPage.tsx */}
+        <Route
+          path="/users-management"
+          element={
+            <ProtectedRoute>
+              <UsersListPage />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* ELIMINAR TODO ESTE BLOQUE DE RUTAS:
-            /admin/access
-            /admin/bookings-list
-            /admin/config
-            /admin/config-full
-            /admin/users
-            /admin/users-list
-            /admin/logs
-            /admin/monitoring
-            /admin/rooms
-            /admin/rooms-management
-            /admin/trust-level-rules
-            /admin/trust-level
-        */}
+        <Route
+            path="/monitoring"
+            element={
+                <ProtectedRoute>
+                    <MonitoringPage />
+                </ProtectedRoute>
+            }
+        />
+
+        <Route
+            path="/trust-level"
+            element={
+                <ProtectedRoute>
+                    <TrustLevelPage />
+                </ProtectedRoute>
+            }
+        />
 
         {/* Redirect to dashboard */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
