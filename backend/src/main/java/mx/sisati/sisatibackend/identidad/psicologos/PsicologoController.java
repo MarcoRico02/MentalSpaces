@@ -12,11 +12,9 @@ import java.net.URI;
 @RequestMapping("/psicologos")
 public class PsicologoController {
 
-    private final PsicologoService psicologoService;
     private final RegistrarPsicologo registrarPsicologo;
 
-    public PsicologoController(PsicologoService psicologoService, RegistrarPsicologo registrarPsicologo) {
-        this.psicologoService = psicologoService;
+    public PsicologoController(RegistrarPsicologo registrarPsicologo) {
         this.registrarPsicologo = registrarPsicologo;
     }
 

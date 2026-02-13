@@ -5,7 +5,6 @@ import mx.sisati.sisatibackend.espacios.caracteristicas.CaracteristicaRepository
 import mx.sisati.sisatibackend.espacios.cubiculo.dto.CubiculoCreateRequestDTO;
 import mx.sisati.sisatibackend.espacios.cubiculo.dto.CubiculoUpdateRequestDTO;
 import mx.sisati.sisatibackend.espacios.locations.Location;
-import mx.sisati.sisatibackend.espacios.locations.LocationService;
 import mx.sisati.sisatibackend.excepciones.DomainException;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
 import mx.sisati.sisatibackend.identidad.propietarios.Propietario;
@@ -104,6 +103,10 @@ public class CubiculoService {
         }
 
         return cubiculo;
+    }
+
+    public Cubiculo getByCubiculoIdOrThrow(Long id){
+        return cubiculoRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(),"CUBICULO_NOT_FOUND"));
     }
 
     public void deactivateAllCubiculosByLocation(Location location) {

@@ -25,7 +25,6 @@ public class CubiculoController {
     public ResponseEntity<CubiculoCreateResponseDTO> create(
             @RequestBody CubiculoCreateRequestDTO dto,
             @AuthenticationPrincipal UsuarioDetails usuarioDetails) {
-
         return ResponseEntity.ok(gestionarCubiculo.create(dto, usuarioDetails.getUsuario().getId()));
     }
 

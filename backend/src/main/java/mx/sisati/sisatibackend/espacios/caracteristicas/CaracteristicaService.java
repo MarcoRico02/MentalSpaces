@@ -1,8 +1,6 @@
 package mx.sisati.sisatibackend.espacios.caracteristicas;
 
 import mx.sisati.sisatibackend.excepciones.ServiceException;
-import mx.sisati.sisatibackend.roles.Rol;
-import mx.sisati.sisatibackend.roles.RolNombre;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -6,8 +6,8 @@ import mx.sisati.sisatibackend.identidad.propietarios.PropietarioService;
 import mx.sisati.sisatibackend.identidad.propietarios.dto.PropietarioRegisterRequestDTO;
 import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 import mx.sisati.sisatibackend.identidad.usuarios.UsuarioService;
-import mx.sisati.sisatibackend.roles.Rol;
-import mx.sisati.sisatibackend.roles.RolService;
+import mx.sisati.sisatibackend.identidad.roles.Rol;
+import mx.sisati.sisatibackend.identidad.roles.RolService;
 import org.springframework.stereotype.Service;
 
 @Service

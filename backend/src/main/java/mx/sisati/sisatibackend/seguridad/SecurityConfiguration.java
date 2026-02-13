@@ -30,12 +30,11 @@ public class SecurityConfiguration {
                 .addFilterBefore(new SecurityHeadersFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((autorize) -> autorize
-                        .requestMatchers(HttpMethod.POST, "/auth/login","/psicologos","/propietarios").permitAll()
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.POST, "/auth/login","/psicologos","/propietarios").permitAll() //Solo los metodo POST permitir a todos
+                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll() //Cualquier tipo de metodo, permitir a todo el mundo
+                        .requestMatchers(HttpMethod.POST, "/admins").hasRole("ADMIN") //Solo metodo post permitir a Admin
+                        .requestMatchers("/actuator/**").hasRole("ADMIN") // Cualquier tipo de metodo permitir solo a admins
+                        .anyRequest().authenticated() // Ya todo lo demas, que lo puedan hacer todo el mundo que este logueado
                 );
         return http.build();
     }

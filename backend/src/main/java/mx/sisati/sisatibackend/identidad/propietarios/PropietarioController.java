@@ -25,6 +25,6 @@ public class PropietarioController {
     public ResponseEntity<PropietarioRegisterResponseDTO> saveOwner(@RequestBody PropietarioRegisterRequestDTO propietarioRegisterRequestDTO){
         Propietario propietario = registrarPropietario.execute(propietarioRegisterRequestDTO);
         PropietarioRegisterResponseDTO respuesta = new PropietarioRegisterResponseDTO(propietario);
-        return ResponseEntity.created(URI.create("/psicologos/" + respuesta.usuarioRegisterResponseDTO().id())).body(respuesta);
+        return ResponseEntity.created(URI.create("/propietarios/" + respuesta.usuarioRegisterResponseDTO().id())).body(respuesta);
     }
 }

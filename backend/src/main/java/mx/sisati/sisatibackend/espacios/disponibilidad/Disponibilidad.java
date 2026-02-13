@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 import mx.sisati.sisatibackend.excepciones.DomainException;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
 
@@ -25,7 +26,7 @@ public class Disponibilidad {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "dia_semana", nullable = false, length = 10)
-    private DiaSemana diaSemana;
+    private DayOfWeek diaSemana;
 
     @Column(name = "hora_inicio", nullable = false)
     private LocalTime horaInicio;
@@ -35,7 +36,7 @@ public class Disponibilidad {
 
     public Disponibilidad(
             Cubiculo cubiculo,
-            DiaSemana diaSemana,
+            DayOfWeek diaSemana,
             LocalTime horaInicio,
             LocalTime horaFin
     ) {
@@ -46,9 +47,18 @@ public class Disponibilidad {
         this.horaFin = horaFin;
     }
 
+
+    public void update(DayOfWeek diaSemana, LocalTime horaInicio, LocalTime horaFin) {
+        validateDiaSemana(diaSemana);
+        validateHoras(horaInicio, horaFin);
+        this.diaSemana = diaSemana;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+    }
+
     private void validate(
             Cubiculo cubiculo,
-            DiaSemana diaSemana,
+            DayOfWeek diaSemana,
             LocalTime horaInicio,
             LocalTime horaFin
     ) {
@@ -70,7 +80,7 @@ public class Disponibilidad {
             throw new DomainException(this.getClass(), "La disponibilidad mínima es de una hora");
     }
 
-    private void validateDiaSemana(DiaSemana diaSemana) {
+    private void validateDiaSemana(DayOfWeek diaSemana) {
         if (diaSemana == null)
             throw new DomainException(this.getClass(), "El día de la semana es obligatorio");
     }

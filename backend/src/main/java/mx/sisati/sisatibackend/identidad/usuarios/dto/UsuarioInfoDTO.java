@@ -1,8 +1,8 @@
 package mx.sisati.sisatibackend.identidad.usuarios.dto;
 
 import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
-import mx.sisati.sisatibackend.roles.Rol;
-import mx.sisati.sisatibackend.roles.RolNombre;
+import mx.sisati.sisatibackend.identidad.roles.Rol;
+import mx.sisati.sisatibackend.identidad.roles.RolNombre;
 
 import java.time.LocalDateTime;
 import java.util.Set;

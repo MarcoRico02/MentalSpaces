@@ -5,12 +5,12 @@ import org.springframework.http.ResponseEntity;
 
 public class BuilderResponse {
 
-    public static ResponseEntity<ErrorResponse> build(HttpStatus badRequest, String invalid_params, String exception) {
+    public static ResponseEntity<ErrorResponse> build(HttpStatus badRequest, String error, String exception) {
         return ResponseEntity
                 .status(badRequest)
                 .body(new ErrorResponse(
                         badRequest.value(),
-                        invalid_params,
+                        error,
                         exception
                 ));
     }
