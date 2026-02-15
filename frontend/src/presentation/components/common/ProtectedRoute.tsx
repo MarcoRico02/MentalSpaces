@@ -28,6 +28,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // Acceso total para PROPIETARIO (mientras ADMIN no esté bien definido en la estructura)
+  if (hasRole("PROPIETARIO")) {
+    return <>{children}</>;
+  }
+
   // If role required and doesn't have it, show access denied
   if (requiredRole && !hasRole(requiredRole)) {
     return (
