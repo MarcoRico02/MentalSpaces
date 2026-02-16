@@ -1,15 +1,12 @@
-package mx.sisati.sisatibackend.agenda.reserva;
+package mx.sisati.sisatibackend.reserva;
 
-import mx.sisati.sisatibackend.agenda.reserva.aplicacion.GestionarReservas;
-import mx.sisati.sisatibackend.agenda.reserva.dto.ReservaCreateRequestDTO;
-import mx.sisati.sisatibackend.agenda.reserva.dto.ReservaCreateResponseDTO;
+import mx.sisati.sisatibackend.reserva.aplicacion.GestionarReservas;
+import mx.sisati.sisatibackend.reserva.dto.ReservaCreateRequestDTO;
+import mx.sisati.sisatibackend.reserva.dto.ReservaCreateResponseDTO;
 import mx.sisati.sisatibackend.auth.UsuarioDetails;
-import mx.sisati.sisatibackend.espacios.disponibilidad.dto.DisponibilidadCreateRequestDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/reservas")
@@ -22,10 +19,9 @@ public class ReservaController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservaCreateResponseDTO> createDisponibilidades(
+    public ResponseEntity<ReservaCreateResponseDTO> createReserva(
             @RequestBody ReservaCreateRequestDTO dtos,
             @AuthenticationPrincipal UsuarioDetails usuarioDetails) {
         return ResponseEntity.ok(gestionarReservas.create(dtos, usuarioDetails.getUsuario().getId()));
     }
-
 }

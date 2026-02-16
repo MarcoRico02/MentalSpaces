@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import mx.sisati.sisatibackend.excepciones.DomainException;
 import mx.sisati.sisatibackend.espacios.locations.Location;
 import mx.sisati.sisatibackend.espacios.caracteristicas.Caracteristica;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -46,12 +48,14 @@ public class Cubiculo {
     private Set<Caracteristica> caracteristicas = new HashSet<>();
 
     @Column(nullable = false)
-    private boolean active = true;
+    private boolean active = false;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     public Cubiculo(Location location, String nombre, String descripcion, Double precio, String imageUrl, Set<Caracteristica> caracteristicas) {

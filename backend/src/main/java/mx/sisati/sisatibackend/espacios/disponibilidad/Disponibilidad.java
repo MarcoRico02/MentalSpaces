@@ -5,9 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 import mx.sisati.sisatibackend.excepciones.DomainException;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -33,6 +36,14 @@ public class Disponibilidad {
 
     @Column(name = "hora_fin", nullable = false)
     private LocalTime horaFin;
+
+    @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     public Disponibilidad(
             Cubiculo cubiculo,

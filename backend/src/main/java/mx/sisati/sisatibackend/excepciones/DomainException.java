@@ -4,11 +4,6 @@ public class DomainException extends RuntimeException {
 
     private final Class<?> domainEntity;
 
-    public DomainException(String message) {
-        super(message);
-        this.domainEntity = null;
-    }
-
     public DomainException(Class<?> domainEntity, String message) {
         super(message);
         this.domainEntity = domainEntity;
@@ -19,7 +14,7 @@ public class DomainException extends RuntimeException {
         this.domainEntity = domainEntity;
     }
 
-    public Class<?> getDomainEntity() {
-        return domainEntity;
+    public String getDomainEntity() {
+        return domainEntity.getSimpleName();
     }
 }

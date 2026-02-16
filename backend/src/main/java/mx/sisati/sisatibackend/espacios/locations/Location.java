@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mx.sisati.sisatibackend.excepciones.DomainException;
 import mx.sisati.sisatibackend.identidad.propietarios.Propietario;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -40,10 +42,12 @@ public class Location {
     @JoinColumn(name = "propietario_id", nullable = false)
     private Propietario propietario;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     public Location(String name, String description, String address, Double latitude, Double longitude, Propietario propietario) {

@@ -1,4 +1,4 @@
-package mx.sisati.sisatibackend.agenda.reserva;
+package mx.sisati.sisatibackend.reserva;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

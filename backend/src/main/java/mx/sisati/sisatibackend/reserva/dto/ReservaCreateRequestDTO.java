@@ -1,4 +1,4 @@
-package mx.sisati.sisatibackend.agenda.reserva.dto;
+package mx.sisati.sisatibackend.reserva.dto;
 
 import java.time.LocalDateTime;
 

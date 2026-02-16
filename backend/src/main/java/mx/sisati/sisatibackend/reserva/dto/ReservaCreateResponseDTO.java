@@ -1,7 +1,7 @@
-package mx.sisati.sisatibackend.agenda.reserva.dto;
+package mx.sisati.sisatibackend.reserva.dto;
 
-import mx.sisati.sisatibackend.agenda.reserva.EstadoReserva;
-import mx.sisati.sisatibackend.agenda.reserva.Reserva;
+import mx.sisati.sisatibackend.reserva.EstadoReserva;
+import mx.sisati.sisatibackend.reserva.Reserva;
 
 import java.time.LocalDateTime;
 

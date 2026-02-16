@@ -105,8 +105,12 @@ public class CubiculoService {
         return cubiculo;
     }
 
-    public Cubiculo getByCubiculoIdOrThrow(Long id){
-        return cubiculoRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(),"CUBICULO_NOT_FOUND"));
+    public Cubiculo getByCubiculoActiveIdOrThrow(Long id){
+        Cubiculo cubiculo = cubiculoRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(),"CUBICULO_NOT_FOUND"));
+        if(!cubiculo.isActive()){
+            throw new ServiceException(this.getClass(), "CUBICULO_NO_DISPONIBLE");
+        }
+        return cubiculo;
     }
 
     public void deactivateAllCubiculosByLocation(Location location) {
@@ -201,7 +205,7 @@ public class CubiculoService {
                     .filter(id -> !foundIds.contains(id))
                     .collect(Collectors.toSet());
                     
-            throw new DomainException("Características no encontradas con IDs: " + missingIds);
+            throw new DomainException(this.getClass(), "Características no encontradas con IDs: " + missingIds);
         }
         
         return foundCaracteristicas.stream().collect(Collectors.toSet());

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -114,5 +115,36 @@ public class DisponibilidadService {
     public Disponibilidad findDisponibilidadById(Long disponibilidadId) {
         return disponibilidadRepository.findById(disponibilidadId)
                 .orElseThrow(() -> new ServiceException(this.getClass(),"No existe la disponibilidad con ID: " + disponibilidadId));
+    }
+
+    public Disponibilidad validarReservaDentroDeDisponibilidad(
+            Long cubiculoId,
+            LocalDateTime inicio,
+            LocalDateTime fin
+    ) {
+        DayOfWeek diaSemana = inicio.getDayOfWeek();
+        LocalTime horaInicio = inicio.toLocalTime();
+        LocalTime horaFin = fin.toLocalTime();
+
+        List<Disponibilidad> disponibilidades =
+                disponibilidadRepository.findByCubiculoIdAndDiaSemana(cubiculoId, diaSemana);
+
+        if (disponibilidades.isEmpty()) {
+            throw new ServiceException(this.getClass(),"CUBICULO_SIN_DISPONIBILIDAD_ESE_DIA");
+        }
+
+        for (Disponibilidad d : disponibilidades) {
+
+            boolean dentro =
+                    !horaInicio.isBefore(d.getHoraInicio()) &&
+                            !horaFin.isAfter(d.getHoraFin());
+
+            if (dentro) {
+                return d;
+            }
+        }
+
+        throw new ServiceException(this.getClass(),
+                "RESERVA_FUERA_DE_HORARIO_DISPONIBLE");
     }
 }

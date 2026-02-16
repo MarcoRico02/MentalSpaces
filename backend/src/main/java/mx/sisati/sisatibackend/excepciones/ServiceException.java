@@ -9,7 +9,7 @@ public class ServiceException extends RuntimeException {
         this.service = service;
     }
 
-    public Class<?> getService() {
-        return service;
+    public String getService() {
+        return service.getSimpleName();
     }
 }

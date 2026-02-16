@@ -1,4 +1,4 @@
-package mx.sisati.sisatibackend.agenda.reserva;
+package mx.sisati.sisatibackend.reserva;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,8 +17,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "reservas")
 public class Reserva {
-    private static final int DURACION_MINIMA_MINUTOS = 60;
-    private static final int DURACION_MAXIMA_MINUTOS = 8 * 60;
     private static final int NOTAS_MAX_LENGTH = 300;
 
     @Id
@@ -74,18 +72,18 @@ public class Reserva {
 
     private void validateCubiculo(Cubiculo cubiculo) {
         if(cubiculo == null){
-            throw new DomainException(this.getClass(), "El cubiculo debe ser seleccionado");
+            throw new DomainException(this.getClass(), "CUBICULO_REQUERIDO");
         }
     }
 
     private void validateNotas(String notas) {
         if (notas != null && notas.length() > NOTAS_MAX_LENGTH)
-            throw new DomainException(this.getClass(), "El maximo de caracteres por nota es de " + NOTAS_MAX_LENGTH);
+            throw new DomainException(this.getClass(), "RESERVA_TAMAÑO_NOTAS_SUPERADO");
     }
 
     private void validateHoras(LocalDateTime inicio, LocalDateTime fin) {
         if (inicio == null || fin == null)
-            throw new DomainException(this.getClass(), "Las horas son obligatorias");
+            throw new DomainException(this.getClass(), "HORAS_REQUERIDAS");
 
         if (inicio.getMinute() != 0 || inicio.getSecond() != 0 || inicio.getNano() != 0 ||
                 fin.getMinute() != 0 || fin.getSecond() != 0 || fin.getNano() != 0)
@@ -95,22 +93,12 @@ public class Reserva {
             throw new DomainException(this.getClass(), "HORA_FIN_DEBE_SER_POSTERIOR_A_HORA_INICIO");
 
         if (!inicio.toLocalDate().equals(fin.toLocalDate()))
-            throw new DomainException(this.getClass(), "No se permite agendar en diferentes dias");
-
-        if (inicio.isBefore(LocalDateTime.now()))
-            throw new DomainException(this.getClass(), "RESERVATION_IN_PAST_NOT_ALLOWED");
-
-        Duration duracion = Duration.between(inicio, fin);
-        if (duracion.toMinutes() > DURACION_MAXIMA_MINUTOS)
-            throw new DomainException(this.getClass(), "La duracion maxima por reserva es de " + DURACION_MAXIMA_MINUTOS);
-
-        if (duracion.toMinutes() < DURACION_MINIMA_MINUTOS)
-            throw new DomainException(this.getClass(), "La duracion minima por reserva es de " + DURACION_MINIMA_MINUTOS);
+            throw new DomainException(this.getClass(), "RESERVAR_EN_DIFERENTES_DIAS_NO_ESTA_PERMITIDO");
     }
 
     private void validatePsicologo(Psicologo psicologo) {
         if(psicologo == null){
-            throw new DomainException(this.getClass(), "El psicologo debe ser seleccionado");
+            throw new DomainException(this.getClass(), "PSICOLOGO_REQUERIDO");
         }
     }
 }
