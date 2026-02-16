@@ -26,15 +26,6 @@ public class PagoController {
         this.pagoService = pagoService;
     }
 
-    @PostMapping
-    @Operation(summary = "Crear un nuevo pago")
-    public ResponseEntity<PagoResponse> crearPago(
-            @Valid @RequestBody CrearPagoRequest request
-    ) {
-        PagoResponse pago = pagoService.crearPago(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(pago);
-    }
-
     @GetMapping("/{id}")
     @Operation(summary = "Obtener un pago por ID")
 
@@ -55,47 +46,5 @@ public class PagoController {
                 ? pagoService.listarPorEstado(estado)
                 : pagoService.listarTodos();
         return ResponseEntity.ok(pagos);
-    }
-
-    @PatchMapping("/{id}/estado")
-    @Operation(summary = "Actualizar el estado de un pago")
-    public ResponseEntity<PagoResponse> actualizarEstado(
-            @Parameter(description = "ID del pago") @PathVariable UUID id,
-            @Valid @RequestBody ActualizarEstadoPagoRequest request
-    ) {
-        PagoResponse pago = pagoService.actualizarEstado(id, request);
-        return ResponseEntity.ok(pago);
-    }
-
-    @PostMapping("/{id}/confirmar")
-    @Operation(summary = "Confirmar un pago como pagado")
-    public ResponseEntity<Void> confirmarPago(
-            @Parameter(description = "ID del pago") @PathVariable UUID id,
-            @Parameter(description = "ID del PaymentIntent de Stripe")
-            @RequestParam String stripePaymentIntentId
-    ) {
-        pagoService.confirmarPago(id, stripePaymentIntentId);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/{id}/cancelar")
-    @Operation(summary = "Cancelar un pago")
-    public ResponseEntity<Void> cancelarPago(
-            @Parameter(description = "ID del pago") @PathVariable UUID id,
-            @Parameter(description = "Motivo de la cancelación")
-            @RequestParam(required = false) String motivo
-    ) {
-        pagoService.cancelarPago(id, motivo);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/expirar-pendientes")
-    @Operation(summary = "Expirar pagos pendientes que han pasado su fecha de expiración")
-    public ResponseEntity<Map<String, Object>> expirarPagosPendientes() {
-        int cantidad = pagoService.expirarPagosPendientes();
-        return ResponseEntity.ok(Map.of(
-                "mensaje", "Pagos expirados exitosamente",
-                "cantidadExpirada", cantidad
-        ));
     }
 }

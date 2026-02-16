@@ -2,6 +2,7 @@ package mx.sisati.sisatibackend.espacios.cubiculo.dto;
 
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +12,7 @@ public record CubiculoUpdateResponseDTO(
         Long id,
         String nombre,
         String descripcion,
-        Double precio,
+        BigDecimal precio,
         String imageUrl,
         List<CaracteristicaDTO> caracteristicas,
         boolean active

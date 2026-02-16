@@ -3,11 +3,13 @@ package mx.sisati.sisatibackend.identidad.usuarios;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
@@ -44,4 +46,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Query("SELECT DISTINCT u FROM Usuario u LEFT JOIN FETCH u.roles")
     Page<Usuario> findAllWithRoles(Pageable pageable);
+
+
+    @Modifying
+    @Query("""
+    update Usuario u
+    set u.fotoPerfil = :archivoId
+    where u.id = :usuarioId
+""")
+    void updateFotoPerfil(Long usuarioId, UUID archivoId);
 }

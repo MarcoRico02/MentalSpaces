@@ -1,6 +1,6 @@
 package mx.sisati.sisatibackend.identidad.usuarios;
 
-import mx.sisati.sisatibackend.identidad.usuarios.aplicacion.ConsultarMiPerfil;
+import mx.sisati.sisatibackend.identidad.usuarios.aplicacion.GestionarUsuarios;
 import mx.sisati.sisatibackend.auth.UsuarioDetails;
 import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioMeResponseDTO;
 import org.springframework.data.domain.Page;
@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final ConsultarMiPerfil consultarMiPerfil;
+    private final GestionarUsuarios gestionarUsuarios;
 
-    public UsuarioController(UsuarioService usuarioService, ConsultarMiPerfil consultarMiPerfil) {
+    public UsuarioController(UsuarioService usuarioService, GestionarUsuarios gestionarUsuarios) {
         this.usuarioService = usuarioService;
-        this.consultarMiPerfil = consultarMiPerfil;
+        this.gestionarUsuarios = gestionarUsuarios;
     }
 
 
     @GetMapping("/me")
     public ResponseEntity<UsuarioMeResponseDTO> me(@AuthenticationPrincipal UsuarioDetails usuario){
-        UsuarioMeResponseDTO usuarioMeResponseDTO = consultarMiPerfil.execute(usuario.getUsuario());
+        UsuarioMeResponseDTO usuarioMeResponseDTO = gestionarUsuarios.execute(usuario.getUsuario());
         return ResponseEntity.ok(usuarioMeResponseDTO);
     }
 

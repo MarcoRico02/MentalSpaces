@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import mx.sisati.sisatibackend.configuracionSistema.ConfiguracionSistema;
 import mx.sisati.sisatibackend.configuracionSistema.ConfiguracionSistemaService;
 import mx.sisati.sisatibackend.configuracionSistema.TipoUso;
+import mx.sisati.sisatibackend.finanzas.pago.dto.PagoResponse;
+import mx.sisati.sisatibackend.finanzas.pagoReserva.PagoReservaService;
 import mx.sisati.sisatibackend.reserva.Reserva;
 import mx.sisati.sisatibackend.reserva.ReservaService;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateRequestDTO;
@@ -24,15 +26,16 @@ public class GestionarReservas {
     private final DisponibilidadService disponibilidadService;
     private final PsicologoService psicologoService;
     private final ReservaService reservaService;
-    // private final PagosService pagosService; para recordar que lo tengo que hacer
+    private final PagoReservaService pagoReservaService;
     private final ConfiguracionSistemaService configuracionSistemaService;
     private final ReservaValidadorCreacionService reservaValidadorCreacionService;
 
-    public GestionarReservas(CubiculoService cubiculoService, DisponibilidadService disponibilidadService, PsicologoService psicologoService, ReservaService reservaService, ConfiguracionSistemaService configuracionSistemaService, ReservaValidadorCreacionService reservaValidadorCreacionService) {
+    public GestionarReservas(CubiculoService cubiculoService, DisponibilidadService disponibilidadService, PsicologoService psicologoService, ReservaService reservaService, PagoReservaService pagoReservaService, ConfiguracionSistemaService configuracionSistemaService, ReservaValidadorCreacionService reservaValidadorCreacionService) {
         this.cubiculoService = cubiculoService;
         this.disponibilidadService = disponibilidadService;
         this.psicologoService = psicologoService;
         this.reservaService = reservaService;
+        this.pagoReservaService = pagoReservaService;
         this.configuracionSistemaService = configuracionSistemaService;
         this.reservaValidadorCreacionService = reservaValidadorCreacionService;
     }
@@ -40,11 +43,13 @@ public class GestionarReservas {
     @Transactional
     public ReservaCreateResponseDTO create(ReservaCreateRequestDTO createDTO, Long usuarioId){
         Psicologo psicologo = psicologoService.getByUsuarioIdOrThrow(usuarioId);
+        pagoReservaService.tienePagosPendientes(psicologo);
         Cubiculo cubiculo = cubiculoService.getByCubiculoActiveIdOrThrow(createDTO.cubiculoId());
         disponibilidadService.validarReservaDentroDeDisponibilidad(createDTO.cubiculoId(), createDTO.inicio(), createDTO.fin());
         List<ConfiguracionSistema> configuracionesSistema = configuracionSistemaService.getConfiguracionPorTipo(TipoUso.RESERVA_CREACION);
         reservaValidadorCreacionService.validarReglasCreacion(configuracionesSistema, createDTO.inicio(), createDTO.fin());
         Reserva reserva = reservaService.crearReserva(cubiculo, psicologo, createDTO.inicio(), createDTO.fin(), createDTO.notas());
-        return  new ReservaCreateResponseDTO(reserva, cubiculo.getId());
+        PagoResponse pagoResponse = pagoReservaService.crearPagoParaReserva(reserva, 15);
+        return  new ReservaCreateResponseDTO(reserva, cubiculo, pagoResponse);
     }
 }
