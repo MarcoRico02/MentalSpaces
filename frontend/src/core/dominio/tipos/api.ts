@@ -98,6 +98,7 @@ export interface LocationCreateRequestDTO {
   address: string;
   latitude: number;
   longitude: number;
+  imageUrl?: string;
 }
 
 export interface LocationResponseDTO {
@@ -108,6 +109,7 @@ export interface LocationResponseDTO {
   latitude: number;
   longitude: number;
   active: boolean;
+  imageUrl?: string | null;
 }
 
 // Paginación extendida del backend
@@ -216,6 +218,7 @@ export interface CubiculoCreateRequestDTO {
   precio: number;
   imageUrl?: string;
   caracteristicasIds?: number[];
+  active?: boolean;
 }
 
 export interface CubiculoUpdateRequestDTO {
@@ -224,6 +227,7 @@ export interface CubiculoUpdateRequestDTO {
   precio?: number;
   imageUrl?: string;
   caracteristicasIds?: number[] | null;
+  active?: boolean;
 }
 
 export interface CubiculoResponse {

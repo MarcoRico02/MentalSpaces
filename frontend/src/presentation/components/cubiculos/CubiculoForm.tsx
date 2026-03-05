@@ -29,6 +29,7 @@ const cubiculoSchema = z.object({
     .optional()
     .or(z.literal("")),
   caracteristicasIds: z.array(z.number()).optional(),
+  active: z.boolean(),
 });
 
 type CubiculoFormData = z.infer<typeof cubiculoSchema>;
@@ -66,10 +67,12 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
       precio: cubiculo?.precio || 0,
       imageUrl: cubiculo?.imageUrl || "",
       caracteristicasIds: cubiculo?.caracteristicas.map((c) => c.id) || [],
+      active: cubiculo?.isActive ?? true,
     },
   });
 
   const selectedCaracteristicas = watch("caracteristicasIds") || [];
+  const activeValue = watch("active");
 
   const onSubmit = async (data: CubiculoFormData) => {
     setIsLoading(true);
@@ -206,29 +209,68 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
         </div>
       </div>
 
+      {/* Estado activo/inactivo */}
+      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+        <div>
+          <p className="text-sm font-medium text-gray-700">Estado del cubículo</p>
+          <p className="text-xs text-gray-500 mt-0.5">
+            {activeValue ? "El cubículo estará disponible para reservas" : "El cubículo no estará disponible"}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setValue("active", !activeValue)}
+          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
+            activeValue ? "bg-blue-600" : "bg-gray-300"
+          }`}
+        >
+          <span
+            className={`inline-block h-5 w-5 rounded-full bg-white shadow-sm transform transition-transform duration-200 ${
+              activeValue ? "translate-x-5" : "translate-x-0"
+            }`}
+          />
+        </button>
+      </div>
+
       {/* Características */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
-          Características
-        </label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {caracteristicas.map((caracteristica) => (
-            <label
-              key={caracteristica.id}
-              className="flex items-center space-x-2 cursor-pointer"
-            >
-              <input
-                type="checkbox"
-                checked={selectedCaracteristicas.includes(caracteristica.id)}
-                onChange={() => handleCaracteristicaToggle(caracteristica.id)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <span className="text-sm text-gray-700">
-                {getCaracteristicaNombre(caracteristica.nombre)}
-              </span>
-            </label>
-          ))}
+        <div className="flex items-center justify-between mb-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Características
+          </label>
+          {selectedCaracteristicas.length > 0 && (
+            <span className="text-xs text-blue-600 font-medium">
+              {selectedCaracteristicas.length} seleccionada{selectedCaracteristicas.length !== 1 ? "s" : ""}
+            </span>
+          )}
         </div>
+        <div className="border border-gray-200 rounded-lg p-3 max-h-48 overflow-y-auto bg-gray-50">
+          <div className="flex flex-wrap gap-2">
+            {caracteristicas.map((caracteristica) => {
+              const isSelected = selectedCaracteristicas.includes(caracteristica.id);
+              return (
+                <button
+                  key={caracteristica.id}
+                  type="button"
+                  onClick={() => handleCaracteristicaToggle(caracteristica.id)}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors cursor-pointer ${
+                    isSelected
+                      ? "bg-blue-600 text-white border-blue-600"
+                      : "bg-white text-gray-600 border-gray-300 hover:border-blue-400 hover:text-blue-600"
+                  }`}
+                >
+                  {isSelected && (
+                    <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                  {getCaracteristicaNombre(caracteristica.nombre)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <p className="mt-1 text-xs text-gray-400">Haz clic para seleccionar o deseleccionar</p>
       </div>
 
       {/* Botones */}

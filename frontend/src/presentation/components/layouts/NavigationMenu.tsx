@@ -8,7 +8,6 @@ import {
   FileText,
   CreditCard,
   FileDown,
-  MapPin,
   Building,
 } from "lucide-react";
 
@@ -53,12 +52,8 @@ const AuthenticatedNavigation: React.FC = () => {
         Mis Pagos
       </NavItem>
 
-      <NavItem to="/locations" icon={MapPin}>
-        Mis Locations
-      </NavItem>
-
       <NavItem to="/cubiculos" icon={Building}>
-        Mis Cubículos
+        Cubículos
       </NavItem>
     </>
   );

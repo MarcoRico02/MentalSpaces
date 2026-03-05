@@ -15,16 +15,16 @@ import java.net.URI;
 @Configuration
 public class R2Config {
 
-    @Value("${R2_ENDPOINT}")
+    @Value("${cloudflare.r2.endpoint}")
     private String endpoint;
 
-    @Value("${R2_ACCESS_KEY}")
+    @Value("${cloudflare.r2.access-key}")
     private String accessKey;
 
-    @Value("${R2_SECRET_KEY}")
+    @Value("${cloudflare.r2.secret-key}")
     private String secretKey;
 
-    @Value("${R2_BUCKET}")
+    @Value("${cloudflare.r2.bucket}")
     private String bucketName;
     @Bean
     public S3Client r2Client() {

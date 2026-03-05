@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ImageIcon, X } from "lucide-react";
 import { Label, Input, Button } from "../ui";
 import {
   locationCreateSchema,
@@ -40,12 +41,14 @@ export const LocationForm: React.FC<LocationFormProps> = ({
           address: location.address,
           latitude: location.latitude,
           longitude: location.longitude,
+          imageUrl: location.imageUrl || "",
         }
-      : undefined,
+      : { imageUrl: "" },
   });
 
   const latitude = watch("latitude");
   const longitude = watch("longitude");
+  const imageUrlValue = watch("imageUrl");
 
   const handleMapLocationSelect = (locationData: {
     lat: number;
@@ -98,6 +101,51 @@ export const LocationForm: React.FC<LocationFormProps> = ({
             {errors.description.message}
           </p>
         )}
+      </div>
+
+      {/* Campo de imagen */}
+      <div>
+        <Label htmlFor="imageUrl">URL de imagen de referencia (opcional)</Label>
+        <div className="space-y-2">
+          <Input
+            id="imageUrl"
+            type="text"
+            placeholder="https://ejemplo.com/imagen.jpg"
+            {...register("imageUrl")}
+            disabled={isLoading}
+            className={errors.imageUrl ? "border-red-500" : ""}
+          />
+          {errors.imageUrl && (
+            <p className="text-red-500 text-sm">{errors.imageUrl.message}</p>
+          )}
+          {/* Preview de imagen */}
+          {imageUrlValue && !errors.imageUrl ? (
+            <div className="relative rounded-lg overflow-hidden border border-gray-200 h-40">
+              <img
+                src={imageUrlValue}
+                alt="Preview"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setValue("imageUrl", "");
+                }}
+                className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-gray-100"
+              >
+                <X className="h-4 w-4 text-gray-600" />
+              </button>
+            </div>
+          ) : (
+            <div className="rounded-lg border-2 border-dashed border-gray-200 h-24 flex items-center justify-center text-gray-400 gap-2">
+              <ImageIcon className="h-5 w-5" />
+              <span className="text-sm">Vista previa de la imagen</span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div>
