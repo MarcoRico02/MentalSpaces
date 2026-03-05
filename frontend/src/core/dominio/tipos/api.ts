@@ -241,6 +241,29 @@ export interface CubiculoResponse {
   isActive: boolean;
 }
 
+export type DiaSemana =
+  | "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY"
+  | "FRIDAY" | "SATURDAY" | "SUNDAY";
+
+export interface DisponibilidadResponseDTO {
+  id: number;
+  diaSemana: DiaSemana;
+  horaInicio: string; // "HH:mm"
+  horaFin: string;    // "HH:mm"
+}
+
+export interface DisponibilidadCreateRequestDTO {
+  diaSemana: DiaSemana;
+  horaInicio: string;
+  horaFin: string;
+}
+
+export interface DisponibilidadUpdateRequestDTO {
+  diaSemana: DiaSemana;
+  horaInicio: string;
+  horaFin: string;
+}
+
 // Para la paginación extendida de cubículos
 export interface CubiculoPage extends Page<CubiculoResponse> {
   content: CubiculoResponse[];

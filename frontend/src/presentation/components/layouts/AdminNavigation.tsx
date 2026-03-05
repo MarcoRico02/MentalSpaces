@@ -75,7 +75,7 @@ export const AdminNavigation: React.FC = () => {
       </NavItem>
 
       <NavItem to="/payments-record" icon={CreditCard}>
-        Historial de pagos
+        Gestion de pagos y subscripciones
       </NavItem>
 
       <NavItem to="/access" icon={Lock}>

@@ -19,7 +19,6 @@ import { MyBookingsPage } from "../presentation/pages/bookings/MyBookingsPage";
 import { NewBookingPage } from "../presentation/pages/bookings/NewBookingPage";
 import { BookingsPage } from "../presentation/pages/bookings/BookingsPage";
 import { RoomsPage } from "../presentation/pages/rooms/RoomsPage";
-import { RoomDetailsPage } from "../presentation/pages/rooms/RoomDetailsPage";
 import { ProfilePage } from "../presentation/pages/profile/ProfilePage";
 import { TutorialPage } from "../presentation/pages/tutorial/TutorialPage";
 import { TherapistsPage } from "../presentation/pages/therapists/TherapistsPage";
@@ -249,15 +248,6 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <RoomsPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/rooms/:id"
-          element={
-            <ProtectedRoute>
-              <RoomDetailsPage />
             </ProtectedRoute>
           }
         />

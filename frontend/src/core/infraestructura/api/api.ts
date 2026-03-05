@@ -114,6 +114,22 @@ export const authAPI = {
     deactivate: (id: number) => apiClient.patch(`/cubiculos/${id}/deactivate`),
   },
 
+  // Disponibilidades endpoints
+  disponibilidades: {
+    getByCubiculo: (cubiculoId: number) =>
+      apiClient.get<import("../../dominio/tipos/api").DisponibilidadResponseDTO[]>(
+        `/cubiculos/${cubiculoId}/disponibilidades`,
+      ),
+    create: (cubiculoId: number, data: import("../../dominio/tipos/api").DisponibilidadCreateRequestDTO[]) =>
+      apiClient.post(`/cubiculos/${cubiculoId}/disponibilidades`, data),
+    update: (cubiculoId: number, disponibilidadId: number, data: import("../../dominio/tipos/api").DisponibilidadUpdateRequestDTO) =>
+      apiClient.put(`/cubiculos/${cubiculoId}/disponibilidades/${disponibilidadId}`, data),
+    delete: (cubiculoId: number, disponibilidadId: number) =>
+      apiClient.delete(`/cubiculos/${cubiculoId}/disponibilidades/${disponibilidadId}`),
+    deleteAll: (cubiculoId: number) =>
+      apiClient.delete(`/cubiculos/${cubiculoId}/disponibilidades`),
+  },
+
   // Características endpoints
   caracteristicas: {
     getAll: () =>
