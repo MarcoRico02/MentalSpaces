@@ -3,11 +3,10 @@ package mx.sisati.sisatibackend.espacios.cubiculo.aplicacion;
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 import mx.sisati.sisatibackend.espacios.cubiculo.CubiculoService;
 import mx.sisati.sisatibackend.espacios.cubiculo.dto.*;
-import mx.sisati.sisatibackend.espacios.disponibilidad.Disponibilidad;
 import mx.sisati.sisatibackend.espacios.disponibilidad.DisponibilidadService;
+import mx.sisati.sisatibackend.espacios.disponibilidad.dto.DisponibilidadCreateRequestDTO;
 import mx.sisati.sisatibackend.espacios.locations.Location;
 import mx.sisati.sisatibackend.espacios.locations.LocationService;
-import mx.sisati.sisatibackend.excepciones.ServiceException;
 import mx.sisati.sisatibackend.identidad.propietarios.Propietario;
 import mx.sisati.sisatibackend.identidad.propietarios.PropietarioService;
 import org.springframework.data.domain.Page;
@@ -15,7 +14,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class GestionarCubiculos {
@@ -38,7 +41,20 @@ public class GestionarCubiculos {
         Propietario propietario = propietarioService.getByUsuarioIdOrThrow(usuarioId);
         Location location = locationService.findByIdOrThrow(dto.locationId(), propietario);
         Cubiculo cubiculo = cubiculoService.createCubiculo(dto, location);
-        disponibilidadService.createDisponibilidades(dto.disponibilidadCreateRequestDTO(), cubiculo);
+        
+        if (dto.disponibilidadCreateRequestDTO() != null && !dto.disponibilidadCreateRequestDTO().isEmpty()) {
+            Map<DayOfWeek, Integer> nuevasPorDia =
+                    dto.disponibilidadCreateRequestDTO()
+                            .stream()
+                            .collect(Collectors.groupingBy(
+                                    DisponibilidadCreateRequestDTO::diaSemana,
+                                    Collectors.summingInt(d -> 1)
+                            ));
+
+            disponibilidadService.validarLimiteDisponibilidades(cubiculo.getId(), nuevasPorDia);
+            disponibilidadService.createDisponibilidades(dto.disponibilidadCreateRequestDTO(), cubiculo);
+        }
+        
         return new CubiculoCreateResponseDTO(cubiculo, location.getId());
     }
 

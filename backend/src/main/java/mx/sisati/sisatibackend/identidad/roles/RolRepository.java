@@ -1,4 +1,4 @@
-package mx.sisati.sisatibackend.roles;
+package mx.sisati.sisatibackend.identidad.roles;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

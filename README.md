@@ -1,4 +1,14 @@
 # README.MD
+
+## Swagger api tester
+http://localhost:8080/api/swagger-ui/index.html#/
+
+
+## actuator links
+http://localhost:8080/api/actuator/health
+http://localhost:8080/api/actuator/metrics
+http://localhost:8080/api/actuator/mappings
+http://localhost:8080/api/actuator/loggers
 ## Datos base obligatorios
 El sistema depende de la existencia de las siguientes tuplas en la base de datos.
 Estos registros son estáticos y deben existir.

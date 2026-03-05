@@ -3,7 +3,7 @@ package mx.sisati.sisatibackend.identidad.propietarios;
 import jakarta.transaction.Transactional;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
 import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
-import mx.sisati.sisatibackend.roles.Rol;
+import mx.sisati.sisatibackend.identidad.roles.Rol;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package mx.sisati.sisatibackend.roles;
+package mx.sisati.sisatibackend.identidad.roles;
 
 import jakarta.persistence.*;
 import lombok.Getter;

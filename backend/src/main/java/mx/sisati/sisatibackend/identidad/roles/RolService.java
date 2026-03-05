@@ -1,4 +1,4 @@
-package mx.sisati.sisatibackend.roles;
+package mx.sisati.sisatibackend.identidad.roles;
 
 import mx.sisati.sisatibackend.excepciones.ServiceException;
 import org.springframework.stereotype.Service;

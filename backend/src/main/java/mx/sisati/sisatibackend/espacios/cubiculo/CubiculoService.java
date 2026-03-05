@@ -5,7 +5,6 @@ import mx.sisati.sisatibackend.espacios.caracteristicas.CaracteristicaRepository
 import mx.sisati.sisatibackend.espacios.cubiculo.dto.CubiculoCreateRequestDTO;
 import mx.sisati.sisatibackend.espacios.cubiculo.dto.CubiculoUpdateRequestDTO;
 import mx.sisati.sisatibackend.espacios.locations.Location;
-import mx.sisati.sisatibackend.espacios.locations.LocationService;
 import mx.sisati.sisatibackend.excepciones.DomainException;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
 import mx.sisati.sisatibackend.identidad.propietarios.Propietario;
@@ -106,6 +105,14 @@ public class CubiculoService {
         return cubiculo;
     }
 
+    public Cubiculo getByCubiculoActiveIdOrThrow(Long id){
+        Cubiculo cubiculo = cubiculoRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(),"CUBICULO_NOT_FOUND"));
+        if(!cubiculo.isActive()){
+            throw new ServiceException(this.getClass(), "CUBICULO_NO_DISPONIBLE");
+        }
+        return cubiculo;
+    }
+
     public void deactivateAllCubiculosByLocation(Location location) {
         Page<Cubiculo> cubiculosPage;
         int page = 0;
@@ -198,7 +205,7 @@ public class CubiculoService {
                     .filter(id -> !foundIds.contains(id))
                     .collect(Collectors.toSet());
                     
-            throw new DomainException("Características no encontradas con IDs: " + missingIds);
+            throw new DomainException(this.getClass(), "Características no encontradas con IDs: " + missingIds);
         }
         
         return foundCaracteristicas.stream().collect(Collectors.toSet());

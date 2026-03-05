@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mx.sisati.sisatibackend.excepciones.DomainException;
-import mx.sisati.sisatibackend.roles.Rol;
+import mx.sisati.sisatibackend.identidad.roles.Rol;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Entity
@@ -49,8 +50,8 @@ public class Usuario{
     @Column(columnDefinition = "TEXT")
     private String bio;
 
-    @Column(name = "profile_image_url")
-    private String profileImageUrl;
+    @Column(name = "foto_perfil_archivo_id")
+    private UUID fotoPerfil;
 
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;

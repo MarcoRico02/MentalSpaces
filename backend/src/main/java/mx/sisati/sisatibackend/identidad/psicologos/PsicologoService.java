@@ -2,10 +2,8 @@ package mx.sisati.sisatibackend.identidad.psicologos;
 
 import jakarta.transaction.Transactional;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
-import mx.sisati.sisatibackend.identidad.propietarios.Propietario;
 import mx.sisati.sisatibackend.identidad.psicologos.dto.PsicologoRegisterRequestDTO;
-import mx.sisati.sisatibackend.roles.Rol;
-import mx.sisati.sisatibackend.roles.RolService;
+import mx.sisati.sisatibackend.identidad.roles.Rol;
 import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +13,9 @@ import java.util.Optional;
 public class PsicologoService {
 
     private final PsicologoRepository psicologoRepository;
-    private final RolService rolService;
 
-    public PsicologoService(PsicologoRepository psicologoRepository, RolService rolService) {
+    public PsicologoService(PsicologoRepository psicologoRepository) {
         this.psicologoRepository = psicologoRepository;
-        this.rolService = rolService;
     }
 
     @Transactional

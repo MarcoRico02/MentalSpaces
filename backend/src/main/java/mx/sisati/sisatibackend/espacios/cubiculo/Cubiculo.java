@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 import mx.sisati.sisatibackend.excepciones.DomainException;
 import mx.sisati.sisatibackend.espacios.locations.Location;
 import mx.sisati.sisatibackend.espacios.caracteristicas.Caracteristica;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +35,7 @@ public class Cubiculo {
     private String descripcion;
 
     @Column(nullable = false)
-    private Double precio;
+    private BigDecimal precio;
 
     @Column(length = 500)
     private String imageUrl;
@@ -46,15 +49,17 @@ public class Cubiculo {
     private Set<Caracteristica> caracteristicas = new HashSet<>();
 
     @Column(nullable = false)
-    private boolean active = true;
+    private boolean active = false;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public Cubiculo(Location location, String nombre, String descripcion, Double precio, String imageUrl, Set<Caracteristica> caracteristicas) {
+    public Cubiculo(Location location, String nombre, String descripcion, BigDecimal precio, String imageUrl, Set<Caracteristica> caracteristicas) {
         validate(location, nombre, descripcion, precio);
         this.location = location;
         this.nombre = nombre;
@@ -64,7 +69,7 @@ public class Cubiculo {
         this.caracteristicas = caracteristicas;
     }
 
-    public void update(String nombre, String descripcion, Double precio, String imageUrl, Set<Caracteristica> caracteristicas) {
+    public void update(String nombre, String descripcion, BigDecimal precio, String imageUrl, Set<Caracteristica> caracteristicas) {
         validateNombre(nombre);
         validateDescripcion(descripcion);
         validatePrecio(precio);
@@ -86,7 +91,7 @@ public class Cubiculo {
         updatedAt = LocalDateTime.now();
     }
 
-    private void validate(Location location, String nombre, String descripcion, Double precio) {
+    private void validate(Location location, String nombre, String descripcion, BigDecimal precio) {
         validateLocation(location);
         validateNombre(nombre);
         validateDescripcion(descripcion);
@@ -114,11 +119,11 @@ public class Cubiculo {
         }
     }
 
-    private void validatePrecio(Double precio) {
+    private void validatePrecio(BigDecimal precio) {
         if (precio == null) {
             throw new DomainException(this.getClass(), "El precio es obligatorio");
         }
-        if (precio < 0) {
+        if (precio.compareTo(BigDecimal.ZERO) < 0) {
             throw new DomainException(this.getClass(), "El precio no puede ser negativo");
         }
     }
