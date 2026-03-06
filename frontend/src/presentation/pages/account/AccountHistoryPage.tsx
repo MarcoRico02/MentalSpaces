@@ -71,7 +71,7 @@ export const AccountHistoryPage: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <div className="text-sm font-medium text-gray-700 mb-1">Estado</div>
+              <div className="text-sm font-medium text-secondary mb-1">Estado</div>
               <Select value={status} onChange={(e) => setStatus(e.target.value)}>
                 <option value="all">Todos</option>
                 <option value="success">Exitosos</option>
@@ -81,7 +81,7 @@ export const AccountHistoryPage: React.FC = () => {
               </Select>
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-700 mb-1">Desde</div>
+              <div className="text-sm font-medium text-secondary mb-1">Desde</div>
               <Input
                 type="date"
                 value={fromDate}
@@ -89,7 +89,7 @@ export const AccountHistoryPage: React.FC = () => {
               />
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-700 mb-1">Hasta</div>
+              <div className="text-sm font-medium text-secondary mb-1">Hasta</div>
               <Input
                 type="date"
                 value={toDate}
@@ -113,7 +113,7 @@ export const AccountHistoryPage: React.FC = () => {
           </div>
 
           <div className="mt-4 flex items-center justify-between">
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-secondary">
               Refrescado automático: <span className="font-medium">ON</span> (demo)
             </div>
             <Button onClick={() => setPayModalOpen(true)}>Pagar pendientes</Button>
@@ -127,7 +127,7 @@ export const AccountHistoryPage: React.FC = () => {
         </CardHeader>
         <CardContent>
           <TableToolbar className="mb-3">
-            <div className="text-sm text-gray-600">Mostrando 1–8 de 42</div>
+            <div className="text-sm text-secondary">Mostrando 1–8 de 42</div>
             <div className="flex gap-2">
               <Button variant="secondary">Anterior</Button>
               <Button variant="secondary">Siguiente</Button>
@@ -148,10 +148,10 @@ export const AccountHistoryPage: React.FC = () => {
             <TBody>
               {rows.map((r) => (
                 <TR key={r.id}>
-                  <TD className="font-medium text-gray-900">{r.id}</TD>
+                  <TD className="font-medium text-default">{r.id}</TD>
                   <TD>{r.createdAt}</TD>
                   <TD>{r.concept}</TD>
-                  <TD className="font-semibold text-gray-900">{r.amount}</TD>
+                  <TD className="font-semibold text-default">{r.amount}</TD>
                   <TD>
                     <Badge variant={badgeVariant(r.status)}>{r.status}</Badge>
                   </TD>
@@ -178,19 +178,19 @@ export const AccountHistoryPage: React.FC = () => {
         }
       >
         <div className="space-y-4">
-          <div className="rounded-md border border-dashed border-gray-300 p-4 text-sm text-gray-600">
+          <div className="rounded-md border border-dashed border-default p-4 text-sm text-secondary">
             Aquí iría el formulario de tarjeta (Stripe Elements).\n\nValidación en tiempo real, 3D Secure, etc.
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <div className="text-sm font-medium text-gray-700 mb-1">
+              <div className="text-sm font-medium text-secondary mb-1">
                 Nombre en la tarjeta
               </div>
               <Input placeholder="Nombre Apellido" />
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-700 mb-1">
+              <div className="text-sm font-medium text-secondary mb-1">
                 Código postal
               </div>
               <Input placeholder="00000" />

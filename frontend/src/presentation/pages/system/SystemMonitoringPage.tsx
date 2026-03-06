@@ -31,11 +31,11 @@ const StatCard: React.FC<{
             <CardContent className="p-4">
                 <div className="flex items-start justify-between">
                     <div>
-                        <div className="text-sm text-gray-600">{title}</div>
-                        <div className="text-2xl font-bold text-gray-900 mt-1">{value}</div>
-                        <div className="text-xs text-gray-500 mt-1">{description}</div>
+                        <div className="text-sm text-secondary">{title}</div>
+                        <div className="text-2xl font-bold text-default mt-1">{value}</div>
+                        <div className="text-xs text-muted-foreground mt-1">{description}</div>
                     </div>
-                    <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-700">
+                    <div className="h-10 w-10 rounded-full bg-surface-2 flex items-center justify-center text-secondary">
                         {icon}
                     </div>
                 </div>
@@ -56,7 +56,7 @@ const ProgressBar: React.FC<{ value: number; max: number; color?: string }> = ({
                                                                                }) => {
     const pct = Math.max(0, Math.min(100, Math.round((value / max) * 100)));
     return (
-        <div className="w-full h-2 rounded-full bg-gray-200 overflow-hidden">
+        <div className="w-full h-2 rounded-full bg-surface-3 overflow-hidden">
             <div className={`h-full ${color}`} style={{ width: `${pct}%` }} />
         </div>
     );
@@ -125,7 +125,7 @@ export const MonitoringPage: React.FC = () => {
                                 <CardTitle>Gráficos (placeholder)</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-10 text-center text-gray-600">
+                                <div className="rounded-md border border-dashed border-default bg-app p-10 text-center text-secondary">
                                     Área para charts (recharts o similar) — demo.
                                 </div>
                             </CardContent>
@@ -138,8 +138,8 @@ export const MonitoringPage: React.FC = () => {
                                 {["Consultorio 1", "Consultorio 2", "Consultorio 3"].map((r, i) => (
                                     <div key={r} className="space-y-1">
                                         <div className="flex items-center justify-between text-sm">
-                                            <span className="text-gray-700">{r}</span>
-                                            <span className="text-gray-600">{60 + i * 10}%</span>
+                                            <span className="text-secondary">{r}</span>
+                                            <span className="text-secondary">{60 + i * 10}%</span>
                                         </div>
                                         <ProgressBar value={60 + i * 10} max={100} color={i === 2 ? "bg-purple-600" : "bg-blue-600"} />
                                     </div>
@@ -171,7 +171,7 @@ export const MonitoringPage: React.FC = () => {
                             </Select>
                             <Button variant="secondary">Aplicar</Button>
                         </div>
-                        <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-10 text-center text-gray-600">
+                        <div className="rounded-md border border-dashed border-default bg-app p-10 text-center text-secondary">
                             Tabla de usuarios + gráfico de pastel (demo)
                         </div>
                     </CardContent>
@@ -184,7 +184,7 @@ export const MonitoringPage: React.FC = () => {
                         <CardTitle>Reservas</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-10 text-center text-gray-600">
+                        <div className="rounded-md border border-dashed border-default bg-app p-10 text-center text-secondary">
                             Tabla de reservas recientes + filtros + métricas (demo)
                         </div>
                     </CardContent>
@@ -197,7 +197,7 @@ export const MonitoringPage: React.FC = () => {
                         <CardTitle>Salas</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-10 text-center text-gray-600">
+                        <div className="rounded-md border border-dashed border-default bg-app p-10 text-center text-secondary">
                             Lista de salas, top salas, estado, ocupación (demo)
                         </div>
                     </CardContent>
@@ -218,7 +218,7 @@ export const MonitoringPage: React.FC = () => {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-sm text-gray-600">
+                                <div className="text-sm text-secondary">
                                     Mensaje de alerta (demo). Timestamp · acción rápida · marcar como leída.
                                 </div>
                                 <div className="mt-3">
@@ -254,7 +254,7 @@ export const MonitoringPage: React.FC = () => {
                                 Exportar
                             </Button>
                         </div>
-                        <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-10 text-center text-gray-600">
+                        <div className="rounded-md border border-dashed border-default bg-app p-10 text-center text-secondary">
                             Exportación PDF/Excel/CSV (demo)
                         </div>
                     </CardContent>

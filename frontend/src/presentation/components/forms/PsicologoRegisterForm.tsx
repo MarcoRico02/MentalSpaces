@@ -124,7 +124,7 @@ export const PsicologoRegisterForm: React.FC = () => {
           id="professionalType"
           {...register("professionalType")}
           disabled={isPending}
-          className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+          className={`w-full px-3 py-2 border border-default rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
             errors.professionalType ? "border-red-500" : ""
           }`}
         >

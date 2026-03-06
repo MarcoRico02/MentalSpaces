@@ -51,7 +51,7 @@ export const FaqPage: React.FC = () => {
 
       <div className="max-w-2xl">
         <div className="relative">
-          <Search className="h-4 w-4 text-gray-400 absolute left-3 top-3" />
+          <Search className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -64,7 +64,7 @@ export const FaqPage: React.FC = () => {
       {results.length === 0 ? (
         <Card>
           <CardContent>
-            <div className="py-10 text-center text-gray-600">
+            <div className="py-10 text-center text-secondary">
               No se encontraron resultados para tu búsqueda.
             </div>
           </CardContent>
@@ -77,7 +77,7 @@ export const FaqPage: React.FC = () => {
                 <CardTitle className="text-base">{item.q}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600 whitespace-pre-line">
+                <p className="text-sm text-secondary whitespace-pre-line">
                   {item.a}
                 </p>
               </CardContent>

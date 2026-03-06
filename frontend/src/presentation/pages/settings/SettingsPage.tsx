@@ -45,7 +45,7 @@ export const SettingsPage: React.FC = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center font-semibold text-gray-700">
+                <div className="h-12 w-12 rounded-full bg-surface-3 flex items-center justify-center font-semibold text-secondary">
                   RM
                 </div>
                 <Button variant="secondary">Cambiar foto</Button>
@@ -115,8 +115,8 @@ export const SettingsPage: React.FC = () => {
             <CardContent className="space-y-4">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div className="font-medium text-gray-900">Nuevas reservas</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="font-medium text-default">Nuevas reservas</div>
+                  <div className="text-sm text-secondary">
                     Recibe un correo cuando se cree una reserva.
                   </div>
                 </div>
@@ -124,8 +124,8 @@ export const SettingsPage: React.FC = () => {
               </div>
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div className="font-medium text-gray-900">Cancelaciones</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="font-medium text-default">Cancelaciones</div>
+                  <div className="text-sm text-secondary">
                     Aviso cuando una reserva sea cancelada.
                   </div>
                 </div>
@@ -133,8 +133,8 @@ export const SettingsPage: React.FC = () => {
               </div>
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <div className="font-medium text-gray-900">Recordatorios</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="font-medium text-default">Recordatorios</div>
+                  <div className="text-sm text-secondary">
                     Recordatorio previo al inicio de la reserva.
                   </div>
                 </div>
@@ -156,7 +156,7 @@ export const SettingsPage: React.FC = () => {
                 <Label htmlFor="reminder">Tiempo de recordatorio (horas)</Label>
                 <Input id="reminder" type="number" defaultValue={24} />
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className="flex items-center gap-2 text-sm text-secondary">
                 <Mail className="h-4 w-4" />
                 Se enviará un correo según el tiempo configurado.
               </div>
@@ -178,10 +178,10 @@ export const SettingsPage: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="rounded-md border border-gray-200 p-4">
-                <div className="text-sm text-gray-600">Tarjeta guardada</div>
-                <div className="font-medium text-gray-900">Visa •••• 4242</div>
-                <div className="text-sm text-gray-600">Expira 12/27</div>
+              <div className="rounded-md border border-default p-4">
+                <div className="text-sm text-secondary">Tarjeta guardada</div>
+                <div className="font-medium text-default">Visa •••• 4242</div>
+                <div className="text-sm text-secondary">Expira 12/27</div>
               </div>
               <Button variant="secondary">Editar</Button>
             </CardContent>
@@ -192,7 +192,7 @@ export const SettingsPage: React.FC = () => {
               <CardTitle>Historial de facturación</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-secondary">
                 Sección demo para futuras facturas.
               </div>
               <Button>Enviar por correo</Button>

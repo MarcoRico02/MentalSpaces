@@ -219,6 +219,7 @@ export interface CubiculoCreateRequestDTO {
   imageUrl?: string;
   caracteristicasIds?: number[];
   active?: boolean;
+  disponibilidades?: DisponibilidadCreateRequestDTO[];
 }
 
 export interface CubiculoUpdateRequestDTO {
@@ -262,6 +263,24 @@ export interface DisponibilidadUpdateRequestDTO {
   diaSemana: DiaSemana;
   horaInicio: string;
   horaFin: string;
+}
+
+// ─── Suscripciones ────────────────────────────────────────────────────────────
+export interface SuscripcionDTO {
+  id: number;
+  nombre: string;
+  precio: number;
+  cubiculosActivosPermitidos: number;
+  comisionPorcentaje: number;
+  descripcion?: string;
+}
+
+export interface CrearSuscripcionRequest {
+  nombre: string;
+  precio: number;
+  cubiculosActivosPermitidos: number;
+  comisionPorcentaje: number;
+  descripcion?: string;
 }
 
 // Para la paginación extendida de cubículos

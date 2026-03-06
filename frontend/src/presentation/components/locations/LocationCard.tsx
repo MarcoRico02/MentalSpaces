@@ -62,14 +62,14 @@ export const LocationCard: React.FC<LocationCardProps> = ({
       </CardHeader>
       <CardContent className="space-y-4">
         {location.description ? (
-          <p className="text-sm text-gray-600 line-clamp-2">
+          <p className="text-sm text-secondary line-clamp-2">
             {location.description}
           </p>
         ) : (
-          <p className="text-sm text-gray-400 italic">Sin descripción</p>
+          <p className="text-sm text-muted-foreground italic">Sin descripción</p>
         )}
 
-        <div className="text-xs text-gray-500 flex items-center gap-1">
+        <div className="text-xs text-muted-foreground flex items-center gap-1">
           <MapPin className="h-3 w-3" />
           {location.latitude.toFixed(4)}, {location.longitude.toFixed(4)}
         </div>

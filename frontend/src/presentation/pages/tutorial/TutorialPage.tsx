@@ -46,7 +46,7 @@ export const TutorialPage: React.FC = () => {
             <CardTitle>{current.title}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="text-gray-700 whitespace-pre-line">{current.body}</div>
+            <div className="text-secondary whitespace-pre-line">{current.body}</div>
 
             <div className="flex items-center justify-center gap-2">
               {sections.map((_, idx) => {
@@ -57,7 +57,7 @@ export const TutorialPage: React.FC = () => {
                     type="button"
                     onClick={() => setStep(idx)}
                     className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                      active ? "bg-blue-600" : "bg-gray-300 hover:bg-gray-400"
+                      active ? "bg-primary" : "bg-surface-3 hover:bg-muted-foreground"
                     }`}
                     aria-label={`Ir al paso ${idx + 1}`}
                   />
@@ -85,7 +85,7 @@ export const TutorialPage: React.FC = () => {
               </Button>
             </div>
 
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-muted-foreground">
               Guardar “tutorial completado” en storage/DB (mencionado) - demo.
             </div>
           </CardContent>

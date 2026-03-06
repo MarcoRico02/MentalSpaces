@@ -202,7 +202,7 @@ export const UsersListPage: React.FC = () => {
                             <TBody>
                                 {filtered.map((u) => (
                                     <TR key={u.id}>
-                                        <TD className="font-medium text-gray-900">{u.fullName}</TD>
+                                        <TD className="font-medium text-default">{u.fullName}</TD>
                                         <TD>@{u.username}</TD>
                                         <TD>{u.email}</TD>
                                         <TD>
@@ -267,10 +267,10 @@ export const UsersListPage: React.FC = () => {
                             <CardTitle>Promoción</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between rounded-md border border-gray-200 p-4">
+                            <div className="flex items-center justify-between rounded-md border border-default p-4">
                                 <div>
-                                    <div className="font-medium text-gray-900">Promoción habilitada</div>
-                                    <div className="text-sm text-gray-600">Automatiza ascensos</div>
+                                    <div className="font-medium text-default">Promoción habilitada</div>
+                                    <div className="text-sm text-secondary">Automatiza ascensos</div>
                                 </div>
                                 <Switch checked />
                             </div>
@@ -303,10 +303,10 @@ export const UsersListPage: React.FC = () => {
                             <CardTitle>Degradación / Rehabilitación</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between rounded-md border border-gray-200 p-4">
+                            <div className="flex items-center justify-between rounded-md border border-default p-4">
                                 <div>
-                                    <div className="font-medium text-gray-900">Degradación habilitada</div>
-                                    <div className="text-sm text-gray-600">No-shows, pagos tardíos</div>
+                                    <div className="font-medium text-default">Degradación habilitada</div>
+                                    <div className="text-sm text-secondary">No-shows, pagos tardíos</div>
                                 </div>
                                 <Switch />
                             </div>
@@ -330,10 +330,10 @@ export const UsersListPage: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between rounded-md border border-gray-200 p-4">
+                            <div className="flex items-center justify-between rounded-md border border-default p-4">
                                 <div>
-                                    <div className="font-medium text-gray-900">Rehabilitación</div>
-                                    <div className="text-sm text-gray-600">Reoportunidad a usuarios</div>
+                                    <div className="font-medium text-default">Rehabilitación</div>
+                                    <div className="text-sm text-secondary">Reoportunidad a usuarios</div>
                                 </div>
                                 <Switch checked />
                             </div>
@@ -372,10 +372,10 @@ export const UsersListPage: React.FC = () => {
                                 <Label htmlFor="date">Fecha</Label>
                                 <Input id="date" type="date" />
                             </div>
-                            <div className="flex items-center justify-between rounded-md border border-gray-200 p-4">
+                            <div className="flex items-center justify-between rounded-md border border-default p-4">
                                 <div>
-                                    <div className="font-medium text-gray-900">Afecta nivel de confianza</div>
-                                    <div className="text-sm text-gray-600">Switch (demo)</div>
+                                    <div className="font-medium text-default">Afecta nivel de confianza</div>
+                                    <div className="text-sm text-secondary">Switch (demo)</div>
                                 </div>
                                 <Switch checked />
                             </div>
@@ -395,7 +395,7 @@ export const UsersListPage: React.FC = () => {
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-10 text-center text-gray-600">
+                            <div className="rounded-md border border-dashed border-default bg-app p-10 text-center text-secondary">
                                 Tabla de incidentes + acciones ver/editar/eliminar (maqueta)
                             </div>
                         </CardContent>
@@ -427,15 +427,15 @@ export const UsersListPage: React.FC = () => {
                 }
             >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="rounded-md border border-gray-200 p-4">
-                        <div className="font-medium text-gray-900">Identificación</div>
-                        <div className="text-sm text-gray-600">Preview (demo)</div>
+                    <div className="rounded-md border border-default p-4">
+                        <div className="font-medium text-default">Identificación</div>
+                        <div className="text-sm text-secondary">Preview (demo)</div>
                     </div>
-                    <div className="rounded-md border border-gray-200 p-4">
-                        <div className="font-medium text-gray-900">Título profesional</div>
-                        <div className="text-sm text-gray-600">Preview (demo)</div>
+                    <div className="rounded-md border border-default p-4">
+                        <div className="font-medium text-default">Título profesional</div>
+                        <div className="text-sm text-secondary">Preview (demo)</div>
                     </div>
-                    <div className="md:col-span-2 rounded-md border border-dashed border-gray-300 bg-gray-50 p-4 text-sm text-gray-600">
+                    <div className="md:col-span-2 rounded-md border border-dashed border-default bg-app p-4 text-sm text-secondary">
                         Estado: pendiente/aprobado/rechazado + notas del admin (demo)
                     </div>
                 </div>
@@ -477,7 +477,7 @@ export const UsersListPage: React.FC = () => {
                         <Label htmlFor="act">Cuenta activa</Label>
                         <div className="flex items-center gap-2">
                             <Switch checked />
-                            <span className="text-sm text-gray-600">Activo</span>
+                            <span className="text-sm text-secondary">Activo</span>
                         </div>
                     </div>
                 </div>

@@ -138,12 +138,12 @@ export const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
 
   return (
     <div className="w-full">
-      <div className="relative rounded-lg overflow-hidden border border-gray-300">
+      <div className="relative rounded-lg overflow-hidden border border-default">
         {/* Indicador de carga geocoding */}
         {isLoading && (
-          <div className="absolute top-4 right-4 z-[1000] bg-white px-3 py-2 rounded-lg shadow-md flex items-center space-x-2">
+          <div className="absolute top-4 right-4 z-[1000] bg-surface px-3 py-2 rounded-lg shadow-md flex items-center space-x-2">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600" />
-            <span className="text-sm text-gray-600">Obteniendo ubicación...</span>
+            <span className="text-sm text-secondary">Obteniendo ubicación...</span>
           </div>
         )}
 
@@ -154,7 +154,7 @@ export const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
             onClick={handleLocateMe}
             disabled={isLocating}
             title="Centrar mapa en mi ciudad"
-            className="absolute bottom-4 right-4 z-[1000] bg-white hover:bg-blue-50 border border-gray-300 hover:border-blue-400 text-gray-700 hover:text-blue-600 px-3 py-2 rounded-lg shadow-md flex items-center gap-2 text-sm font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+            className="absolute bottom-4 right-4 z-[1000] bg-surface hover:bg-blue-50 border border-default hover:border-blue-400 text-secondary hover:text-blue-600 px-3 py-2 rounded-lg shadow-md flex items-center gap-2 text-sm font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isLocating ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -199,7 +199,7 @@ export const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
                     {address && (
                       <div>
                         <strong>Dirección:</strong>
-                        <div className="text-xs text-gray-600 mt-1">{address}</div>
+                        <div className="text-xs text-secondary mt-1">{address}</div>
                       </div>
                     )}
                   </div>
@@ -232,7 +232,7 @@ export const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
 
       {/* Instrucciones */}
       {!markerPosition && !disabled && (
-        <div className="mt-3 text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
+        <div className="mt-3 text-sm text-secondary bg-app p-3 rounded-lg">
           <div className="font-semibold mb-1">📍 Cómo seleccionar ubicación:</div>
           <ul className="space-y-1 text-xs">
             <li>• Haz clic en <strong>Mi ubicación</strong> para centrar el mapa donde estás</li>
@@ -244,7 +244,7 @@ export const LocationMapPicker: React.FC<LocationMapPickerProps> = ({
       )}
 
       {disabled && (
-        <div className="mt-3 text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
+        <div className="mt-3 text-sm text-muted-foreground bg-app p-3 rounded-lg">
           El mapa está deshabilitado. Modifica las coordenadas manualmente.
         </div>
       )}

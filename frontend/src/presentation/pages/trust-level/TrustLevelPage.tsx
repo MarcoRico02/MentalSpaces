@@ -387,10 +387,10 @@ export const TrustLevelPage: React.FC = () => {
                 <Card>
                     <CardContent>
                         <div className="py-10 text-center">
-                            <div className="text-lg font-semibold text-gray-900">
+                            <div className="text-lg font-semibold text-default">
                                 Acceso restringido
                             </div>
-                            <div className="text-sm text-gray-600 mt-2">
+                            <div className="text-sm text-secondary mt-2">
                                 Tu cuenta no tiene permisos para ver esta página.
                             </div>
                         </div>
@@ -413,7 +413,7 @@ export const TrustLevelPage: React.FC = () => {
                                     form.setValue("promotionEnabled", checked)
                                 }
                             />
-                            <span className="text-sm text-gray-600">Habilitar</span>
+                            <span className="text-sm text-secondary">Habilitar</span>
                         </div>
                     </CardTitle>
                     <CardDescription>
@@ -584,7 +584,7 @@ export const TrustLevelPage: React.FC = () => {
                                     form.setValue("degradationEnabled", checked)
                                 }
                             />
-                            <span className="text-sm text-gray-600">Habilitar</span>
+                            <span className="text-sm text-secondary">Habilitar</span>
                         </div>
                     </CardTitle>
                     <CardDescription>
@@ -642,7 +642,7 @@ export const TrustLevelPage: React.FC = () => {
                                     form.setValue("rehabilitationEnabled", checked)
                                 }
                             />
-                            <span className="text-sm text-gray-600">Habilitar</span>
+                            <span className="text-sm text-secondary">Habilitar</span>
                         </div>
                     </CardTitle>
                     <CardDescription>
@@ -696,7 +696,7 @@ export const TrustLevelPage: React.FC = () => {
                     <div className="flex items-center justify-between gap-4">
                         <div>
                             <Label htmlFor="penaltiesEnabled">Penalizaciones</Label>
-                            <div className="text-xs text-gray-600">
+                            <div className="text-xs text-secondary">
                                 Restringir/penalizar por comportamiento negativo.
                             </div>
                         </div>
@@ -708,7 +708,7 @@ export const TrustLevelPage: React.FC = () => {
                     <div className="flex items-center justify-between gap-4">
                         <div>
                             <Label htmlFor="bonusesEnabled">Bonificaciones</Label>
-                            <div className="text-xs text-gray-600">
+                            <div className="text-xs text-secondary">
                                 Beneficios por comportamiento positivo.
                             </div>
                         </div>
@@ -743,12 +743,12 @@ export const TrustLevelPage: React.FC = () => {
                 </CardHeader>
                 <CardContent className="space-y-3">
                     <div className="grid gap-3">
-                        <div className="flex items-start gap-4 p-4 border rounded-lg bg-gray-50 border-dashed">
-                            <Users className="h-5 w-5 text-gray-500" />
+                        <div className="flex items-start gap-4 p-4 border rounded-lg bg-app border-dashed">
+                            <Users className="h-5 w-5 text-muted-foreground" />
                             <div className="flex-1">
                                 <h3 className="text-lg font-bold mb-1">Novato</h3>
-                                <p className="text-sm text-gray-600">Usuario nuevo con historial limitado</p>
-                                <ul className="list-disc pl-5 mt-2 space-y-1 text-sm text-gray-700">
+                                <p className="text-sm text-secondary">Usuario nuevo con historial limitado</p>
+                                <ul className="list-disc pl-5 mt-2 space-y-1 text-sm text-secondary">
                                     <li>Sin privilegios especiales</li>
                                     <li>Máximo 7 días de antelación</li>
                                 </ul>
@@ -756,12 +756,12 @@ export const TrustLevelPage: React.FC = () => {
                             <ArrowDownCircle className="h-5 w-5 text-blue-400" />
                         </div>
 
-                        <div className="flex items-start gap-4 p-4 border rounded-lg bg-blue-50 border-blue-200 ml-6">
-                            <BadgeCheck className="h-5 w-5 text-blue-600" />
+                        <div className="flex items-start gap-4 p-4 border rounded-lg bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800 ml-6">
+                            <BadgeCheck className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                             <div className="flex-1">
-                                <h3 className="text-lg font-bold mb-1 text-blue-700">Confiable</h3>
-                                <p className="text-sm text-blue-700">Usuario con buen historial</p>
-                                <ul className="list-disc pl-5 mt-2 space-y-1 text-sm text-blue-800">
+                                <h3 className="text-lg font-bold mb-1 text-blue-700 dark:text-blue-400">Confiable</h3>
+                                <p className="text-sm text-blue-700 dark:text-blue-400">Usuario con buen historial</p>
+                                <ul className="list-disc pl-5 mt-2 space-y-1 text-sm text-blue-800 dark:text-blue-300">
                                     <li>Hasta 14 días de antelación</li>
                                     <li>Reservas consecutivas permitidas</li>
                                 </ul>
@@ -769,24 +769,24 @@ export const TrustLevelPage: React.FC = () => {
                             <ArrowDownCircle className="h-5 w-5 text-purple-400" />
                         </div>
 
-                        <div className="flex items-start gap-4 p-4 border rounded-lg bg-purple-50 border-purple-200 ml-12">
-                            <Award className="h-5 w-5 text-purple-600" />
+                        <div className="flex items-start gap-4 p-4 border rounded-lg bg-purple-50 border-purple-200 dark:bg-purple-900/20 dark:border-purple-800 ml-12">
+                            <Award className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                             <div className="flex-1">
-                                <h3 className="text-lg font-bold mb-1 text-purple-700">VIP</h3>
-                                <p className="text-sm text-purple-700">Privilegios especiales</p>
-                                <ul className="list-disc pl-5 mt-2 space-y-1 text-sm text-purple-800">
+                                <h3 className="text-lg font-bold mb-1 text-purple-700 dark:text-purple-400">VIP</h3>
+                                <p className="text-sm text-purple-700 dark:text-purple-400">Privilegios especiales</p>
+                                <ul className="list-disc pl-5 mt-2 space-y-1 text-sm text-purple-800 dark:text-purple-300">
                                     <li>Hasta 30 días de antelación</li>
                                     <li>Acceso a horas premium</li>
                                 </ul>
                             </div>
                         </div>
 
-                        <div className="flex items-start gap-4 p-4 border rounded-lg bg-red-50 border-red-200 ml-6 mt-4">
-                            <UserX className="h-5 w-5 text-red-600" />
+                        <div className="flex items-start gap-4 p-4 border rounded-lg bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800 ml-6 mt-4">
+                            <UserX className="h-5 w-5 text-red-600 dark:text-red-400" />
                             <div className="flex-1">
-                                <h3 className="text-lg font-bold mb-1 text-red-700">Problemático</h3>
-                                <p className="text-sm text-red-700">Historial de incidentes negativos</p>
-                                <ul className="list-disc pl-5 mt-2 space-y-1 text-sm text-red-800">
+                                <h3 className="text-lg font-bold mb-1 text-red-700 dark:text-red-400">Problemático</h3>
+                                <p className="text-sm text-red-700 dark:text-red-400">Historial de incidentes negativos</p>
+                                <ul className="list-disc pl-5 mt-2 space-y-1 text-sm text-red-800 dark:text-red-300">
                                     <li>Restricciones de reservas</li>
                                     <li>Pago por adelantado</li>
                                     <li>Máximo 3 días de antelación</li>
@@ -802,8 +802,8 @@ export const TrustLevelPage: React.FC = () => {
                     <CardTitle className="flex items-center justify-between">
                         <span>Configuración</span>
                         <div className="flex items-center gap-2">
-                            <Shield className="h-4 w-4 text-gray-600" />
-                            <span className="text-sm text-gray-600">Admin</span>
+                            <Shield className="h-4 w-4 text-secondary" />
+                            <span className="text-sm text-secondary">Admin</span>
                         </div>
                     </CardTitle>
                 </CardHeader>
@@ -837,7 +837,7 @@ export const TrustLevelPage: React.FC = () => {
             </Card>
 
             <div className="space-y-3">
-                <h2 className="text-xl font-bold text-gray-900">Niveles actuales</h2>
+                <h2 className="text-xl font-bold text-default">Niveles actuales</h2>
                 <Card>
                     <CardContent className="p-0">
                         <Table>
@@ -855,8 +855,8 @@ export const TrustLevelPage: React.FC = () => {
                                 {userTrustLevels.map((u) => (
                                     <TR key={u.id}>
                                         <TD>
-                                            <div className="font-medium text-gray-900">{u.username}</div>
-                                            <div className="text-xs text-gray-600">{u.fullName}</div>
+                                            <div className="font-medium text-default">{u.username}</div>
+                                            <div className="text-xs text-secondary">{u.fullName}</div>
                                         </TD>
                                         <TD>
                                             <Badge variant={trustLevelBadgeVariant(u.trustLevel)}>
@@ -873,7 +873,7 @@ export const TrustLevelPage: React.FC = () => {
                         </Table>
                     </CardContent>
                     <CardFooter>
-                        <div className="text-xs text-gray-600">
+                        <div className="text-xs text-secondary">
                             Nota: estos datos están simulados hasta conectar endpoints del backend.
                         </div>
                     </CardFooter>
@@ -881,7 +881,7 @@ export const TrustLevelPage: React.FC = () => {
             </div>
 
             <div className="space-y-3">
-                <h2 className="text-xl font-bold text-gray-900">Incidentes recientes</h2>
+                <h2 className="text-xl font-bold text-default">Incidentes recientes</h2>
                 <Card>
                     <CardContent className="p-0">
                         <Table>
@@ -912,7 +912,7 @@ export const TrustLevelPage: React.FC = () => {
                         </Table>
                     </CardContent>
                     <CardFooter>
-                        <div className="text-xs text-gray-600">
+                        <div className="text-xs text-secondary">
                             Siguiente paso: persistir incidentes en backend y refrescar con React Query.
                         </div>
                     </CardFooter>
@@ -1011,10 +1011,10 @@ export const TrustLevelPage: React.FC = () => {
                         />
                     </div>
 
-                    <div className="flex items-center justify-between gap-4 p-3 border rounded-lg bg-gray-50">
+                    <div className="flex items-center justify-between gap-4 p-3 border rounded-lg bg-app">
                         <div>
-                            <div className="font-medium text-gray-900">Afecta nivel de confianza</div>
-                            <div className="text-xs text-gray-600">
+                            <div className="font-medium text-default">Afecta nivel de confianza</div>
+                            <div className="text-xs text-secondary">
                                 Si está activo, este incidente contará para las métricas.
                             </div>
                         </div>

@@ -28,6 +28,7 @@ import { UsersListPage } from "../presentation/pages/users/UsersManagementPage";
 import { LogsPage } from "../presentation/pages/logs/LogsPage";
 import { MonitoringPage} from "@/presentation/pages/system/SystemMonitoringPage.tsx";
 import { TrustLevelPage} from "@/presentation/pages/trust-level/TrustLevelPage.tsx";
+import { SubscriptionManagementPage } from "../presentation/pages/account/SubscriptionManagementPage";
 
 export const AppRoutes: React.FC = () => {
   const { isLoading } = useAuth();
@@ -98,7 +99,7 @@ export const AppRoutes: React.FC = () => {
           path="/payments-record"
           element={
             <ProtectedRoute>
-              <PaymentsPage />
+              <SubscriptionManagementPage />
             </ProtectedRoute>
           }
         />

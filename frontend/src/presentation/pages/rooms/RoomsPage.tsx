@@ -94,13 +94,13 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
       <div className="flex items-center gap-3">
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-xl text-gray-500 hover:text-gray-900 transition-colors"
+          className="flex items-center gap-1 text-xl text-muted-foreground hover:text-default transition-colors"
         >
           <ChevronLeft className="h-4 w-4" />
           Locaciones
         </button>
         <span className="text-gray-300">/</span>
-        <span className="text-xl font-medium text-gray-900">{location.name}</span>
+        <span className="text-xl font-medium text-default">{location.name}</span>
       </div>
 
       {/* Banner de la locación */}
@@ -121,13 +121,13 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
       <div className="flex flex-col sm:flex-row gap-3">
         {/* Buscador */}
         <div className="flex-1 min-w-0 sm:min-w-64 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           <input
             type="text"
             placeholder="Buscar cubículos..."
             value={searchTerm}
             onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(0); }}
-            className="h-15 w-full pl-9 pr-3 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            className="h-15 w-full pl-9 pr-3 border border-default rounded-md text-sm bg-surface focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
@@ -136,8 +136,8 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
           onClick={() => { setShowInactive(!showInactive); setCurrentPage(0); }}
           className={`h-15 inline-flex items-center gap-2 px-4 border rounded-md text-sm font-medium transition-colors ${
             showInactive
-              ? "bg-blue-600 text-white border-blue-600"
-              : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+              ? "bg-primary text-white border-primary"
+              : "bg-surface text-secondary border-default hover:bg-app"
           }`}
         >
           <Filter className="h-4 w-4" />
@@ -152,7 +152,7 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
       </div>
 
       {/* Contador */}
-      <div className="flex items-center gap-2 text-gray-500 text-sm">
+      <div className="flex items-center gap-2 text-muted-foreground text-sm">
         <LayoutGrid className="h-4 w-4" />
         <span>
           {searchTerm
@@ -163,7 +163,7 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
 
       {/* Grid de cubículos */}
       {isLoading ? (
-        <div className="py-16 flex flex-col items-center gap-3 text-gray-500">
+        <div className="py-16 flex flex-col items-center gap-3 text-muted-foreground">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
           <span className="text-sm">Cargando cubículos...</span>
         </div>
@@ -180,10 +180,10 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
           <CardContent>
             <div className="py-14 text-center space-y-3">
               <LayoutGrid className="mx-auto h-10 w-10 text-gray-300" />
-              <p className="font-medium text-gray-700">
+              <p className="font-medium text-secondary">
                 {searchTerm ? "Sin resultados" : "Sin cubículos"}
               </p>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 {searchTerm
                   ? "Intenta con otra búsqueda"
                   : "Agrega el primer cubículo a esta locación."}
@@ -215,17 +215,21 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
                       {c.nombre}
                     </span>
                     <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${
-                      c.isActive ? "bg-green-100 text-green-800" : "bg-gray-200 text-gray-700"
+                      c.isActive
+                        ? "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300"
+                        : "bg-surface-3 text-secondary"
                     }`}>
                       {c.isActive ? "Activo" : "Inactivo"}
                     </span>
                   </div>
                 </div>
               ) : (
-                <div className="h-14 bg-gray-100 flex items-center justify-between px-4">
-                  <span className="font-semibold text-gray-800 text-sm truncate">{c.nombre}</span>
+                <div className="h-14 bg-surface-2 flex items-center justify-between px-4">
+                  <span className="font-semibold text-default text-sm truncate">{c.nombre}</span>
                   <span className={`shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${
-                    c.isActive ? "bg-green-100 text-green-800" : "bg-gray-200 text-gray-700"
+                    c.isActive
+                      ? "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300"
+                      : "bg-surface-3 text-secondary"
                   }`}>
                     {c.isActive ? "Activo" : "Inactivo"}
                   </span>
@@ -235,15 +239,15 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
               <CardContent className="pt-3 space-y-3">
                 {/* Nombre (cuando hay imagen, ya se muestra arriba) */}
                 {!c.imageUrl && (
-                  <p className="text-xs text-gray-400">Sin imagen de referencia</p>
+                  <p className="text-xs text-muted-foreground">Sin imagen de referencia</p>
                 )}
 
                 {c.descripcion && (
-                  <p className="text-sm text-gray-600 line-clamp-2">{c.descripcion}</p>
+                  <p className="text-sm text-secondary line-clamp-2">{c.descripcion}</p>
                 )}
 
-                <div className="flex items-center gap-1 text-gray-800 font-medium text-sm">
-                  <DollarSign className="h-3.5 w-3.5 text-gray-500" />
+                <div className="flex items-center gap-1 text-default font-medium text-sm">
+                  <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
                   ${c.precio} / hr
                 </div>
 
@@ -253,13 +257,13 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
                     {c.caracteristicas.slice(0, 3).map((car) => (
                       <span
                         key={car.id}
-                        className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full"
+                        className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full"
                       >
                         {formatCaracteristica(car.nombre)}
                       </span>
                     ))}
                     {c.caracteristicas.length > 3 && (
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                      <span className="text-xs bg-surface-2 text-secondary px-2 py-0.5 rounded-full">
                         +{c.caracteristicas.length - 3}
                       </span>
                     )}
@@ -298,24 +302,24 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
       {/* Paginación — solo cuando no hay búsqueda activa y hay más de 1 página */}
       {!searchTerm && totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-secondary">
             Mostrando {numberOfElements} de {totalElements} cubículos
           </span>
           <div className="flex gap-2">
             <button
               onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
               disabled={currentPage === 0}
-              className="px-3 py-1.5 border border-gray-300 rounded-md text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="px-3 py-1.5 border border-default rounded-md text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-app"
             >
               Anterior
             </button>
-            <span className="px-3 py-1.5 text-sm text-gray-700">
+            <span className="px-3 py-1.5 text-sm text-secondary">
               {currentPage + 1} / {totalPages}
             </span>
             <button
               onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
               disabled={currentPage >= totalPages - 1}
-              className="px-3 py-1.5 border border-gray-300 rounded-md text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="px-3 py-1.5 border border-default rounded-md text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-app"
             >
               Siguiente
             </button>
@@ -389,7 +393,7 @@ export const RoomsPage: React.FC = () => {
       />
 
       {isLoadingLocations ? (
-        <div className="py-16 flex flex-col items-center gap-3 text-gray-500">
+        <div className="py-16 flex flex-col items-center gap-3 text-muted-foreground">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
           <span className="text-sm">Cargando locaciones...</span>
         </div>
@@ -398,8 +402,8 @@ export const RoomsPage: React.FC = () => {
           <CardContent>
             <div className="py-16 text-center space-y-2">
               <MapPin className="mx-auto h-10 w-10 text-gray-300" />
-              <p className="font-medium text-gray-700">Sin locaciones registradas</p>
-              <p className="text-sm text-gray-500">
+              <p className="font-medium text-secondary">Sin locaciones registradas</p>
+              <p className="text-sm text-muted-foreground">
                 Crea una locación desde el menú "Locaciones" para empezar.
               </p>
             </div>
@@ -409,7 +413,7 @@ export const RoomsPage: React.FC = () => {
         <>
           {locations.filter((l) => l.active).length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Activas</h2>
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Activas</h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {locations.filter((l) => l.active).map((loc) => (
                   <LocationCard key={loc.id} location={loc} onClick={() => setSelectedLocation(loc)} />
@@ -419,7 +423,7 @@ export const RoomsPage: React.FC = () => {
           )}
           {locations.filter((l) => !l.active).length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Inactivas</h2>
+              <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Inactivas</h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {locations.filter((l) => !l.active).map((loc) => (
                   <LocationCard key={loc.id} location={loc} onClick={() => setSelectedLocation(loc)} />
@@ -471,9 +475,9 @@ const LocationCard: React.FC<LocationCardProps> = ({ location, onClick }) => (
     </CardHeader>
     <CardContent className="space-y-4">
       {location.description ? (
-        <p className="text-sm text-gray-600 line-clamp-2">{location.description}</p>
+        <p className="text-sm text-secondary line-clamp-2">{location.description}</p>
       ) : (
-        <p className="text-sm text-gray-400 italic">Sin descripción</p>
+        <p className="text-sm text-muted-foreground italic">Sin descripción</p>
       )}
       <Button className="w-full group-hover:bg-blue-700 transition-colors">
         <LayoutGrid className="h-4 w-4 mr-2" />

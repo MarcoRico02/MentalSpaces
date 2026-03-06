@@ -25,7 +25,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-app">
       <Header />
       {/* Header no es fixed en este proyecto, no necesitamos spacer. */}
 

@@ -86,7 +86,7 @@ export const TherapistsPage: React.FC = () => {
 
       <div className="max-w-xl">
         <div className="relative">
-          <Search className="h-4 w-4 text-gray-400 absolute left-3 top-3" />
+          <Search className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -110,7 +110,7 @@ export const TherapistsPage: React.FC = () => {
       {filtered.length === 0 ? (
         <Card>
           <CardContent>
-            <div className="py-10 text-center text-gray-600">
+            <div className="py-10 text-center text-secondary">
               No se encontraron terapeutas con esa búsqueda.
             </div>
           </CardContent>
@@ -121,7 +121,7 @@ export const TherapistsPage: React.FC = () => {
             <Card key={t.id}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-semibold">
+                  <div className="h-10 w-10 rounded-full bg-surface-3 flex items-center justify-center text-secondary font-semibold">
                     {t.fullName
                       .split(" ")
                       .slice(0, 2)
@@ -129,15 +129,15 @@ export const TherapistsPage: React.FC = () => {
                       .join("")}
                   </div>
                   <div>
-                    <div className="text-base font-semibold text-gray-900">
+                    <div className="text-base font-semibold text-default">
                       {t.fullName}
                     </div>
-                    <div className="text-sm text-gray-600">{t.specialty}</div>
+                    <div className="text-sm text-secondary">{t.specialty}</div>
                   </div>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div className="text-sm text-gray-600 space-y-1">
+                <div className="text-sm text-secondary space-y-1">
                   <div className="flex items-center gap-2">
                     <Phone className="h-4 w-4" />
                     {t.phone}
@@ -181,7 +181,7 @@ export const TherapistsPage: React.FC = () => {
         }
       >
         <div className="space-y-4">
-          <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-6 text-center text-gray-600">
+          <div className="rounded-md border border-dashed border-default bg-app p-6 text-center text-secondary">
             Aquí iría el BookingModal para seleccionar fecha/sala/horario (demo).
           </div>
         </div>

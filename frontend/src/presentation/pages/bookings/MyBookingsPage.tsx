@@ -128,14 +128,14 @@ export const MyBookingsPage: React.FC = () => {
                   <span>{b.room}</span>
                   <Badge variant={badgeVariant(b.status)}>{b.status}</Badge>
                 </CardTitle>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-secondary mt-1">
                   {b.date} · {b.time} · {b.location}
                 </p>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-600">Precio total</div>
-                  <div className="font-semibold text-gray-900">{b.price}</div>
+                  <div className="text-sm text-secondary">Precio total</div>
+                  <div className="font-semibold text-default">{b.price}</div>
                 </div>
 
                 {b.status === "Cancelled" && b.cancellationReason && (
@@ -155,7 +155,7 @@ export const MyBookingsPage: React.FC = () => {
                   )}
                 </div>
 
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-muted-foreground">
                   Reglas de cancelación: validación por configuración del sistema (demo)
                   · Refetch cada 5s (demo)
                 </div>
@@ -187,12 +187,12 @@ export const MyBookingsPage: React.FC = () => {
             ["Ubicación", "Sede Roma"],
             ["Horario", "10:00 - 11:00"],
           ].map(([k, v]) => (
-            <div key={k} className="rounded-md border border-gray-200 p-3">
-              <div className="text-gray-600">{k}</div>
-              <div className="font-medium text-gray-900">{v}</div>
+            <div key={k} className="rounded-md border border-default p-3">
+              <div className="text-secondary">{k}</div>
+              <div className="font-medium text-default">{v}</div>
             </div>
           ))}
-          <div className="md:col-span-2 rounded-md border border-dashed border-gray-300 bg-gray-50 p-4 text-gray-600">
+          <div className="md:col-span-2 rounded-md border border-dashed border-default bg-app p-4 text-secondary">
             Aquí irían más detalles (terapeuta, estado, notas, etc.).
           </div>
         </div>
@@ -216,10 +216,10 @@ export const MyBookingsPage: React.FC = () => {
         }
       >
         <div className="space-y-3">
-          <div className="rounded-md border border-gray-200 p-4 text-sm text-gray-600">
+          <div className="rounded-md border border-default p-4 text-sm text-secondary">
             Validación de plazo mínimo · permisos del plan · mensajes de error (demo)
           </div>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             ¿Seguro que deseas cancelar? Esta acción puede tener penalizaciones.
           </div>
         </div>

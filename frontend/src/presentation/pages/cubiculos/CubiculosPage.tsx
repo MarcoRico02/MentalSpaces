@@ -159,7 +159,7 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
       <div className="p-6">
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Cargando datos...</p>
+          <p className="mt-2 text-secondary">Cargando datos...</p>
         </div>
       </div>
     );
@@ -172,10 +172,10 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
           <div className="mx-auto h-12 w-12 text-red-500">
             <Filter className="h-full w-full" />
           </div>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">
+          <h3 className="mt-2 text-sm font-medium text-default">
             Error al cargar datos
           </h3>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-muted-foreground">
             {(locationsError as any)?.response?.data?.message ||
               (caracteristicasError as any)?.response?.data?.message ||
               "Error desconocido"}
@@ -195,11 +195,11 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
     return (
       <div className="p-6">
         <div className="text-center py-12">
-          <MapPin className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">
+          <MapPin className="mx-auto h-12 w-12 text-muted-foreground" />
+          <h3 className="mt-2 text-sm font-medium text-default">
             No hay locations
           </h3>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-muted-foreground">
             Debes crear una location antes de gestionar cubículos
           </p>
         </div>
@@ -211,17 +211,17 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
     <div className="p-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-default">
           Gestión de Cubículos
         </h1>
-        <p className="text-gray-600">
+        <p className="text-secondary">
           Administra los espacios de tus locations
         </p>
       </div>
 
       {/* Selector de Location */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-secondary mb-2">
           Seleccionar Location
         </label>
         <select
@@ -230,7 +230,7 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
             setSelectedLocationId(Number(e.target.value));
             setCurrentPage(0);
           }}
-          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          className="block w-full rounded-md border-default shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
         >
           <option value="">Selecciona una location...</option>
           {locations.map((location: LocationResponseDTO) => (
@@ -248,7 +248,7 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
             {/* Buscador */}
             <div className="flex-1 relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
+                <Search className="h-5 w-5 text-muted-foreground" />
               </div>
               <input
                 type="text"
@@ -258,7 +258,7 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
                   setSearchTerm(e.target.value);
                   setCurrentPage(0);
                 }}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="block w-full pl-10 pr-3 py-2 border border-default rounded-md leading-5 bg-surface placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
             </div>
 
@@ -272,7 +272,7 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
                 className={`inline-flex items-center px-4 py-2 border rounded-md text-sm font-medium ${
                   showInactive
                     ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                    : "bg-surface text-secondary border-default hover:bg-app"
                 }`}
               >
                 <Filter className="h-4 w-4 mr-2" />
@@ -300,13 +300,13 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
             </div>
           ) : filteredCubiculos.length === 0 ? (
             <div className="text-center py-12">
-              <div className="mx-auto h-12 w-12 text-gray-400">
+              <div className="mx-auto h-12 w-12 text-muted-foreground">
                 <Star className="h-full w-full" />
               </div>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">
+              <h3 className="mt-2 text-sm font-medium text-default">
                 {searchTerm ? "No hay resultados" : "No hay cubículos"}
               </h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {searchTerm
                   ? "Intenta con otra búsqueda"
                   : "Crea tu primer cubículo"}
@@ -317,15 +317,15 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
               {filteredCubiculos.map((cubiculo) => (
                 <div
                   key={cubiculo.id}
-                  className={`bg-white rounded-lg shadow-md border ${
+                  className={`bg-surface rounded-lg shadow-md border ${
                     !cubiculo.isActive
-                      ? "opacity-75 border-gray-300"
-                      : "border-gray-200"
+                      ? "opacity-75 border-default"
+                      : "border-default"
                   }`}
                 >
                   {/* Imagen */}
                   {cubiculo.imageUrl && (
-                    <div className="h-48 w-full bg-gray-200 rounded-t-lg overflow-hidden">
+                    <div className="h-48 w-full bg-surface-3 rounded-t-lg overflow-hidden">
                       <img
                         src={cubiculo.imageUrl}
                         alt={cubiculo.nombre}
@@ -337,26 +337,26 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
                   {/* Contenido */}
                   <div className="p-4">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-lg font-medium text-gray-900 truncate">
+                      <h3 className="text-lg font-medium text-default truncate">
                         {cubiculo.nombre}
                       </h3>
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           cubiculo.isActive
                             ? "bg-green-100 text-green-800"
-                            : "bg-gray-100 text-gray-800"
+                            : "bg-surface-2 text-default"
                         }`}
                       >
                         {cubiculo.isActive ? "Activo" : "Inactivo"}
                       </span>
                     </div>
 
-                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                    <p className="text-secondary text-sm mb-3 line-clamp-2">
                       {cubiculo.descripcion}
                     </p>
 
                     <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center text-gray-900">
+                      <div className="flex items-center text-default">
                         <DollarSign className="h-4 w-4 mr-1" />
                         <span className="font-medium">${cubiculo.precio}</span>
                       </div>
@@ -377,7 +377,7 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
                               </span>
                             ))}
                           {cubiculo.caracteristicas.length > 3 && (
-                            <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-gray-100 text-gray-800">
+                            <span className="inline-flex items-center px-2 py-1 rounded text-xs bg-surface-2 text-default">
                               +{cubiculo.caracteristicas.length - 3}
                             </span>
                           )}
@@ -389,7 +389,7 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
                     <div className="flex gap-2">
                       <button
                         onClick={() => setEditingCubiculo(cubiculo)}
-                        className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-default text-sm font-medium rounded-md text-secondary bg-surface hover:bg-app focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       >
                         <Edit className="h-4 w-4 mr-1" />
                         Editar
@@ -424,7 +424,7 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
           {/* Paginación */}
           {cubiculosData && !showInactive && cubiculosData.totalPages > 1 && (
             <div className="mt-6 flex items-center justify-between">
-              <div className="text-sm text-gray-700">
+              <div className="text-sm text-secondary">
                 Mostrando {cubiculosData.numberOfElements} de{" "}
                 {cubiculosData.totalElements} cubículos
               </div>
@@ -432,7 +432,7 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
                 <button
                   onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
                   disabled={currentPage === 0}
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1 border border-default rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Anterior
                 </button>
@@ -446,7 +446,7 @@ export const CubiculosPage: React.FC<CubiculosPageProps> = ({
                     )
                   }
                   disabled={currentPage >= cubiculosData.totalPages - 1}
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1 border border-default rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Siguiente
                 </button>

@@ -16,23 +16,23 @@ const DIAS: { value: DiaSemana; label: string }[] = [
 ];
 
 const DIA_COLORS: Record<DiaSemana, string> = {
-  MONDAY:    "bg-blue-50 border-blue-200",
-  TUESDAY:   "bg-purple-50 border-purple-200",
-  WEDNESDAY: "bg-green-50 border-green-200",
-  THURSDAY:  "bg-yellow-50 border-yellow-200",
-  FRIDAY:    "bg-orange-50 border-orange-200",
-  SATURDAY:  "bg-red-50 border-red-200",
-  SUNDAY:    "bg-gray-50 border-gray-200",
+  MONDAY:    "bg-blue-50   border-blue-200   dark:bg-blue-900/20   dark:border-blue-800",
+  TUESDAY:   "bg-purple-50 border-purple-200 dark:bg-purple-900/20 dark:border-purple-800",
+  WEDNESDAY: "bg-green-50  border-green-200  dark:bg-green-900/20  dark:border-green-800",
+  THURSDAY:  "bg-yellow-50 border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-800",
+  FRIDAY:    "bg-orange-50 border-orange-200 dark:bg-orange-900/20 dark:border-orange-800",
+  SATURDAY:  "bg-red-50    border-red-200    dark:bg-red-900/20    dark:border-red-800",
+  SUNDAY:    "bg-app border-default",
 };
 
 const DIA_BADGE: Record<DiaSemana, string> = {
-  MONDAY:    "bg-blue-100 text-blue-700",
-  TUESDAY:   "bg-purple-100 text-purple-700",
-  WEDNESDAY: "bg-green-100 text-green-700",
-  THURSDAY:  "bg-yellow-100 text-yellow-700",
-  FRIDAY:    "bg-orange-100 text-orange-700",
-  SATURDAY:  "bg-red-100 text-red-700",
-  SUNDAY:    "bg-gray-100 text-gray-700",
+  MONDAY:    "bg-blue-100   text-blue-700   dark:bg-blue-900/40   dark:text-blue-300",
+  TUESDAY:   "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
+  WEDNESDAY: "bg-green-100  text-green-700  dark:bg-green-900/40  dark:text-green-300",
+  THURSDAY:  "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+  FRIDAY:    "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300",
+  SATURDAY:  "bg-red-100    text-red-700    dark:bg-red-900/40    dark:text-red-300",
+  SUNDAY:    "bg-surface-2 text-secondary",
 };
 
 interface FormData { diaSemana: DiaSemana; horaInicio: string; horaFin: string; }
@@ -88,36 +88,36 @@ const RowForm: React.FC<{
       setErr(null); onSave(form);
     };
     return (
-      <div className="border border-blue-200 rounded-lg p-3 bg-blue-50 space-y-3">
+      <div className="border border-primary/30 rounded-lg p-3 bg-primary/5 space-y-3">
         <div className="grid grid-cols-3 gap-2">
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Dia</label>
+            <label className="block text-xs font-medium text-secondary mb-1">Dia</label>
             <select value={form.diaSemana} onChange={e => setForm({ ...form, diaSemana: e.target.value as DiaSemana })}
-              className="w-full h-9 px-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+              className="w-full h-9 px-2 border border-default rounded-md text-sm bg-surface text-default focus:outline-none focus:ring-1 focus:ring-primary">
               {DIAS.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Inicio</label>
+            <label className="block text-xs font-medium text-secondary mb-1">Inicio</label>
             <input type="time" lang="es-MX" value={form.horaInicio}
               onChange={e => setForm({ ...form, horaInicio: normalizarHora(e.target.value) })}
-              className="w-full h-9 px-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" />
+              className="w-full h-9 px-2 border border-default rounded-md text-sm bg-surface text-default focus:outline-none focus:ring-1 focus:ring-primary" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Fin</label>
+            <label className="block text-xs font-medium text-secondary mb-1">Fin</label>
             <input type="time" lang="es-MX" value={form.horaFin}
               onChange={e => setForm({ ...form, horaFin: normalizarHora(e.target.value) })}
-              className="w-full h-9 px-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" />
+              className="w-full h-9 px-2 border border-default rounded-md text-sm bg-surface text-default focus:outline-none focus:ring-1 focus:ring-primary" />
           </div>
         </div>
-        {err && <p className="text-xs text-red-600">{err}</p>}
+        {err && <p className="text-xs text-red-500">{err}</p>}
         <div className="flex gap-2 justify-end">
           <button type="button" onClick={onCancel}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium text-gray-600 bg-white hover:bg-gray-50">
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-default rounded-md text-xs font-medium text-secondary bg-surface hover:bg-surface-2">
             <X className="h-3.5 w-3.5" />Cancelar
           </button>
           <button type="button" onClick={save} disabled={isSaving}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50">
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-white bg-primary hover:opacity-90 disabled:opacity-50">
             <Save className="h-3.5 w-3.5" />{isSaving ? "Guardando..." : "Guardar"}
           </button>
         </div>
@@ -135,7 +135,7 @@ const DiaBlock: React.FC<{
   <div className={`border rounded-lg overflow-hidden ${DIA_COLORS[dia]}`}>
     <div className="px-3 py-2 flex items-center gap-2">
       <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${DIA_BADGE[dia]}`}>{label}</span>
-      <span className="text-xs text-gray-500">{slots.length} horario{slots.length !== 1 ? "s" : ""}</span>
+      <span className="text-xs text-muted-foreground">{slots.length} horario{slots.length !== 1 ? "s" : ""}</span>
     </div>
     <div className="px-3 pb-3 space-y-2">
       {slots.map(slot => {
@@ -147,18 +147,18 @@ const DiaBlock: React.FC<{
             excludeId={slot.id}
             onSave={d => onSaveEdit(key, d)} onCancel={onCancelEdit} isSaving={isSaving} />
         ) : (
-          <div key={key} className="flex items-center justify-between bg-white rounded-md px-3 py-2 border border-gray-200">
+          <div key={key} className="flex items-center justify-between bg-surface rounded-md px-3 py-2 border border-default">
             <div className="flex items-center gap-2 text-sm">
-              <Clock className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-              <span className="font-medium text-gray-800">{formatear12h(slot.horaInicio)} - {formatear12h(slot.horaFin)}</span>
+              <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              <span className="font-medium text-default">{formatear12h(slot.horaInicio)} - {formatear12h(slot.horaFin)}</span>
             </div>
             <div className="flex gap-1">
               <button type="button" onClick={() => onEdit(key, slot)}
-                className="p-1.5 rounded hover:bg-gray-100 text-gray-500 hover:text-blue-600" title="Editar">
+                className="p-1.5 rounded hover:bg-surface-2 text-muted-foreground hover:text-primary" title="Editar">
                 <Edit className="h-3.5 w-3.5" />
               </button>
               <button type="button" onClick={() => onDelete(slot)}
-                className="p-1.5 rounded hover:bg-red-50 text-gray-500 hover:text-red-600" title="Eliminar">
+                className="p-1.5 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-500" title="Eliminar">
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
             </div>
@@ -212,7 +212,7 @@ export const DisponibilidadManager: React.FC<{ cubiculoId: number }> = ({ cubicu
   })).filter(d => d.slots.length > 0);
 
   if (isLoading) return (
-    <div className="py-6 flex items-center justify-center gap-2 text-gray-500 text-sm">
+    <div className="py-6 flex items-center justify-center gap-2 text-muted-foreground text-sm">
       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600" />Cargando...
     </div>
   );
@@ -220,7 +220,7 @@ export const DisponibilidadManager: React.FC<{ cubiculoId: number }> = ({ cubicu
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+        <div className="flex items-center gap-2 text-sm font-medium text-secondary">
           <Calendar className="h-4 w-4 text-blue-600" />
           <span>{disps.length > 0 ? `${disps.length} horario${disps.length !== 1 ? "s" : ""} configurado${disps.length !== 1 ? "s" : ""}` : "Sin horarios"}</span>
         </div>
@@ -228,12 +228,12 @@ export const DisponibilidadManager: React.FC<{ cubiculoId: number }> = ({ cubicu
           {disps.length > 0 && (
             <button type="button" onClick={() => { if (confirm("Eliminar todos?")) deleteAllM.mutate(); }}
               disabled={deleteAllM.isPending}
-              className="inline-flex items-center gap-1 px-2.5 py-1.5 border border-red-200 rounded-md text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50">
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 border border-red-300 dark:border-red-800 rounded-md text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-500/10 disabled:opacity-50">
               <Trash2 className="h-3.5 w-3.5" />Limpiar todo
             </button>
           )}
           <button type="button" onClick={() => { setShowAdd(true); setEditKey(null); }}
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 border border-blue-300 rounded-md text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100">
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 border border-primary/40 rounded-md text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20">
             <Plus className="h-3.5 w-3.5" />Agregar horario
           </button>
         </div>
@@ -242,10 +242,10 @@ export const DisponibilidadManager: React.FC<{ cubiculoId: number }> = ({ cubicu
       {showAdd && <RowForm onSave={d => createM.mutate([d])} existingSlots={disps} onCancel={() => setShowAdd(false)} isSaving={createM.isPending} />}
 
       {disps.length === 0 && !showAdd ? (
-        <div className="py-8 text-center border border-dashed border-gray-200 rounded-lg">
-          <Clock className="mx-auto h-8 w-8 text-gray-300 mb-2" />
-          <p className="text-sm text-gray-500">No hay horarios configurados</p>
-          <button type="button" onClick={() => setShowAdd(true)} className="mt-2 text-xs text-blue-600 hover:underline">
+        <div className="py-8 text-center border border-dashed border-default rounded-lg">
+          <Clock className="mx-auto h-8 w-8 text-muted-foreground mb-2" />
+          <p className="text-sm text-muted-foreground">No hay horarios configurados</p>
+          <button type="button" onClick={() => setShowAdd(true)} className="mt-2 text-xs text-primary hover:underline">
             Agregar el primer horario
           </button>
         </div>
@@ -284,12 +284,12 @@ export const DisponibilidadInlineEditor: React.FC<{
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+        <div className="flex items-center gap-2 text-sm font-medium text-secondary">
           <Calendar className="h-4 w-4 text-blue-600" />
           <span>{value.length > 0 ? `${value.length} horario${value.length !== 1 ? "s" : ""}` : "Sin horarios (opcional)"}</span>
         </div>
         <button type="button" onClick={() => { setShowForm(true); setEditKey(null); }}
-          className="inline-flex items-center gap-1 px-2.5 py-1.5 border border-blue-300 rounded-md text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100">
+          className="inline-flex items-center gap-1 px-2.5 py-1.5 border border-primary/40 rounded-md text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20">
           <Plus className="h-3.5 w-3.5" />Agregar
         </button>
       </div>
@@ -297,9 +297,9 @@ export const DisponibilidadInlineEditor: React.FC<{
       {showForm && <RowForm onSave={add} existingSlots={value} onCancel={() => setShowForm(false)} isSaving={false} />}
 
       {value.length === 0 && !showForm ? (
-        <div className="py-4 text-center border border-dashed border-gray-200 rounded-lg">
-          <Clock className="mx-auto h-6 w-6 text-gray-300 mb-1" />
-          <p className="text-xs text-gray-400">Puedes agregar horarios despues de crear el cubiculo</p>
+        <div className="py-4 text-center border border-dashed border-default rounded-lg">
+          <Clock className="mx-auto h-6 w-6 text-muted-foreground mb-1" />
+          <p className="text-xs text-muted-foreground">Puedes agregar horarios despues de crear el cubiculo</p>
         </div>
       ) : (
         <div className="space-y-2">

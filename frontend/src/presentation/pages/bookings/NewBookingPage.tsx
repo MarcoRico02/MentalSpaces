@@ -44,7 +44,7 @@ export const NewBookingPage: React.FC = () => {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Datos de la reserva</CardTitle>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-secondary mt-1">
               Validaciones complejas, disponibilidad y cálculo de costo (maqueta).
             </p>
           </CardHeader>
@@ -69,7 +69,7 @@ export const NewBookingPage: React.FC = () => {
                   <option value="u1">Terapeuta Demo</option>
                   <option value="u2">Otro terapeuta</option>
                 </Select>
-                <div className="text-xs text-gray-500 mt-1">
+                <div className="text-xs text-muted-foreground mt-1">
                   Visible solo para administradores (maqueta).
                 </div>
               </div>
@@ -77,7 +77,7 @@ export const NewBookingPage: React.FC = () => {
               <div>
                 <Label htmlFor="date">Fecha</Label>
                 <div className="relative">
-                  <CalendarDays className="h-4 w-4 text-gray-400 absolute left-3 top-3" />
+                  <CalendarDays className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
                   <Input id="date" type="date" className="pl-9" />
                 </div>
               </div>
@@ -85,7 +85,7 @@ export const NewBookingPage: React.FC = () => {
               <div>
                 <Label htmlFor="start">Hora inicio</Label>
                 <div className="relative">
-                  <Clock className="h-4 w-4 text-gray-400 absolute left-3 top-3" />
+                  <Clock className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
                   <Select id="start" className="pl-9">
                     <option>08:00</option>
                     <option>09:00</option>
@@ -135,7 +135,7 @@ export const NewBookingPage: React.FC = () => {
               <Button variant="secondary">Cancelar</Button>
             </div>
 
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-muted-foreground">
               Estados UI: isSubmitting, spinner en botón, validación de traslapes,
               reglas del sistema, límites de usuario, etc. (demo)
             </div>
@@ -147,20 +147,20 @@ export const NewBookingPage: React.FC = () => {
             <CardTitle>Resumen de costo</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="rounded-md bg-gray-50 p-3 text-sm">
-              <div className="text-gray-600">Precio original</div>
-              <div className="font-semibold text-gray-900">$450.00</div>
+            <div className="rounded-md bg-app p-3 text-sm">
+              <div className="text-secondary">Precio original</div>
+              <div className="font-semibold text-default">$450.00</div>
             </div>
-            <div className="rounded-md bg-gray-50 p-3 text-sm">
-              <div className="text-gray-600">Descuento por plan</div>
-              <div className="font-semibold text-gray-900">-$150.00</div>
+            <div className="rounded-md bg-app p-3 text-sm">
+              <div className="text-secondary">Descuento por plan</div>
+              <div className="font-semibold text-default">-$150.00</div>
             </div>
-            <div className="rounded-md border border-gray-200 p-3 text-sm">
-              <div className="text-gray-600">Total</div>
-              <div className="text-xl font-bold text-gray-900">$300.00</div>
+            <div className="rounded-md border border-default p-3 text-sm">
+              <div className="text-secondary">Total</div>
+              <div className="text-xl font-bold text-default">$300.00</div>
             </div>
 
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-secondary">
               Integración con planes: horas disponibles, hoursToCover, validación
               de horas suficientes (maqueta).
             </div>

@@ -92,7 +92,7 @@ export const LocationForm: React.FC<LocationFormProps> = ({
           placeholder="Descripción detallada de la locación..."
           {...register("description")}
           disabled={isLoading}
-          className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+          className={`w-full px-3 py-2 border border-default rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
             errors.description ? "border-red-500" : ""
           }`}
         />
@@ -120,7 +120,7 @@ export const LocationForm: React.FC<LocationFormProps> = ({
           )}
           {/* Preview de imagen */}
           {imageUrlValue && !errors.imageUrl ? (
-            <div className="relative rounded-lg overflow-hidden border border-gray-200 h-40">
+            <div className="relative rounded-lg overflow-hidden border border-default h-40">
               <img
                 src={imageUrlValue}
                 alt="Preview"
@@ -134,13 +134,13 @@ export const LocationForm: React.FC<LocationFormProps> = ({
                 onClick={() => {
                   setValue("imageUrl", "");
                 }}
-                className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-gray-100"
+                className="absolute top-2 right-2 bg-surface rounded-full p-1 shadow hover:bg-surface-2"
               >
-                <X className="h-4 w-4 text-gray-600" />
+                <X className="h-4 w-4 text-secondary" />
               </button>
             </div>
           ) : (
-            <div className="rounded-lg border-2 border-dashed border-gray-200 h-24 flex items-center justify-center text-gray-400 gap-2">
+            <div className="rounded-lg border-2 border-dashed border-default h-24 flex items-center justify-center text-muted-foreground gap-2">
               <ImageIcon className="h-5 w-5" />
               <span className="text-sm">Vista previa de la imagen</span>
             </div>
@@ -211,15 +211,15 @@ export const LocationForm: React.FC<LocationFormProps> = ({
           {showMap ? "Ocultar mapa" : "Seleccionar en mapa"}
         </Button>
         {latitude && longitude && (
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-secondary">
             Coordenadas: {latitude.toFixed(6)}, {longitude.toFixed(6)}
           </span>
         )}
       </div>
 
       {showMap && (
-        <div className="border border-gray-300 rounded-lg p-4 bg-gray-50">
-          <div className="text-center text-gray-600 mb-2">
+        <div className="border border-default rounded-lg p-4 bg-app">
+          <div className="text-center text-secondary mb-2">
             🗺️ Seleccionar ubicación en mapa
           </div>
           <LocationMapPicker

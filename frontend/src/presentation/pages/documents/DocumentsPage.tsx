@@ -75,7 +75,7 @@ export const DocumentsPage: React.FC = () => {
           title="Aún no has subido documentos"
           description="Sube tu identificación oficial y tu título profesional desde Mi Perfil para completar tu registro."
           action={<Button>Ir a Mi Perfil</Button>}
-          icon={<FileText className="h-10 w-10 text-gray-400" />}
+          icon={<FileText className="h-10 w-10 text-muted-foreground" />}
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -86,13 +86,13 @@ export const DocumentsPage: React.FC = () => {
                   <span>{d.title}</span>
                   <Badge variant={statusVariant(d.status)}>{d.status}</Badge>
                 </CardTitle>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-secondary mt-1">
                   Formato: {d.format} · Actualizado: {d.updatedAt}
                 </p>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-md bg-gray-100 flex items-center justify-center text-gray-600">
+                  <div className="h-12 w-12 rounded-md bg-surface-2 flex items-center justify-center text-secondary">
                     {d.format === "PDF" ? (
                       <FileText className="h-6 w-6" />
                     ) : (
@@ -101,10 +101,10 @@ export const DocumentsPage: React.FC = () => {
                   </div>
 
                   <div className="flex-1">
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-secondary">
                       Vista previa (demo)
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-muted-foreground">
                       Detección automática de tipo de archivo
                     </div>
                   </div>
@@ -143,7 +143,7 @@ export const DocumentsPage: React.FC = () => {
           </div>
         }
       >
-        <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
+        <div className="rounded-md border border-dashed border-default bg-app p-8 text-center text-secondary">
           {active?.format === "PDF" ? (
             <div className="space-y-2">
               <FileText className="h-8 w-8 mx-auto" />

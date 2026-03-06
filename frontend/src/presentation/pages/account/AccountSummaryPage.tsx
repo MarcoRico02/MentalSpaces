@@ -61,12 +61,12 @@ export const AccountSummaryPage: React.FC = () => {
         {stats.map((s) => (
           <Card key={s.label}>
             <CardHeader>
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-secondary">
                 {s.label}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900">{s.value}</div>
+              <div className="text-2xl font-bold text-default">{s.value}</div>
             </CardContent>
           </Card>
         ))}
@@ -75,7 +75,7 @@ export const AccountSummaryPage: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>Movimientos recientes</CardTitle>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-secondary mt-1">
             Últimas transacciones registradas en tu cuenta.
           </p>
         </CardHeader>
@@ -92,13 +92,13 @@ export const AccountSummaryPage: React.FC = () => {
                 className="py-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <div className="font-medium text-gray-900">{m.concept}</div>
-                  <div className="text-sm text-gray-600">{m.createdAt}</div>
+                  <div className="font-medium text-default">{m.concept}</div>
+                  <div className="text-sm text-secondary">{m.createdAt}</div>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <div className="font-semibold text-gray-900">{m.amount}</div>
+                    <div className="font-semibold text-default">{m.amount}</div>
                   </div>
                   <Badge variant={statusVariant(m.status)}>{m.status}</Badge>
                 </div>

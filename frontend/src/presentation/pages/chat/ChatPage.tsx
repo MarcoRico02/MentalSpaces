@@ -96,7 +96,7 @@ export const ChatPage: React.FC = () => {
           <Card className="lg:col-span-1">
             <CardContent className="p-4 space-y-3">
               <div className="relative">
-                <Search className="h-4 w-4 text-gray-400 absolute left-3 top-3" />
+                <Search className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
                 <Input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -116,19 +116,19 @@ export const ChatPage: React.FC = () => {
                       className={`w-full text-left rounded-md border p-3 transition-colors ${
                         active
                           ? "border-blue-200 bg-blue-50"
-                          : "border-gray-200 hover:bg-gray-50"
+                          : "border-default hover:bg-app"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
-                        <div className="font-medium text-gray-900">
+                        <div className="font-medium text-default">
                           {c.userLabel}
                         </div>
                         {c.unread && <Badge variant="warning">Nuevo</Badge>}
                       </div>
-                      <div className="text-sm text-gray-600 mt-1 line-clamp-2">
+                      <div className="text-sm text-secondary mt-1 line-clamp-2">
                         {c.lastMessage}
                       </div>
-                      <div className="text-xs text-gray-500 mt-2">
+                      <div className="text-xs text-muted-foreground mt-2">
                         {c.updatedAt}
                       </div>
                     </button>
@@ -142,18 +142,18 @@ export const ChatPage: React.FC = () => {
         {/* Chat thread */}
         <Card className={mode === "admin" ? "lg:col-span-2" : "lg:col-span-3"}>
           <CardContent className="p-0">
-            <div className="border-b border-gray-100 p-4">
-              <div className="font-semibold text-gray-900">
+            <div className="border-b border-default p-4">
+              <div className="font-semibold text-default">
                 {mode === "admin"
                   ? "Conversación activa (usuario seleccionado)"
                   : "Tu conversación con el administrador"}
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-secondary">
                 Indicador “escribiendo...” · WebSocket: chat:nuevoMensaje (demo)
               </div>
             </div>
 
-            <div className="p-4 h-[420px] overflow-y-auto space-y-3 bg-gray-50">
+            <div className="p-4 h-[420px] overflow-y-auto space-y-3 bg-app">
               {messages.map((m) => (
                 <div
                   key={m.id}
@@ -163,13 +163,13 @@ export const ChatPage: React.FC = () => {
                     className={`max-w-[85%] rounded-lg px-3 py-2 text-sm shadow-sm ${
                       m.from === "me"
                         ? "bg-blue-600 text-white"
-                        : "bg-white text-gray-900 border border-gray-200"
+                        : "bg-surface text-default border border-default"
                     }`}
                   >
                     <div className="whitespace-pre-line">{m.text}</div>
                     <div
                       className={`mt-1 text-[11px] ${
-                        m.from === "me" ? "text-white/80" : "text-gray-500"
+                        m.from === "me" ? "text-white/80" : "text-muted-foreground"
                       }`}
                     >
                       {m.time}
@@ -179,7 +179,7 @@ export const ChatPage: React.FC = () => {
               ))}
             </div>
 
-            <div className="border-t border-gray-100 p-4 bg-white">
+            <div className="border-t border-default p-4 bg-surface">
               <div className="flex gap-2">
                 <Input placeholder="Escribe un mensaje..." />
                 <Button className="shrink-0">

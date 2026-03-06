@@ -2,17 +2,17 @@ import React from "react";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 import { NavItem } from "./NavItem";
 import {
-  Users,
-  Calendar,
-  Settings,
-  ClipboardList,
-  Building,
-  ShieldCheck,
-  Activity,
-  Cog,
-  BarChart3,
-  CreditCard,
-  Lock,
+    Users,
+    Calendar,
+    Settings,
+    ClipboardList,
+    Building,
+    ShieldCheck,
+    Activity,
+    Cog,
+    BarChart3,
+    CreditCard,
+    Lock, History,
 } from "lucide-react";
 
 export const AdminNavigation: React.FC = () => {
@@ -75,7 +75,11 @@ export const AdminNavigation: React.FC = () => {
       </NavItem>
 
       <NavItem to="/payments-record" icon={CreditCard}>
-        Gestion de pagos y subscripciones
+        Gestion subscripciones
+      </NavItem>
+
+      <NavItem to="" icon={History}>
+        Historial de pagos
       </NavItem>
 
       <NavItem to="/access" icon={Lock}>

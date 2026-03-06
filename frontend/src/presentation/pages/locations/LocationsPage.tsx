@@ -36,10 +36,10 @@ export const LocationsPage: React.FC = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl font-bold text-default mb-4">
             Acceso Restringido
           </h1>
-          <p className="text-gray-600">
+          <p className="text-secondary">
             Esta función está disponible solo para propietarios.
           </p>
         </div>
@@ -126,7 +126,7 @@ export const LocationsPage: React.FC = () => {
       {isLoadingLocations ? (
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto" />
-          <p className="mt-4 text-gray-600">Cargando locaciones...</p>
+          <p className="mt-4 text-secondary">Cargando locaciones...</p>
         </div>
       ) : locations?.length === 0 ? (
         /* Estado vacío */
@@ -134,7 +134,7 @@ export const LocationsPage: React.FC = () => {
           <CardContent>
             <div className="py-16 text-center">
               <svg
-                className="mx-auto h-12 w-12 text-gray-400 mb-4"
+                className="mx-auto h-12 w-12 text-muted-foreground mb-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -146,10 +146,10 @@ export const LocationsPage: React.FC = () => {
                   d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                 />
               </svg>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-default mb-2">
                 No hay locaciones registradas
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-secondary mb-6">
                 Comienza agregando tu primera locación para poder ofrecer consultorios.
               </p>
               <Button onClick={() => setShowForm(true)}>
@@ -164,7 +164,7 @@ export const LocationsPage: React.FC = () => {
           {/* Locaciones Activas */}
           {activeLocations.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              <h2 className="text-lg font-semibold text-default mb-4">
                 Locaciones Activas ({activeLocations.length})
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -186,7 +186,7 @@ export const LocationsPage: React.FC = () => {
           {/* Locaciones Inactivas */}
           {inactiveLocations.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              <h2 className="text-lg font-semibold text-default mb-4">
                 Locaciones Inactivas ({inactiveLocations.length})
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

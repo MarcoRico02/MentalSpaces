@@ -101,27 +101,27 @@ export const BookingsPage: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <div className="text-sm font-medium text-gray-700 mb-1">Fecha</div>
+              <div className="text-sm font-medium text-secondary mb-1">Fecha</div>
               <div className="flex items-center gap-2">
-                <CalendarDays className="h-4 w-4 text-gray-500" />
+                <CalendarDays className="h-4 w-4 text-muted-foreground" />
                 <input
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-default rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-xs text-muted-foreground mt-1">
                 Persistencia en localStorage (mencionado) - demo.
               </div>
             </div>
 
             <div>
-              <div className="text-sm font-medium text-gray-700 mb-1">
+              <div className="text-sm font-medium text-secondary mb-1">
                 Ubicación / Sede
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-gray-500" />
+                <MapPin className="h-4 w-4 text-muted-foreground" />
                 <Select
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
@@ -134,7 +134,7 @@ export const BookingsPage: React.FC = () => {
             </div>
 
             <div className="flex items-end">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-secondary">
                 Auto-refresh cada 5s · URL params: location/date/bookingCreated (demo)
               </div>
             </div>
@@ -145,7 +145,7 @@ export const BookingsPage: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>Grid</CardTitle>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-secondary mt-1">
             Eje X: horas (8:00–20:00) · Eje Y: consultorios. Click celda vacía → nueva reserva (demo).
           </p>
         </CardHeader>
@@ -154,9 +154,9 @@ export const BookingsPage: React.FC = () => {
             <div className="min-w-[900px]">
               {/* Header row */}
               <div className="grid" style={{ gridTemplateColumns: `180px repeat(${HOURS.length}, 1fr)` }}>
-                <div className="p-2 text-xs font-semibold text-gray-600">Sala</div>
+                <div className="p-2 text-xs font-semibold text-secondary">Sala</div>
                 {HOURS.map((h) => (
-                  <div key={h} className="p-2 text-xs font-semibold text-gray-600">
+                  <div key={h} className="p-2 text-xs font-semibold text-secondary">
                     {String(h).padStart(2, "0")}:00
                   </div>
                 ))}
@@ -164,7 +164,7 @@ export const BookingsPage: React.FC = () => {
                 {/* Rows */}
                 {rooms.map((room) => (
                   <React.Fragment key={room}>
-                    <div className="p-2 text-sm font-medium text-gray-900 border-t border-gray-100">
+                    <div className="p-2 text-sm font-medium text-default border-t border-default">
                       {room}
                     </div>
 
@@ -176,7 +176,7 @@ export const BookingsPage: React.FC = () => {
                       return (
                         <div
                           key={`${room}-${h}`}
-                          className="relative border-t border-gray-100 border-l border-gray-100 h-12"
+                          className="relative border-t border-default border-l border-default h-12"
                         >
                           {!hasBlock ? (
                             <button

@@ -92,7 +92,7 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
           locationId,
           ...data,
           caracteristicasIds: data.caracteristicasIds || [],
-          disponibilidadCreateRequestDTO: disponibilidades.length > 0 ? disponibilidades : undefined,
+          disponibilidades: disponibilidades.length > 0 ? disponibilidades : undefined,
         });
         toast.success("Cubículo creado exitosamente");
       }
@@ -126,7 +126,7 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
 
       {/* Tabs — solo en modo edición */}
       {isEditing && (
-        <div className="flex border-b border-gray-200">
+        <div className="flex border-b border-default">
           {(["info", "disponibilidad"] as const).map((tab) => (
             <button
               key={tab}
@@ -134,8 +134,8 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
                 activeTab === tab
-                  ? "border-blue-600 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-muted-foreground hover:text-secondary"
               }`}
             >
               {tab === "info" ? "Información" : "Disponibilidad"}
@@ -150,40 +150,40 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
           {/* Campos básicos */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div className="col-span-2">
-              <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="nombre" className="block text-sm font-medium text-secondary">
                 Nombre del Cubículo *
               </label>
               <input
                 type="text"
                 id="nombre"
                 {...register("nombre")}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full border border-default rounded-md shadow-sm bg-surface text-default placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="Ej: Sala de Terapia Individual"
               />
               {errors.nombre && <p className="mt-1 text-sm text-red-600">{errors.nombre.message}</p>}
             </div>
 
             <div className="col-span-2">
-              <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="descripcion" className="block text-sm font-medium text-secondary">
                 Descripción
               </label>
               <textarea
                 id="descripcion"
                 rows={3}
                 {...register("descripcion")}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full border border-default rounded-md shadow-sm bg-surface text-default placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="Describe el espacio y sus características..."
               />
               {errors.descripcion && <p className="mt-1 text-sm text-red-600">{errors.descripcion.message}</p>}
             </div>
 
             <div>
-              <label htmlFor="precio" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="precio" className="block text-sm font-medium text-secondary">
                 Precio por hora *
               </label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500 sm:text-sm">$</span>
+                  <span className="text-muted-foreground sm:text-sm">$</span>
                 </div>
                 <input
                   type="number"
@@ -191,7 +191,7 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
                   step="0.01"
                   min="0"
                   {...register("precio", { valueAsNumber: true })}
-                  className="mt-1 block w-full pl-7 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="mt-1 block w-full pl-7 border border-default rounded-md shadow-sm bg-surface text-default placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm"
                   placeholder="0.00"
                 />
               </div>
@@ -199,14 +199,14 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
             </div>
 
             <div>
-              <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="imageUrl" className="block text-sm font-medium text-secondary">
                 URL de Imagen
               </label>
               <input
                 type="url"
                 id="imageUrl"
                 {...register("imageUrl")}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full border border-default rounded-md shadow-sm bg-surface text-default placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm"
                 placeholder="https://ejemplo.com/imagen.jpg"
               />
               {errors.imageUrl && <p className="mt-1 text-sm text-red-600">{errors.imageUrl.message}</p>}
@@ -214,10 +214,10 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
           </div>
 
           {/* Estado activo/inactivo */}
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="flex items-center justify-between p-3 bg-app rounded-lg border border-default">
             <div>
-              <p className="text-sm font-medium text-gray-700">Estado del cubículo</p>
-              <p className="text-xs text-gray-500 mt-0.5">
+              <p className="text-sm font-medium text-secondary">Estado del cubículo</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
                 {activeValue ? "El cubículo estará disponible para reservas" : "El cubículo no estará disponible"}
               </p>
             </div>
@@ -225,10 +225,10 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
               type="button"
               onClick={() => setValue("active", !activeValue)}
               className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
-                activeValue ? "bg-blue-600" : "bg-gray-300"
+                activeValue ? "bg-primary" : "bg-surface-3"
               }`}
             >
-              <span className={`inline-block h-5 w-5 rounded-full bg-white shadow-sm transform transition-transform duration-200 ${
+              <span className={`inline-block h-5 w-5 rounded-full bg-surface shadow-sm transform transition-transform duration-200 ${
                 activeValue ? "translate-x-5" : "translate-x-0"
               }`} />
             </button>
@@ -237,14 +237,14 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
           {/* Características */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-gray-700">Características</label>
+              <label className="block text-sm font-medium text-secondary">Características</label>
               {selectedCaracteristicas.length > 0 && (
-                <span className="text-xs text-blue-600 font-medium">
+                <span className="text-xs text-primary font-medium">
                   {selectedCaracteristicas.length} seleccionada{selectedCaracteristicas.length !== 1 ? "s" : ""}
                 </span>
               )}
             </div>
-            <div className="border border-gray-200 rounded-lg p-3 max-h-48 overflow-y-auto bg-gray-50">
+            <div className="border border-default rounded-lg p-3 max-h-48 overflow-y-auto bg-app">
               <div className="flex flex-wrap gap-2">
                 {caracteristicas.map((caracteristica) => {
                   const isSelected = selectedCaracteristicas.includes(caracteristica.id);
@@ -255,8 +255,8 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
                       onClick={() => handleCaracteristicaToggle(caracteristica.id)}
                       className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-colors cursor-pointer ${
                         isSelected
-                          ? "bg-blue-600 text-white border-blue-600"
-                          : "bg-white text-gray-600 border-gray-300 hover:border-blue-400 hover:text-blue-600"
+                          ? "bg-primary text-white border-primary"
+                          : "bg-surface text-secondary border-default hover:border-primary hover:text-primary"
                       }`}
                     >
                       {isSelected && (
@@ -270,13 +270,13 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
                 })}
               </div>
             </div>
-            <p className="mt-1 text-xs text-gray-400">Haz clic para seleccionar o deseleccionar</p>
+            <p className="mt-1 text-xs text-muted-foreground">Haz clic para seleccionar o deseleccionar</p>
           </div>
 
           {/* Disponibilidad inline — solo al crear */}
           {!isEditing && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-secondary mb-2">
                 Horarios de disponibilidad
               </label>
               <DisponibilidadInlineEditor
@@ -295,11 +295,11 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
 
       {/* Botones — siempre visibles excepto en tab disponibilidad */}
       {(!isEditing || activeTab === "info") && (
-        <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+        <div className="flex justify-end space-x-3 pt-4 border-t border-default">
           <button
             type="button"
             onClick={onCancel}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="inline-flex items-center px-4 py-2 border border-default shadow-sm text-sm font-medium rounded-md text-secondary bg-surface hover:bg-app focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >
             <X className="h-4 w-4 mr-2" />
             Cancelar
@@ -307,7 +307,7 @@ export const CubiculoForm: React.FC<CubiculoFormProps> = ({
           <button
             type="submit"
             disabled={isLoading}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50"
           >
             <Save className="h-4 w-4 mr-2" />
             {isLoading ? "Guardando..." : isEditing ? "Actualizar" : "Crear"}
