@@ -153,4 +153,13 @@ export const authAPI = {
     eliminar: (id: number) =>
       apiClient.delete(`/suscripciones/${id}`),
   },
+
+  // Reservas endpoints
+  reservas: {
+    crear: (data: import("../../dominio/tipos/api").ReservaCreateRequestDTO) =>
+      apiClient.post<import("../../dominio/tipos/api").ReservaCreateResponseDTO>(
+        "/reservas",
+        data,
+      ),
+  },
 };

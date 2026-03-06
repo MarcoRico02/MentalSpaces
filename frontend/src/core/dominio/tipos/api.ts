@@ -283,6 +283,56 @@ export interface CrearSuscripcionRequest {
   descripcion?: string;
 }
 
+// ─── Reservas ────────────────────────────────────────────────────────────────
+export const EstadoReserva = {
+  PENDIENTE: "PENDIENTE",
+  RECHAZADO: "RECHAZADO",
+  CONFIRMADA: "CONFIRMADA",
+  CANCELADA: "CANCELADA",
+  FINALIZADA: "FINALIZADA",
+} as const;
+export type EstadoReserva = (typeof EstadoReserva)[keyof typeof EstadoReserva];
+
+export interface ReservaCreateRequestDTO {
+  cubiculoId: number;
+  /** ISO 8601: "2026-03-10T09:00:00" */
+  inicio: string;
+  /** ISO 8601: "2026-03-10T11:00:00" */
+  fin: string;
+  notas?: string;
+}
+
+export interface ReservaDTO {
+  id: number;
+  cubiculoId: number;
+  cubiculoNombre: string;
+  psicologoId: number;
+  inicio: string;
+  fin: string;
+  notas?: string;
+  estadoReserva: EstadoReserva;
+  createdAt: string;
+}
+
+export interface PagoResponse {
+  id: string;
+  monto: number;
+  moneda: string;
+  estado: string;
+  estadoDescripcion: string;
+  metodoPago?: string;
+  descripcion?: string;
+  requiereFactura: boolean;
+  fechaExpiracion?: string;
+  createdAt: string;
+}
+
+export interface ReservaCreateResponseDTO {
+  reservaDTO: ReservaDTO;
+  cubiculoDTO: CubiculoResponse;
+  pagoDTO: PagoResponse;
+}
+
 // Para la paginación extendida de cubículos
 export interface CubiculoPage extends Page<CubiculoResponse> {
   content: CubiculoResponse[];

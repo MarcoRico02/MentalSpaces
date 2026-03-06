@@ -16,6 +16,7 @@ import {
 } from "../../components/ui";
 import { authAPI } from "../../../core/infraestructura/api/api";
 import { showToast } from "../../../core/infraestructura/utilidades/toast";
+import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 import type { SuscripcionDTO, CrearSuscripcionRequest } from "../../../core/dominio/tipos/api";
 
 // ─── Esquema de validación ────────────────────────────────────────────────────
@@ -152,7 +153,8 @@ const PlanCard: React.FC<{
   plan: SuscripcionDTO;
   onEdit: (plan: SuscripcionDTO) => void;
   onDelete: (plan: SuscripcionDTO) => void;
-}> = ({ plan, onEdit, onDelete }) => (
+  canManage: boolean;
+}> = ({ plan, onEdit, onDelete, canManage }) => (
   <Card className="flex flex-col">
     <CardHeader>
       <div className="flex items-start justify-between gap-2">
@@ -204,20 +206,20 @@ const PlanCard: React.FC<{
     </CardContent>
 
     <CardFooter className="flex gap-2">
-      <Button
-        variant="secondary"
-        className="flex-1"
-        onClick={() => onEdit(plan)}
-      >
-        <Edit className="h-3.5 w-3.5 mr-1" /> Editar
-      </Button>
-      <Button
-        variant="danger"
-        className="flex-1"
-        onClick={() => onDelete(plan)}
-      >
-        <Trash2 className="h-3.5 w-3.5 mr-1" /> Eliminar
-      </Button>
+      {canManage ? (
+        <>
+          <Button variant="secondary" className="flex-1" onClick={() => onEdit(plan)}>
+            <Edit className="h-3.5 w-3.5 mr-1" /> Editar
+          </Button>
+          <Button variant="danger" className="flex-1" onClick={() => onDelete(plan)}>
+            <Trash2 className="h-3.5 w-3.5 mr-1" /> Eliminar
+          </Button>
+        </>
+      ) : (
+        <p className="text-xs text-muted-foreground w-full text-center py-1">
+          Solo administradores pueden gestionar planes
+        </p>
+      )}
     </CardFooter>
   </Card>
 );
@@ -225,6 +227,8 @@ const PlanCard: React.FC<{
 // ─── Página principal ─────────────────────────────────────────────────────────
 export const SubscriptionManagementPage: React.FC = () => {
   const qc = useQueryClient();
+  const { isAdmin } = useAuth();
+  const canManage = isAdmin();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingPlan, setEditingPlan] = useState<SuscripcionDTO | null>(null);
   const [deletingPlan, setDeletingPlan] = useState<SuscripcionDTO | null>(null);
@@ -317,12 +321,14 @@ export const SubscriptionManagementPage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="Gestión de Suscripciones"
-        description="Administra los planes de suscripción disponibles para los propietarios."
+        description="Planes de suscripción disponibles para los propietarios."
         right={
-          <Button onClick={handleOpenCreate}>
-            <Plus className="h-4 w-4 mr-2" />
-            Nuevo plan
-          </Button>
+          canManage ? (
+            <Button onClick={handleOpenCreate}>
+              <Plus className="h-4 w-4 mr-2" />
+              Nuevo plan
+            </Button>
+          ) : undefined
         }
       />
 
@@ -397,12 +403,16 @@ export const SubscriptionManagementPage: React.FC = () => {
               <Package className="mx-auto h-10 w-10 text-muted-foreground" />
               <p className="font-medium text-default">Sin planes registrados</p>
               <p className="text-sm text-muted-foreground">
-                Crea el primer plan de suscripción para los propietarios.
+                {canManage
+                  ? "Crea el primer plan de suscripción para los propietarios."
+                  : "Aún no hay planes de suscripción disponibles. Contacta al administrador."}
               </p>
-              <Button onClick={handleOpenCreate} className="mt-2">
-                <Plus className="h-4 w-4 mr-2" />
-                Crear primer plan
-              </Button>
+              {canManage && (
+                <Button onClick={handleOpenCreate} className="mt-2">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Crear primer plan
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -416,6 +426,7 @@ export const SubscriptionManagementPage: React.FC = () => {
               <PlanCard
                 key={plan.id}
                 plan={plan}
+                canManage={canManage}
                 onEdit={handleOpenEdit}
                 onDelete={setDeletingPlan}
               />
@@ -442,7 +453,7 @@ export const SubscriptionManagementPage: React.FC = () => {
                     <TH>Cubículos</TH>
                     <TH>Comisión</TH>
                     <TH>Descripción</TH>
-                    <TH>Acciones</TH>
+                    {canManage && <TH>Acciones</TH>}
                   </TR>
                 </THead>
                 <TBody>
@@ -474,26 +485,28 @@ export const SubscriptionManagementPage: React.FC = () => {
                           {plan.descripcion || "—"}
                         </span>
                       </TD>
-                      <TD>
-                        <div className="flex gap-1">
-                          <button
-                            type="button"
-                            onClick={() => handleOpenEdit(plan)}
-                            className="p-1.5 rounded hover:bg-surface-2 text-muted-foreground hover:text-primary transition-colors"
-                            title="Editar"
-                          >
-                            <Edit className="h-4 w-4" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setDeletingPlan(plan)}
-                            className="p-1.5 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors"
-                            title="Eliminar"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </TD>
+                      {canManage && (
+                        <TD>
+                          <div className="flex gap-1">
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEdit(plan)}
+                              className="p-1.5 rounded hover:bg-surface-2 text-muted-foreground hover:text-primary transition-colors"
+                              title="Editar"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setDeletingPlan(plan)}
+                              className="p-1.5 rounded hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors"
+                              title="Eliminar"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </TD>
+                      )}
                     </TR>
                   ))}
                 </TBody>

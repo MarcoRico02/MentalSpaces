@@ -6,7 +6,7 @@ import { ProtectedRoute } from "../presentation/components/common/ProtectedRoute
 import { LoginPage } from "../presentation/pages/auth/LoginPage";
 import { DashboardPage } from "../presentation/pages/dashboard/DashboardPage";
 import { LocationsPage } from "../presentation/pages/locations/LocationsPage";
-import { CubiculosPage } from "../presentation/pages/cubiculos/CubiculosPage";
+import { BuscarCubiculosPage } from "../presentation/pages/cubiculos/BuscarCubiculosPage";
 import { AccountSummaryPage } from "../presentation/pages/account/AccountSummaryPage";
 import { AccountHistoryPage } from "../presentation/pages/account/AccountHistoryPage";
 import {PaymentsPage} from "../presentation/pages/account/PaymentsPage";
@@ -29,6 +29,7 @@ import { LogsPage } from "../presentation/pages/logs/LogsPage";
 import { MonitoringPage} from "@/presentation/pages/system/SystemMonitoringPage.tsx";
 import { TrustLevelPage} from "@/presentation/pages/trust-level/TrustLevelPage.tsx";
 import { SubscriptionManagementPage } from "../presentation/pages/account/SubscriptionManagementPage";
+
 
 export const AppRoutes: React.FC = () => {
   const { isLoading } = useAuth();
@@ -179,7 +180,7 @@ export const AppRoutes: React.FC = () => {
           path="/cubiculos"
           element={
             <ProtectedRoute>
-              <CubiculosPage />
+              <BuscarCubiculosPage />
             </ProtectedRoute>
           }
         />
