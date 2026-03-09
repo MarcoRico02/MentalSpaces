@@ -1,26 +1,147 @@
 @import "tailwindcss";
 
+/* ─── Habilitar la variante dark por clase en <html> ─────────────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── Tokens semánticos ─────────────────────────────────────────────────────
+   Modo claro: blancos/grises claros + azul-600 como acento
+   Modo oscuro: escala de grises oscuros + azul-400 como acento (mayor contraste)
+   Todos los valores de color siguen el formato R G B para poder usar /opacity
+   ─────────────────────────────────────────────────────────────────────────── */
 @layer base {
   :root {
-    --primary: 59 130 246; /* blue-500 */
+    /* Acento azul */
+    --primary: 37 99 235;          /* blue-600  – sobre blanco ratio ≥ 4.5:1 ✓ */
+    --primary-hover: 29 78 216;    /* blue-700 */
+    --primary-foreground: 255 255 255;
+
+    /* Fondo de la app */
+    --bg-app: 249 250 251;         /* gray-50  */
+    --bg-surface: 255 255 255;     /* white    */
+    --bg-surface-2: 243 244 246;   /* gray-100 */
+    --bg-surface-3: 229 231 235;   /* gray-200 */
+
+    /* Texto */
+    --text-primary: 17 24 39;      /* gray-900 */
+    --text-secondary: 75 85 99;    /* gray-600 */
+    --text-muted: 107 114 128;     /* gray-500 */
+    --text-placeholder: 156 163 175; /* gray-400 */
+
+    /* Bordes */
+    --border: 229 231 235;         /* gray-200 */
+    --border-strong: 209 213 219;  /* gray-300 */
+
+    /* ── Sidebar ─────────────────────────────────────────────────────────── */
+    --sidebar: 255 255 255;                  /* bg */
+    --sidebar-border: 229 231 235;           /* gray-200 */
+    --sidebar-foreground: 55 65 81;          /* gray-700  texto nav */
+    --sidebar-primary: 37 99 235;            /* blue-600  ítem activo bg */
+    --sidebar-primary-foreground: 255 255 255;
+    --sidebar-accent: 239 246 255;           /* blue-50   hover bg */
+    --sidebar-accent-foreground: 29 78 216;  /* blue-700  hover texto */
+    --sidebar-ring: 147 197 253;             /* blue-300 */
+
+    /* ── Misceláneos ─────────────────────────────────────────────────────── */
+    --muted-foreground: 107 114 128;         /* gray-500  */
+    --ring: 147 197 253;                     /* blue-300  focus ring */
+  }
+
+  /* ── Modo oscuro ─────────────────────────────────────────────────────────
+     Escala de grises oscuros.  Azul sube a blue-400 para mantener contraste
+     sobre fondos oscuros (≥ 4.5:1 WCAG AA).
+     ─────────────────────────────────────────────────────────────────────── */
+  .dark {
+    /* Acento azul — blue-400 sobre gray-900 ratio ~5.9:1 ✓ */
+    --primary: 96 165 250;          /* blue-400 */
+    --primary-hover: 147 197 253;   /* blue-300 */
+    --primary-foreground: 15 23 42; /* slate-900  texto sobre botón azul */
+
+    /* Fondos */
+    --bg-app: 17 24 39;             /* gray-900 */
+    --bg-surface: 31 41 55;         /* gray-800 */
+    --bg-surface-2: 55 65 81;       /* gray-700 */
+    --bg-surface-3: 75 85 99;       /* gray-600 */
+
+    /* Texto — grises claros para contraste ≥ 4.5:1 sobre fondos oscuros */
+    --text-primary: 243 244 246;    /* gray-100 */
+    --text-secondary: 209 213 219;  /* gray-300 */
+    --text-muted: 156 163 175;      /* gray-400 */
+    --text-placeholder: 107 114 128; /* gray-500 */
+
+    /* Bordes */
+    --border: 55 65 81;             /* gray-700 */
+    --border-strong: 75 85 99;      /* gray-600 */
+
+    /* ── Sidebar oscuro ──────────────────────────────────────────────────── */
+    --sidebar: 24 33 47;                     /* un tono ligeramente más oscuro que surface */
+    --sidebar-border: 55 65 81;              /* gray-700 */
+    --sidebar-foreground: 209 213 219;       /* gray-300 */
+    --sidebar-primary: 96 165 250;           /* blue-400  ítem activo */
+    --sidebar-primary-foreground: 15 23 42;  /* texto sobre activo */
+    --sidebar-accent: 37 47 63;              /* gris azulado hover */
+    --sidebar-accent-foreground: 147 197 253; /* blue-300  texto hover */
+    --sidebar-ring: 59 130 246;              /* blue-500 */
+
+    /* Misceláneos */
+    --muted-foreground: 156 163 175;         /* gray-400 */
+    --ring: 59 130 246;                      /* blue-500 */
+  }
+
+  /* Aplicar color de fondo base a html/body para evitar parpadeo */
+  html {
+    background-color: rgb(var(--bg-app));
+    color: rgb(var(--text-primary));
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: rgb(var(--bg-app));
+    color: rgb(var(--text-primary));
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
+/* ─── Utilidades semánticas ─────────────────────────────────────────────── */
 @layer utilities {
-  .text-primary {
-    color: rgb(var(--primary));
-  }
-  .bg-primary {
-    background-color: rgb(var(--primary));
-  }
+  /* Acento */
+  .text-primary        { color: rgb(var(--primary)); }
+  .bg-primary          { background-color: rgb(var(--primary)); }
+  .border-primary      { border-color: rgb(var(--primary)); }
+  .ring-primary        { --tw-ring-color: rgb(var(--primary)); }
+
+  /* Superficies */
+  .bg-app              { background-color: rgb(var(--bg-app)); }
+  .bg-surface          { background-color: rgb(var(--bg-surface)); }
+  .bg-surface-2        { background-color: rgb(var(--bg-surface-2)); }
+  .bg-surface-3        { background-color: rgb(var(--bg-surface-3)); }
+
+  /* Texto */
+  .text-default        { color: rgb(var(--text-primary)); }
+  .text-secondary      { color: rgb(var(--text-secondary)); }
+  .text-muted-foreground { color: rgb(var(--muted-foreground)); }
+
+  /* Bordes */
+  .border-default      { border-color: rgb(var(--border)); }
+
+  /* Sidebar — usadas por Sidebar.tsx / NavItem.tsx / MobileNavigation.tsx */
+  .bg-sidebar          { background-color: rgb(var(--sidebar)); }
+  .border-sidebar-border { border-color: rgb(var(--sidebar-border)); }
+  .text-sidebar-foreground { color: rgb(var(--sidebar-foreground)); }
+  .bg-sidebar-primary  { background-color: rgb(var(--sidebar-primary)); }
+  .text-sidebar-primary-foreground { color: rgb(var(--sidebar-primary-foreground)); }
+  .bg-sidebar-accent   { background-color: rgb(var(--sidebar-accent)); }
+  .text-sidebar-accent-foreground { color: rgb(var(--sidebar-accent-foreground)); }
+  .ring-sidebar-ring   { --tw-ring-color: rgb(var(--sidebar-ring)); }
+
+  /* Gradientes (login) */
   .from-primary\/50 {
-    background: linear-gradient(
-      to var(--tw-gradient-to-position),
-      rgb(var(--primary) / 0.5),
-      var(--tw-gradient-stops)
-    );
+    --tw-gradient-from: rgb(var(--primary) / 0.5);
   }
   .to-primary {
-    background-color: rgb(var(--primary));
+    --tw-gradient-to: rgb(var(--primary));
   }
 }

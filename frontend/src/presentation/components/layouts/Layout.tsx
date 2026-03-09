@@ -14,7 +14,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({
   }
 
   return (
-    <div className="h-screen flex bg-gray-50">
+    <div className="h-screen flex bg-app">
       <AppLayout>{children}</AppLayout>
     </div>
   );

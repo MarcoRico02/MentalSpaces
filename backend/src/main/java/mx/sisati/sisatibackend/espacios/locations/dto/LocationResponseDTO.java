@@ -7,5 +7,6 @@ public record LocationResponseDTO(
     String address,
     Double latitude,
     Double longitude,
-    boolean active
+    boolean active,
+    String imageUrl
 ) {}

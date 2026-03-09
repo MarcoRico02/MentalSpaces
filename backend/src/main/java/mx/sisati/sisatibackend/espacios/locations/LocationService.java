@@ -21,6 +21,7 @@ public class LocationService {
 
     public Location saveLocation(LocationCreateRequestDTO locationCreateRequestDTO, Propietario propietario){
         Location location = new Location(locationCreateRequestDTO.name(), locationCreateRequestDTO.description(), locationCreateRequestDTO.address(), locationCreateRequestDTO.latitude(), locationCreateRequestDTO.longitude(), propietario);
+        location.setImageUrl(locationCreateRequestDTO.imageUrl());
         locationRepository.save(location);
         return location;
     }
@@ -41,7 +42,8 @@ public class LocationService {
                 dto.description(),
                 dto.address(),
                 dto.latitude(),
-                dto.longitude()
+                dto.longitude(),
+                dto.imageUrl()
         );
 
         return locationRepository.save(location);

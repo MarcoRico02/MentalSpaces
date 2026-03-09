@@ -41,7 +41,8 @@ public class CubiculoService {
                 dto.descripcion(),
                 dto.precio(),
                 dto.imageUrl(),
-                caracteristicas
+                caracteristicas,
+                dto.active() != null ? dto.active() : true
         );
 
         return cubiculoRepository.save(cubiculo);
@@ -50,10 +51,7 @@ public class CubiculoService {
     public Cubiculo updateCubiculo(Long cubiculoId, CubiculoUpdateRequestDTO dto, Propietario propietario) {
         Cubiculo cubiculo = findCubiculoByIdAndValidateOwnership(cubiculoId, propietario);
 
-        // Validar y resolver características (null = no modificar, vacío = eliminar todas)
         Set<Caracteristica> caracteristicas = validateAndResolveCaracteristicas(dto.caracteristicasIds());
-        
-        // Si es null, mantener las características actuales
         if (caracteristicas == null) {
             caracteristicas = cubiculo.getCaracteristicas();
         }
@@ -65,6 +63,10 @@ public class CubiculoService {
                 dto.imageUrl(),
                 caracteristicas
         );
+
+        if (dto.active() != null) {
+            cubiculo.setActive(dto.active());
+        }
 
         return cubiculoRepository.save(cubiculo);
     }

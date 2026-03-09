@@ -1,5 +1,6 @@
 package mx.sisati.sisatibackend.cloudflare;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -12,7 +13,8 @@ import java.io.InputStream;
 public class AlmacenamientoService {
     private final S3Client r2Client;
 
-    private static final String BUCKET = "sisati-archivos-dev";
+    @Value("${cloudflare.r2.bucket}")
+    private String bucket;
 
     public AlmacenamientoService(S3Client r2Client) {
         this.r2Client = r2Client;
@@ -20,7 +22,7 @@ public class AlmacenamientoService {
 
     public String upload(String key, InputStream file, long size, String contentType) {
         PutObjectRequest request = PutObjectRequest.builder()
-                .bucket(BUCKET)
+                .bucket(bucket)
                 .key(key)
                 .contentType(contentType)
                 .build();
@@ -33,7 +35,7 @@ public class AlmacenamientoService {
     public void delete(String key) {
 
         DeleteObjectRequest request = DeleteObjectRequest.builder()
-                .bucket(BUCKET)
+                .bucket(bucket)
                 .key(key)
                 .build();
 

@@ -13,5 +13,6 @@ public record CubiculoCreateRequestDTO(
         BigDecimal precio,
         String imageUrl,
         Set<Long> caracteristicasIds,
-        List<DisponibilidadCreateRequestDTO> disponibilidadCreateRequestDTO
+        List<DisponibilidadCreateRequestDTO> disponibilidadCreateRequestDTO,
+        Boolean active
 ) {}

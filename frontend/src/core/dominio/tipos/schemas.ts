@@ -73,6 +73,7 @@ export const locationCreateSchema = z.object({
     .number()
     .min(-180, "La longitud debe estar entre -180 y 180")
     .max(180, "La longitud debe estar entre -180 y 180"),
+  imageUrl: z.string().optional(),
 });
 
 export type LocationCreateFormData = z.infer<typeof locationCreateSchema>;

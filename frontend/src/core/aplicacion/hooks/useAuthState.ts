@@ -9,8 +9,16 @@ export const useAuthState = () => {
   } = useQuery({
     queryKey: ["auth", "user"],
     queryFn: async () => {
-      const { data } = await authAPI.me();
-      return data;
+      try {
+        const { data } = await authAPI.me();
+        return data;
+      } catch (e) {
+        // Si el backend falla (500) o responde 401/403, tratamos como 'no autenticado'
+        // para no romper el render del app shell.
+        // eslint-disable-next-line no-console
+        console.error("Error en /usuarios/me", e);
+        return null;
+      }
     },
     retry: false,
     staleTime: 5 * 60 * 1000, // 5 minutes

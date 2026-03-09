@@ -33,10 +33,10 @@ export const LocationModal: React.FC<LocationModalProps> = ({
       <DialogBackdrop className="fixed inset-0 transition-opacity backdrop-blur-[2px]" />
 
       <div className="fixed inset-0 flex items-center justify-center p-4">
-        <DialogPanel className="relative bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden transform transition-all">
+        <DialogPanel className="relative bg-surface rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden transform transition-all">
           {/* Header */}
-          <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 z-10">
-            <DialogTitle className="text-xl font-semibold text-gray-900">
+          <div className="sticky top-0 bg-surface border-b border-default px-6 py-4 z-10">
+            <DialogTitle className="text-xl font-semibold text-default">
               {location ? "Editar Locación" : "Nueva Locación"}
             </DialogTitle>
           </div>

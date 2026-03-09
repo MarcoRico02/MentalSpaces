@@ -6,7 +6,30 @@ import { ProtectedRoute } from "../presentation/components/common/ProtectedRoute
 import { LoginPage } from "../presentation/pages/auth/LoginPage";
 import { DashboardPage } from "../presentation/pages/dashboard/DashboardPage";
 import { LocationsPage } from "../presentation/pages/locations/LocationsPage";
-import { CubiculosPage } from "../presentation/pages/cubiculos/CubiculosPage";
+import { BuscarCubiculosPage } from "../presentation/pages/cubiculos/BuscarCubiculosPage";
+import { AccountSummaryPage } from "../presentation/pages/account/AccountSummaryPage";
+import { AccountHistoryPage } from "../presentation/pages/account/AccountHistoryPage";
+import {PaymentsPage} from "../presentation/pages/account/PaymentsPage";
+import { FaqPage } from "../presentation/pages/faq/FaqPage";
+import { SettingsPage } from "../presentation/pages/settings/SettingsPage";
+import { NotFoundPage } from "../presentation/pages/not-found/NotFoundPage";
+import { DocumentsPage } from "../presentation/pages/documents/DocumentsPage";
+import { ChatPage } from "../presentation/pages/chat/ChatPage";
+import { MyBookingsPage } from "../presentation/pages/bookings/MyBookingsPage";
+import { NewBookingPage } from "../presentation/pages/bookings/NewBookingPage";
+import { BookingsPage } from "../presentation/pages/bookings/BookingsPage";
+import { RoomsPage } from "../presentation/pages/rooms/RoomsPage";
+import { ProfilePage } from "../presentation/pages/profile/ProfilePage";
+import { TutorialPage } from "../presentation/pages/tutorial/TutorialPage";
+import { TherapistsPage } from "../presentation/pages/therapists/TherapistsPage";
+import { TherapistProfilePage } from "../presentation/pages/therapists/TherapistProfilePage";
+import { SystemConfigPage } from "../presentation/pages/system/SystemConfigPage";
+import { UsersListPage } from "../presentation/pages/users/UsersManagementPage";
+import { LogsPage } from "../presentation/pages/logs/LogsPage";
+import { MonitoringPage} from "@/presentation/pages/system/SystemMonitoringPage.tsx";
+import { TrustLevelPage} from "@/presentation/pages/trust-level/TrustLevelPage.tsx";
+import { SubscriptionManagementPage } from "../presentation/pages/account/SubscriptionManagementPage";
+
 
 export const AppRoutes: React.FC = () => {
   const { isLoading } = useAuth();
@@ -24,7 +47,17 @@ export const AppRoutes: React.FC = () => {
     <AppLayout>
       {/* Public Routes */}
       <Routes>
+        {/* Auth */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/auth" element={<Navigate to="/login" replace />} />
+
+        {/* Aliases / compat */}
+        <Route path="/my-payments" element={<Navigate to="/payments" replace />} />
+        <Route path="/account-settings" element={<Navigate to="/settings" replace />} />
+
+        {/* Public pages */}
+        <Route path="/faq" element={<FaqPage />} />
+        <Route path="/tutorial" element={<TutorialPage />} />
 
         {/* Protected Routes */}
         <Route
@@ -32,6 +65,104 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/account-summary"
+          element={
+            <ProtectedRoute>
+              <AccountSummaryPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/account-history"
+          element={
+            <ProtectedRoute>
+              <AccountHistoryPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/payments"
+          element={
+            <ProtectedRoute>
+              <PaymentsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/payments-record"
+          element={
+            <ProtectedRoute>
+              <SubscriptionManagementPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Logs de auditoría (reorganizado) */}
+        <Route
+          path="/logs"
+          element={
+            <ProtectedRoute>
+              <LogsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Configuraciones (alias usado por el menú) */}
+        <Route
+          path="/config"
+          element={
+          <ProtectedRoute>
+            <SystemConfigPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/bookings-rules"
+          element={
+            <ProtectedRoute>
+                <SystemConfigPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Usuarios (alias usado por el menú) */}
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute>
+              <UsersListPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Compat legacy /admin/* */}
+        <Route path="/logs"
+               element={
+                    <ProtectedRoute>
+                        <LogsPage />
+                    </ProtectedRoute>
+               } />
+        <Route path="/users"
+               element={
+                    <ProtectedRoute>
+                        <UsersListPage />
+                    </ProtectedRoute>
+               } />
+
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <SettingsPage />
             </ProtectedRoute>
           }
         />
@@ -49,13 +180,148 @@ export const AppRoutes: React.FC = () => {
           path="/cubiculos"
           element={
             <ProtectedRoute>
-              <CubiculosPage />
+              <BuscarCubiculosPage />
             </ProtectedRoute>
           }
         />
 
+        <Route
+          path="/documents"
+          element={
+            <ProtectedRoute>
+              <DocumentsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/my-bookings"
+          element={
+            <ProtectedRoute>
+              <MyBookingsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Alias: equivalente semántico */}
+        <Route
+          path="/bookings/mine"
+          element={<Navigate to="/my-bookings" replace />}
+        />
+
+        <Route
+          path="/new-booking"
+          element={
+            <ProtectedRoute>
+              <NewBookingPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Alias: edición via query param (documento) */}
+        <Route
+          path="/edit-booking"
+          element={<Navigate to="/new-booking" replace />}
+        />
+
+        <Route
+          path="/bookings"
+          element={
+            <ProtectedRoute>
+              <BookingsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Alias: calendario admin existente */}
+        <Route path="/admin/bookings" element={<Navigate to="/bookings" replace />} />
+
+        <Route
+          path="/rooms"
+          element={
+            <ProtectedRoute>
+              <RoomsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/therapists"
+          element={
+            <ProtectedRoute>
+              <TherapistsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/therapist-profile"
+          element={
+            <ProtectedRoute>
+              <TherapistProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/system-config"
+          element={
+            <ProtectedRoute>
+              <SystemConfigPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/users-management"
+          element={
+            <ProtectedRoute>
+              <UsersListPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+            path="/monitoring"
+            element={
+                <ProtectedRoute>
+                    <MonitoringPage />
+                </ProtectedRoute>
+            }
+        />
+
+        <Route
+            path="/trust-level"
+            element={
+                <ProtectedRoute>
+                    <TrustLevelPage />
+                </ProtectedRoute>
+            }
+        />
+
         {/* Redirect to dashboard */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+        {/* 404 */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AppLayout>
   );

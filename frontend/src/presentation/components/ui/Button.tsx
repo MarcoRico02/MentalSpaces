@@ -17,14 +17,19 @@ export const Button: React.FC<ButtonProps> = ({
     "px-4 py-2 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variantClasses = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
-    secondary: "bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500",
-    danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
+    // Azul — usa --primary que cambia según el tema (blue-600 claro / blue-400 oscuro)
+    primary:
+      "bg-primary text-white hover:opacity-90 focus:ring-primary",
+    // Secundario — superficie neutra con texto claro en oscuro
+    secondary:
+      "bg-surface-2 text-default border border-default hover:bg-surface-3 focus:ring-primary",
+    danger:
+      "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
   };
 
   return (
     <button
-      className={`${baseClasses} ${variantClasses[variant as keyof typeof variantClasses]} ${className}`}
+      className={`${baseClasses} ${variantClasses[variant]} ${className}`}
       disabled={disabled || isLoading}
       {...props}
     >

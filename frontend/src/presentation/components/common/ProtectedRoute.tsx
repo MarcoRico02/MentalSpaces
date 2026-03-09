@@ -28,13 +28,18 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // Acceso total para PROPIETARIO (mientras ADMIN no esté bien definido en la estructura)
+  if (hasRole("PROPIETARIO")) {
+    return <>{children}</>;
+  }
+
   // If role required and doesn't have it, show access denied
   if (requiredRole && !hasRole(requiredRole)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Access Denied</h1>
-          <p className="mt-2 text-gray-600">
+          <h1 className="text-2xl font-bold text-default">Access Denied</h1>
+          <p className="mt-2 text-secondary">
             You don't have permissions to access this page.
           </p>
         </div>

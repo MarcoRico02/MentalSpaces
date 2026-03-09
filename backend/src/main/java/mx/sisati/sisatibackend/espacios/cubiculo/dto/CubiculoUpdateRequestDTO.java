@@ -8,5 +8,6 @@ public record CubiculoUpdateRequestDTO(
         String descripcion,
         BigDecimal precio,
         String imageUrl,
-        Set<Long> caracteristicasIds
+        Set<Long> caracteristicasIds,
+        Boolean active
 ) {}

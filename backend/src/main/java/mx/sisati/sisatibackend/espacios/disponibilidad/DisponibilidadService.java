@@ -83,7 +83,10 @@ public class DisponibilidadService {
             }
 
             if (haySuperposicion(horaInicio, horaFin, existente.getHoraInicio(), existente.getHoraFin())) {
-                throw new ServiceException(this.getClass(), "La disponibilidad se superpone con una existente para el mismo día de la semana");
+                throw new ServiceException(this.getClass(),
+                        "El horario " + horaInicio + "–" + horaFin +
+                        " se superpone con el horario existente " + existente.getHoraInicio() + "–" + existente.getHoraFin() +
+                        " del mismo día. Usa rangos de horas que no se solapicen (p. ej. 09:00–13:00 y 15:00–19:00).");
             }
         }
     }
