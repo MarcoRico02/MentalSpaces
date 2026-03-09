@@ -2,6 +2,7 @@ package mx.sisati.sisatibackend.archivo;
 
 import mx.sisati.sisatibackend.cloudflare.AlmacenamientoService;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
+import mx.sisati.sisatibackend.identidad.psicologos.Psicologo;
 import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,6 +107,46 @@ public class ArchivoService {
                     is,
                     fotoDePerfil.getSize(),
                     fotoDePerfil.getContentType()
+            );
+
+            return archivo.getId();
+
+        } catch (IOException e) {
+            throw new ServiceException(this.getClass(), "Error leyendo archivo subido");
+        }
+    }
+
+    public UUID subirCedulaProfesional(Psicologo psicologo, MultipartFile cedulaProfecional){
+        try (InputStream is = cedulaProfecional.getInputStream()) {
+
+            Archivo archivo = this.subir(
+                    TipoEntidad.PSICOLOGO,
+                    psicologo.getId(),
+                    TipoArchivo.PSICOLOGO_CEDULA_PROFESIONAL,
+                    cedulaProfecional.getOriginalFilename(),
+                    is,
+                    cedulaProfecional.getSize(),
+                    cedulaProfecional.getContentType()
+            );
+
+            return archivo.getId();
+
+        } catch (IOException e) {
+            throw new ServiceException(this.getClass(), "Error leyendo archivo subido");
+        }
+    }
+
+    public UUID subirIdentificacion(Psicologo psicologo, MultipartFile identificacion){
+        try (InputStream is = identificacion.getInputStream()) {
+
+            Archivo archivo = this.subir(
+                    TipoEntidad.PSICOLOGO,
+                    psicologo.getId(),
+                    TipoArchivo.PSICOLOGO_IDENTIFICACION,
+                    identificacion.getOriginalFilename(),
+                    is,
+                    identificacion.getSize(),
+                    identificacion.getContentType()
             );
 
             return archivo.getId();

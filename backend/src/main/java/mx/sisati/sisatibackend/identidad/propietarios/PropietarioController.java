@@ -21,15 +21,11 @@ public class PropietarioController {
         this.registrarPropietario = registrarPropietario;
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping
     public ResponseEntity<PropietarioRegisterResponseDTO> saveOwner(
-            @RequestParam("username") String username,
-            @RequestParam("fullName") String fullName,
-            @RequestParam("email") String email,
-            @RequestParam("password") String password,
-            @RequestParam(value = "fotoPerfil", required = false) MultipartFile fotoPerfil
+            @RequestBody PropietarioRegisterRequestDTO dto
     ){
-        Propietario propietario = registrarPropietario.execute(new PropietarioRegisterRequestDTO(new UsuarioRegisterDTO(username, password, fullName, email)), fotoPerfil);
+        Propietario propietario = registrarPropietario.execute(dto);
         PropietarioRegisterResponseDTO respuesta = new PropietarioRegisterResponseDTO(propietario);
         return ResponseEntity.created(URI.create("/propietarios/" + respuesta.usuarioRegisterResponseDTO().id())).body(respuesta);
     }

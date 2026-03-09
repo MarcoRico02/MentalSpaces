@@ -26,8 +26,8 @@ public class RegistrarPropietario {
     }
 
     @Transactional
-    public Propietario execute(PropietarioRegisterRequestDTO dto, MultipartFile fotoDePerfil) {
-        Usuario usuario = gestionarUsuarios.save(dto.usuarioRegisterDTO(), fotoDePerfil);
+    public Propietario execute(PropietarioRegisterRequestDTO dto) {
+        Usuario usuario = gestionarUsuarios.save(dto.usuarioRegisterDTO());
         Rol rol = rolService.propietario();
         return propietarioService.saveOwner(usuario, rol);
     }

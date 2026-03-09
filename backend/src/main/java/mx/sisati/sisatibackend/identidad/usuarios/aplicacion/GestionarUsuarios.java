@@ -22,12 +22,10 @@ public class GestionarUsuarios {
     private final UsuarioService usuarioService;
     private final PsicologoService psicologoService;
     private final PropietarioService propietarioService;
-    private final ArchivoService archivoService;
-    public GestionarUsuarios(UsuarioService usuarioService, PsicologoService psicologoService, PropietarioService propietarioService, ArchivoService archivoService) {
+    public GestionarUsuarios(UsuarioService usuarioService, PsicologoService psicologoService, PropietarioService propietarioService) {
         this.usuarioService = usuarioService;
         this.psicologoService = psicologoService;
         this.propietarioService = propietarioService;
-        this.archivoService = archivoService;
     }
 
     public UsuarioMeResponseDTO execute(Usuario usuario){
@@ -43,10 +41,8 @@ public class GestionarUsuarios {
     }
 
     @Transactional
-    public Usuario save(UsuarioRegisterDTO nuevoUsuario, MultipartFile fotoDePerfil){
+    public Usuario save(UsuarioRegisterDTO nuevoUsuario){
         Usuario usuario = usuarioService.saveUser(nuevoUsuario);
-        UUID archivoId = archivoService.subirFotoPerfil(usuario, fotoDePerfil);
-        usuarioService.asignarFotoPerfil(usuario.getId(),archivoId);
         return usuario;
     }
 }

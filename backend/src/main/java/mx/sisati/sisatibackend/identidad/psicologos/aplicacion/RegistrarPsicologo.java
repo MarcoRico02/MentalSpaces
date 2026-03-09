@@ -25,8 +25,8 @@ public class RegistrarPsicologo {
     }
 
     @Transactional
-    public Psicologo execute(PsicologoRegisterRequestDTO dto, MultipartFile fotoDePerfil) {
-        Usuario usuario = gestionarUsuarios.save(dto.usuarioRegisterDTO(), fotoDePerfil);
+    public Psicologo execute(PsicologoRegisterRequestDTO dto) {
+        Usuario usuario = gestionarUsuarios.save(dto.usuarioRegisterDTO());
         Rol rol = rolService.psicologo();
         return psicologoService.savePsychologist(usuario, dto, rol);
     }

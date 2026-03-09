@@ -50,6 +50,6 @@ public class GestionarReservas {
         reservaValidadorCreacionService.validarReglasCreacion(configuracionesSistema, createDTO.inicio(), createDTO.fin());
         Reserva reserva = reservaService.crearReserva(cubiculo, psicologo, createDTO.inicio(), createDTO.fin(), createDTO.notas());
         PagoResponse pagoResponse = pagoReservaService.crearPagoParaReserva(reserva, 15);
-        return  new ReservaCreateResponseDTO(reserva, cubiculo, pagoResponse);
+        return new ReservaCreateResponseDTO(reserva, cubiculo, pagoResponse);
     }
 }
