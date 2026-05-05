@@ -149,10 +149,10 @@ export const SystemConfigPage: React.FC = () => {
           <Card>
             <CardContent>
               <div className="py-10 text-center">
-                <div className="text-lg font-semibold text-gray-900">
+                <div className="text-lg font-semibold text-default">
                   Acceso restringido
                 </div>
-                <div className="text-sm text-gray-600 mt-2">
+                <div className="text-sm text-secondary mt-2">
                   Tu cuenta no tiene permisos para ver esta página.
                 </div>
               </div>
@@ -215,7 +215,7 @@ export const SystemConfigPage: React.FC = () => {
 
                   <CardContent>
                     {!editing ? (
-                        <div className="text-2xl font-semibold text-gray-900">
+                        <div className="text-2xl font-semibold text-default">
                           {config.value}
                         </div>
                     ) : (
@@ -233,7 +233,7 @@ export const SystemConfigPage: React.FC = () => {
                         />
                     )}
 
-                    <div className="text-xs text-gray-500 mt-2">
+                    <div className="text-xs text-muted-foreground mt-2">
                       Última actualización: {new Date(config.updatedAt).toLocaleString()}
                     </div>
                   </CardContent>

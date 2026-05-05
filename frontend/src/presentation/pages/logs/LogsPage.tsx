@@ -65,8 +65,8 @@ export const LogsPage: React.FC = () => {
     });
 
     const badgeClass = (sev: Severity) => {
-        if (sev === "ALL") return "bg-gray-100 text-gray-800";
-        return severityColors[sev] ?? "bg-gray-100 text-gray-800";
+        if (sev === "ALL") return "bg-surface-2 text-default";
+        return severityColors[sev] ?? "bg-surface-2 text-default";
     };
 
     const toggleSort = (field: "createdAt" | "severity") => {
@@ -92,15 +92,15 @@ export const LogsPage: React.FC = () => {
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-6 gap-3">
                         <div>
-                            <div className="text-sm font-medium text-gray-700 mb-1">Desde</div>
+                            <div className="text-sm font-medium text-secondary mb-1">Desde</div>
                             <Input type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
                         </div>
                         <div>
-                            <div className="text-sm font-medium text-gray-700 mb-1">Hasta</div>
+                            <div className="text-sm font-medium text-secondary mb-1">Hasta</div>
                             <Input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
                         </div>
                         <div>
-                            <div className="text-sm font-medium text-gray-700 mb-1">Severidad</div>
+                            <div className="text-sm font-medium text-secondary mb-1">Severidad</div>
                             <Select value={severity} onChange={(e) => setSeverity(e.target.value as Severity)}>
                                 <option value="ALL">ALL</option>
                                 <option value="INFO">INFO</option>
@@ -110,7 +110,7 @@ export const LogsPage: React.FC = () => {
                             </Select>
                         </div>
                         <div className="md:col-span-2">
-                            <div className="text-sm font-medium text-gray-700 mb-1">Módulo/Endpoint</div>
+                            <div className="text-sm font-medium text-secondary mb-1">Módulo/Endpoint</div>
                             <Input
                                 value={moduleLike}
                                 onChange={(e) => setModuleLike(e.target.value)}
@@ -118,13 +118,13 @@ export const LogsPage: React.FC = () => {
                             />
                         </div>
                         <div>
-                            <div className="text-sm font-medium text-gray-700 mb-1">Usuario ID</div>
+                            <div className="text-sm font-medium text-secondary mb-1">Usuario ID</div>
                             <Input value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="123" />
                         </div>
                     </div>
 
                     <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                        <div className="text-sm text-gray-600">
+                        <div className="text-sm text-secondary">
                             Auto-refresh: 15s (mencionado) · pageSize: 20 (demo)
                         </div>
                         <div className="flex gap-2">
@@ -152,7 +152,7 @@ export const LogsPage: React.FC = () => {
             <Card>
                 <CardHeader>
                     <CardTitle>Tabla de logs</CardTitle>
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-xs text-muted-foreground mt-1">
                         Ordenamiento interactivo: {sort} ({dir})
                     </div>
                 </CardHeader>
@@ -199,7 +199,7 @@ export const LogsPage: React.FC = () => {
                     </Table>
 
                     <div className="mt-4 flex items-center justify-between text-sm">
-                        <div className="text-gray-600">Página {page} de 10 · Total: 200 (demo)</div>
+                        <div className="text-secondary">Página {page} de 10 · Total: 200 (demo)</div>
                         <div className="flex gap-2">
                             <Button variant="secondary" onClick={() => setPage(1)}>Primera</Button>
                             <Button variant="secondary" onClick={() => setPage((p) => Math.max(1, p - 1))}>Anterior</Button>
@@ -233,14 +233,14 @@ export const LogsPage: React.FC = () => {
                         ["Endpoint", "/api/bookings"],
                         ["URL", "https://sati.mx/demo"],
                     ].map(([k, v]) => (
-                        <div key={k} className="rounded-md border border-gray-200 p-3">
-                            <div className="text-gray-600">{k}</div>
-                            <div className="font-medium text-gray-900">{v}</div>
+                        <div key={k} className="rounded-md border border-default p-3">
+                            <div className="text-secondary">{k}</div>
+                            <div className="font-medium text-default">{v}</div>
                         </div>
                     ))}
                     <div className="md:col-span-2">
-                        <div className="text-sm font-medium text-gray-700 mb-2">Stack trace</div>
-                        <pre className="max-h-48 overflow-auto rounded-md border border-gray-200 bg-gray-50 p-3 text-xs">
+                        <div className="text-sm font-medium text-secondary mb-2">Stack trace</div>
+                        <pre className="max-h-48 overflow-auto rounded-md border border-default bg-app p-3 text-xs">
 Stack trace demo...
 line 1
 line 2

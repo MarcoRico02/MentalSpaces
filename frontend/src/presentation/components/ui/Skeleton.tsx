@@ -15,7 +15,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
         {Array.from({ length: lines }).map((_, i) => (
           <div
             key={i}
-            className="h-4 w-full animate-pulse rounded bg-gray-200"
+            className="h-4 w-full animate-pulse rounded bg-surface-3"
           />
         ))}
       </div>
@@ -24,7 +24,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 
   return (
     <div
-      className={`h-4 w-full animate-pulse rounded bg-gray-200 ${className}`}
+      className={`h-4 w-full animate-pulse rounded bg-surface-3 ${className}`}
       {...props}
     />
   );

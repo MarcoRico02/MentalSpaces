@@ -41,7 +41,8 @@ public class CubiculoService {
                 dto.descripcion(),
                 dto.precio(),
                 dto.imageUrl(),
-                caracteristicas
+                caracteristicas,
+                dto.active() != null ? dto.active() : true
         );
 
         return cubiculoRepository.save(cubiculo);
@@ -50,10 +51,7 @@ public class CubiculoService {
     public Cubiculo updateCubiculo(Long cubiculoId, CubiculoUpdateRequestDTO dto, Propietario propietario) {
         Cubiculo cubiculo = findCubiculoByIdAndValidateOwnership(cubiculoId, propietario);
 
-        // Validar y resolver características (null = no modificar, vacío = eliminar todas)
         Set<Caracteristica> caracteristicas = validateAndResolveCaracteristicas(dto.caracteristicasIds());
-        
-        // Si es null, mantener las características actuales
         if (caracteristicas == null) {
             caracteristicas = cubiculo.getCaracteristicas();
         }
@@ -65,6 +63,10 @@ public class CubiculoService {
                 dto.imageUrl(),
                 caracteristicas
         );
+
+        if (dto.active() != null) {
+            cubiculo.setActive(dto.active());
+        }
 
         return cubiculoRepository.save(cubiculo);
     }
@@ -105,8 +107,12 @@ public class CubiculoService {
         return cubiculo;
     }
 
-    public Cubiculo getByCubiculoIdOrThrow(Long id){
-        return cubiculoRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(),"CUBICULO_NOT_FOUND"));
+    public Cubiculo getByCubiculoActiveIdOrThrow(Long id){
+        Cubiculo cubiculo = cubiculoRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(),"CUBICULO_NOT_FOUND"));
+        if(!cubiculo.isActive()){
+            throw new ServiceException(this.getClass(), "CUBICULO_NO_DISPONIBLE");
+        }
+        return cubiculo;
     }
 
     public void deactivateAllCubiculosByLocation(Location location) {
@@ -201,7 +207,7 @@ public class CubiculoService {
                     .filter(id -> !foundIds.contains(id))
                     .collect(Collectors.toSet());
                     
-            throw new DomainException("Características no encontradas con IDs: " + missingIds);
+            throw new DomainException(this.getClass(), "Características no encontradas con IDs: " + missingIds);
         }
         
         return foundCaracteristicas.stream().collect(Collectors.toSet());

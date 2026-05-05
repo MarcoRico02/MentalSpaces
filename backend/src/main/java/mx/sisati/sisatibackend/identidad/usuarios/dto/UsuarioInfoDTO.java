@@ -14,7 +14,6 @@ public record UsuarioInfoDTO(
         String fullName,
         String email,
         String bio,
-        String profileImageUrl,
         Set<RolNombre> roles,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
@@ -27,7 +26,6 @@ public record UsuarioInfoDTO(
                 usuario.getFullName(),
                 usuario.getEmail(),
                 usuario.getBio(),
-                usuario.getProfileImageUrl(),
                 usuario.getRoles()
                         .stream()
                         .map(Rol::getNombre)

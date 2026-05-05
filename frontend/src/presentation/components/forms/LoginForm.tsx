@@ -40,11 +40,11 @@ export const LoginForm: React.FC = () => {
       <div className="space-y-8">
         {/* Tabs */}
         <Tab.Group selectedIndex={selectedTab} onChange={setSelectedTab}>
-          <Tab.List className="flex space-x-1 rounded-lg bg-gray-100 p-1">
+          <Tab.List className="flex space-x-1 rounded-lg bg-surface-2 p-1">
             <Tab
               className={({ selected }) =>
                 `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700
-                  ${selected ? "bg-white shadow" : "text-blue-100 hover:bg-white/[0.12] hover:text-blue-600"}`
+                  ${selected ? "bg-surface shadow" : "text-blue-100 hover:bg-surface/[0.12] hover:text-blue-600"}`
               }
             >
               Iniciar sesión
@@ -52,7 +52,7 @@ export const LoginForm: React.FC = () => {
             <Tab
               className={({ selected }) =>
                 `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700
-                  ${selected ? "bg-white shadow" : "text-blue-100 hover:bg-white/[0.12] hover:text-blue-600"}`
+                  ${selected ? "bg-surface shadow" : "text-blue-100 hover:bg-surface/[0.12] hover:text-blue-600"}`
               }
             >
               Registrarse
@@ -102,11 +102,11 @@ export const LoginForm: React.FC = () => {
                       id="remember-me"
                       name="please-remember-me"
                       type="checkbox"
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-default rounded"
                     />
                     <label
                       htmlFor="please-remember-me"
-                      className="ml-2 block text-sm text-gray-900"
+                      className="ml-2 block text-sm text-default"
                     >
                       Recordarme
                     </label>
@@ -140,11 +140,11 @@ export const LoginForm: React.FC = () => {
               <div className="space-y-6">
                 {/* Registration type tabs */}
                 <Tab.Group>
-                  <Tab.List className="flex space-x-1 rounded-lg bg-gray-100 p-1">
+                  <Tab.List className="flex space-x-1 rounded-lg bg-surface-2 p-1">
                     <Tab
                       className={({ selected }) =>
                         `w-full rounded-lg py-2 text-sm font-medium leading-5 text-blue-700
-                          ${selected ? "bg-white shadow" : "text-blue-100 hover:bg-white/[0.12] hover:text-blue-600"}`
+                          ${selected ? "bg-surface shadow" : "text-blue-100 hover:bg-surface/[0.12] hover:text-blue-600"}`
                       }
                     >
                       Psicólogo
@@ -152,7 +152,7 @@ export const LoginForm: React.FC = () => {
                     <Tab
                       className={({ selected }) =>
                         `w-full rounded-lg py-2 text-sm font-medium leading-5 text-blue-700
-                          ${selected ? "bg-white shadow" : "text-blue-100 hover:bg-white/[0.12] hover:text-blue-600"}`
+                          ${selected ? "bg-surface shadow" : "text-blue-100 hover:bg-surface/[0.12] hover:text-blue-600"}`
                       }
                     >
                       Propietario
@@ -163,10 +163,10 @@ export const LoginForm: React.FC = () => {
                     <Tab.Panel>
                       <div className="space-y-4">
                         <div className="text-center">
-                          <h3 className="text-lg font-medium text-gray-900 mb-2">
+                          <h3 className="text-lg font-medium text-default mb-2">
                             Registro de Psicólogo
                           </h3>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-secondary">
                             Regístrate como profesional de la salud mental
                           </p>
                         </div>
@@ -176,10 +176,10 @@ export const LoginForm: React.FC = () => {
                     <Tab.Panel>
                       <div className="space-y-4">
                         <div className="text-center">
-                          <h3 className="text-lg font-medium text-gray-900 mb-2">
+                          <h3 className="text-lg font-medium text-default mb-2">
                             Registro de Propietario
                           </h3>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-secondary">
                             Publica tus consultorios para reservas
                           </p>
                         </div>

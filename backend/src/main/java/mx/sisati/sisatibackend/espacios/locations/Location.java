@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import mx.sisati.sisatibackend.excepciones.DomainException;
 import mx.sisati.sisatibackend.identidad.propietarios.Propietario;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -36,14 +38,19 @@ public class Location {
     @Column(nullable = false)
     private boolean active = true;
 
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "propietario_id", nullable = false)
     private Propietario propietario;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "updated_at")
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     public Location(String name, String description, String address, Double latitude, Double longitude, Propietario propietario) {
@@ -61,7 +68,8 @@ public class Location {
             String description,
             String address,
             Double latitude,
-            Double longitude
+            Double longitude,
+            String imageUrl
     ) {
         validate(name, description, address, latitude, longitude, this.propietario);
         this.name = name;
@@ -69,6 +77,11 @@ public class Location {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.imageUrl = imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     @PrePersist

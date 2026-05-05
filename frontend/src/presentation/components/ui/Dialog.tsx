@@ -26,29 +26,29 @@ export const Dialog: React.FC<DialogProps> = ({
     <div className="fixed inset-0 z-50">
       <button
         type="button"
-        className="absolute inset-0 bg-black/40"
+        className="absolute inset-0 bg-black/50 dark:bg-black/70"
         onClick={() => onOpenChange?.(false)}
         aria-label="Cerrar modal"
       />
       <div className="absolute inset-0 flex items-center justify-center p-4">
         <div
-          className={`w-full ${maxWidthClassName} rounded-lg bg-white shadow-lg border border-gray-200`}
+          className={`w-full ${maxWidthClassName} rounded-lg bg-surface shadow-lg border border-default`}
           role="dialog"
           aria-modal="true"
         >
-          <div className="flex items-start justify-between gap-4 p-4 border-b border-gray-100">
+          <div className="flex items-start justify-between gap-4 p-4 border-b border-default">
             <div>
               {title && (
-                <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
+                <h2 className="text-lg font-semibold text-default">{title}</h2>
               )}
               {description && (
-                <p className="text-sm text-gray-600 mt-1">{description}</p>
+                <p className="text-sm text-secondary mt-1">{description}</p>
               )}
             </div>
             <button
               type="button"
               onClick={() => onOpenChange?.(false)}
-              className="p-2 rounded-md hover:bg-gray-100 text-gray-600"
+              className="p-2 rounded-md hover:bg-surface-2 text-muted-foreground"
               aria-label="Cerrar"
             >
               <X className="h-5 w-5" />
@@ -57,7 +57,7 @@ export const Dialog: React.FC<DialogProps> = ({
 
           <div className="p-4">{children}</div>
 
-          {footer && <div className="p-4 border-t border-gray-100">{footer}</div>}
+          {footer && <div className="p-4 border-t border-default">{footer}</div>}
         </div>
       </div>
     </div>

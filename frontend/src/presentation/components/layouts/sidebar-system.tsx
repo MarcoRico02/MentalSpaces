@@ -304,7 +304,7 @@ export const SidebarInset = forwardRef<HTMLElement, { children: React.ReactNode 
       <main
         ref={ref}
         className={
-          "flex min-h-svh w-full flex-1 flex-col bg-gray-50 " +
+          "flex min-h-svh w-full flex-1 flex-col bg-app " +
           // Estilos para variant=inset (reacciona al Sidebar via peer)
           "md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm"
         }

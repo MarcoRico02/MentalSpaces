@@ -223,15 +223,15 @@ export const DashboardPage: React.FC = () => {
         <CardContent>
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
-              <div className="text-sm text-gray-600">Bienvenido</div>
-              <div className="text-2xl md:text-3xl font-bold text-gray-900">
+              <div className="text-sm text-secondary">Bienvenido</div>
+              <div className="text-2xl md:text-3xl font-bold text-default">
                 {user?.usuarioInfoDTO?.fullName ? (
                   <>¡Hola, {user.usuarioInfoDTO.fullName}!</>
                 ) : (
                   "¡Hola!"
                 )}
               </div>
-              <div className="text-sm text-gray-600 mt-1">
+              <div className="text-sm text-secondary mt-1">
                 {isPsicologo()
                   ? "Panel de control para psicólogos"
                   : isPropietario()
@@ -253,14 +253,14 @@ export const DashboardPage: React.FC = () => {
             <CardContent>
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <div className="text-sm text-gray-600">{s.label}</div>
-                  <div className="text-2xl font-bold text-gray-900 mt-1">
+                  <div className="text-sm text-secondary">{s.label}</div>
+                  <div className="text-2xl font-bold text-default mt-1">
                     {s.value}
                   </div>
-                  {s.hint && <div className="text-xs text-gray-500 mt-1">{s.hint}</div>}
+                  {s.hint && <div className="text-xs text-muted-foreground mt-1">{s.hint}</div>}
                 </div>
                 {s.icon && (
-                  <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-700">
+                  <div className="h-10 w-10 rounded-full bg-surface-2 flex items-center justify-center text-secondary">
                     {s.icon}
                   </div>
                 )}
@@ -274,7 +274,7 @@ export const DashboardPage: React.FC = () => {
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Actividad reciente</CardTitle>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-secondary mt-1">
               Últimos eventos relevantes para tu rol (maqueta).
             </p>
           </CardHeader>
@@ -291,7 +291,7 @@ export const DashboardPage: React.FC = () => {
               <TBody>
                 {activity.map((a, idx) => (
                   <TR key={idx}>
-                    <TD className="font-medium text-gray-900">{a.label}</TD>
+                    <TD className="font-medium text-default">{a.label}</TD>
                     <TD>{a.detail}</TD>
                     <TD>{a.when}</TD>
                     <TD>{statusBadge(a.status)}</TD>
@@ -305,7 +305,7 @@ export const DashboardPage: React.FC = () => {
         <Card>
           <CardHeader>
             <CardTitle>Acciones rápidas</CardTitle>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-secondary mt-1">
               Navegación directa (solo UI).
             </p>
           </CardHeader>
@@ -321,7 +321,7 @@ export const DashboardPage: React.FC = () => {
               </Button>
             ))}
 
-            <div className="pt-3 text-xs text-gray-500">
+            <div className="pt-3 text-xs text-muted-foreground">
               Nota: rutas admin requieren rol ADMIN (ProtectedRoute). En esta maqueta
               no se ejecutan endpoints.
             </div>

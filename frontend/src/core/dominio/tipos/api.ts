@@ -98,6 +98,7 @@ export interface LocationCreateRequestDTO {
   address: string;
   latitude: number;
   longitude: number;
+  imageUrl?: string;
 }
 
 export interface LocationResponseDTO {
@@ -108,6 +109,7 @@ export interface LocationResponseDTO {
   latitude: number;
   longitude: number;
   active: boolean;
+  imageUrl?: string | null;
 }
 
 // Paginación extendida del backend
@@ -216,6 +218,8 @@ export interface CubiculoCreateRequestDTO {
   precio: number;
   imageUrl?: string;
   caracteristicasIds?: number[];
+  active?: boolean;
+  disponibilidades?: DisponibilidadCreateRequestDTO[];
 }
 
 export interface CubiculoUpdateRequestDTO {
@@ -224,6 +228,7 @@ export interface CubiculoUpdateRequestDTO {
   precio?: number;
   imageUrl?: string;
   caracteristicasIds?: number[] | null;
+  active?: boolean;
 }
 
 export interface CubiculoResponse {
@@ -235,6 +240,97 @@ export interface CubiculoResponse {
   imageUrl: string;
   caracteristicas: CaracteristicaDTO[];
   isActive: boolean;
+}
+
+export type DiaSemana =
+  | "MONDAY" | "TUESDAY" | "WEDNESDAY" | "THURSDAY"
+  | "FRIDAY" | "SATURDAY" | "SUNDAY";
+
+export interface DisponibilidadResponseDTO {
+  id: number;
+  diaSemana: DiaSemana;
+  horaInicio: string; // "HH:mm"
+  horaFin: string;    // "HH:mm"
+}
+
+export interface DisponibilidadCreateRequestDTO {
+  diaSemana: DiaSemana;
+  horaInicio: string;
+  horaFin: string;
+}
+
+export interface DisponibilidadUpdateRequestDTO {
+  diaSemana: DiaSemana;
+  horaInicio: string;
+  horaFin: string;
+}
+
+// ─── Suscripciones ────────────────────────────────────────────────────────────
+export interface SuscripcionDTO {
+  id: number;
+  nombre: string;
+  precio: number;
+  cubiculosActivosPermitidos: number;
+  comisionPorcentaje: number;
+  descripcion?: string;
+}
+
+export interface CrearSuscripcionRequest {
+  nombre: string;
+  precio: number;
+  cubiculosActivosPermitidos: number;
+  comisionPorcentaje: number;
+  descripcion?: string;
+}
+
+// ─── Reservas ────────────────────────────────────────────────────────────────
+export const EstadoReserva = {
+  PENDIENTE: "PENDIENTE",
+  RECHAZADO: "RECHAZADO",
+  CONFIRMADA: "CONFIRMADA",
+  CANCELADA: "CANCELADA",
+  FINALIZADA: "FINALIZADA",
+} as const;
+export type EstadoReserva = (typeof EstadoReserva)[keyof typeof EstadoReserva];
+
+export interface ReservaCreateRequestDTO {
+  cubiculoId: number;
+  /** ISO 8601: "2026-03-10T09:00:00" */
+  inicio: string;
+  /** ISO 8601: "2026-03-10T11:00:00" */
+  fin: string;
+  notas?: string;
+}
+
+export interface ReservaDTO {
+  id: number;
+  cubiculoId: number;
+  cubiculoNombre: string;
+  psicologoId: number;
+  inicio: string;
+  fin: string;
+  notas?: string;
+  estadoReserva: EstadoReserva;
+  createdAt: string;
+}
+
+export interface PagoResponse {
+  id: string;
+  monto: number;
+  moneda: string;
+  estado: string;
+  estadoDescripcion: string;
+  metodoPago?: string;
+  descripcion?: string;
+  requiereFactura: boolean;
+  fechaExpiracion?: string;
+  createdAt: string;
+}
+
+export interface ReservaCreateResponseDTO {
+  reservaDTO: ReservaDTO;
+  cubiculoDTO: CubiculoResponse;
+  pagoDTO: PagoResponse;
 }
 
 // Para la paginación extendida de cubículos

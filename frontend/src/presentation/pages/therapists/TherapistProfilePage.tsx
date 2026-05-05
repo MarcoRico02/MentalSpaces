@@ -22,7 +22,7 @@ export const TherapistProfilePage: React.FC = () => {
         <Card className="lg:col-span-1">
           <CardContent className="p-4 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center font-semibold text-gray-700">
+              <div className="h-12 w-12 rounded-full bg-surface-3 flex items-center justify-center font-semibold text-secondary">
                 {user.fullName
                   .split(" ")
                   .slice(0, 2)
@@ -30,8 +30,8 @@ export const TherapistProfilePage: React.FC = () => {
                   .join("")}
               </div>
               <div>
-                <div className="font-semibold text-gray-900">{user.fullName}</div>
-                <div className="text-sm text-gray-600">Especialidad (demo)</div>
+                <div className="font-semibold text-default">{user.fullName}</div>
+                <div className="text-sm text-secondary">Especialidad (demo)</div>
               </div>
             </div>
 

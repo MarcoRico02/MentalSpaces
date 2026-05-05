@@ -1,5 +1,6 @@
 package mx.sisati.sisatibackend.espacios.caracteristicas;
 
+import mx.sisati.sisatibackend.espacios.cubiculo.dto.CaracteristicaDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,11 @@ public class CaracteristicaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Caracteristica>> findAll() {
-        return ResponseEntity.ok(caracteristicaService.findAll());
+    public ResponseEntity<List<CaracteristicaDTO>> findAll() {
+        List<CaracteristicaDTO> result = caracteristicaService.findAll()
+                .stream()
+                .map(CaracteristicaDTO::new)
+                .toList();
+        return ResponseEntity.ok(result);
     }
 }

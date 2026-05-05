@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,10 @@ public class DisponibilidadService {
             }
 
             if (haySuperposicion(horaInicio, horaFin, existente.getHoraInicio(), existente.getHoraFin())) {
-                throw new ServiceException(this.getClass(), "La disponibilidad se superpone con una existente para el mismo día de la semana");
+                throw new ServiceException(this.getClass(),
+                        "El horario " + horaInicio + "–" + horaFin +
+                        " se superpone con el horario existente " + existente.getHoraInicio() + "–" + existente.getHoraFin() +
+                        " del mismo día. Usa rangos de horas que no se solapicen (p. ej. 09:00–13:00 y 15:00–19:00).");
             }
         }
     }
@@ -114,5 +118,36 @@ public class DisponibilidadService {
     public Disponibilidad findDisponibilidadById(Long disponibilidadId) {
         return disponibilidadRepository.findById(disponibilidadId)
                 .orElseThrow(() -> new ServiceException(this.getClass(),"No existe la disponibilidad con ID: " + disponibilidadId));
+    }
+
+    public Disponibilidad validarReservaDentroDeDisponibilidad(
+            Long cubiculoId,
+            LocalDateTime inicio,
+            LocalDateTime fin
+    ) {
+        DayOfWeek diaSemana = inicio.getDayOfWeek();
+        LocalTime horaInicio = inicio.toLocalTime();
+        LocalTime horaFin = fin.toLocalTime();
+
+        List<Disponibilidad> disponibilidades =
+                disponibilidadRepository.findByCubiculoIdAndDiaSemana(cubiculoId, diaSemana);
+
+        if (disponibilidades.isEmpty()) {
+            throw new ServiceException(this.getClass(),"CUBICULO_SIN_DISPONIBILIDAD_ESE_DIA");
+        }
+
+        for (Disponibilidad d : disponibilidades) {
+
+            boolean dentro =
+                    !horaInicio.isBefore(d.getHoraInicio()) &&
+                            !horaFin.isAfter(d.getHoraFin());
+
+            if (dentro) {
+                return d;
+            }
+        }
+
+        throw new ServiceException(this.getClass(),
+                "RESERVA_FUERA_DE_HORARIO_DISPONIBLE");
     }
 }

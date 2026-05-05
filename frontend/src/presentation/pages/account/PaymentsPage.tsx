@@ -77,16 +77,16 @@ export const PaymentsPage: React.FC = () => {
             {pending.map((p) => (
               <div
                 key={p.booking}
-                className="rounded-md border border-gray-200 p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+                className="rounded-md border border-default p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
               >
                 <div>
-                  <div className="font-medium text-gray-900">{p.concept}</div>
-                  <div className="text-sm text-gray-600">
+                  <div className="font-medium text-default">{p.concept}</div>
+                  <div className="text-sm text-secondary">
                     Vence: {p.due} · Reserva: {p.booking}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="font-semibold text-gray-900">{p.amount}</div>
+                  <div className="font-semibold text-default">{p.amount}</div>
                   <Button onClick={() => setStripeOpen(true)}>Pagar</Button>
                 </div>
               </div>
@@ -104,23 +104,23 @@ export const PaymentsPage: React.FC = () => {
             <CardContent className="space-y-3">
               <div className="flex items-start justify-between">
                 <div>
-                  <div className="text-xl font-bold text-gray-900">Plan Pro</div>
-                  <div className="text-sm text-gray-600">$1,299 / mes</div>
+                  <div className="text-xl font-bold text-default">Plan Pro</div>
+                  <div className="text-sm text-secondary">$1,299 / mes</div>
                 </div>
                 <Badge variant="success">Activo</Badge>
               </div>
               <div className="grid grid-cols-2 gap-3 text-sm">
-                <div className="rounded-md bg-gray-50 p-3">
-                  <div className="text-gray-600">Horas incluidas</div>
-                  <div className="font-semibold text-gray-900">10</div>
+                <div className="rounded-md bg-app p-3">
+                  <div className="text-secondary">Horas incluidas</div>
+                  <div className="font-semibold text-default">10</div>
                 </div>
-                <div className="rounded-md bg-gray-50 p-3">
-                  <div className="text-gray-600">Horas restantes</div>
-                  <div className="font-semibold text-gray-900">4</div>
+                <div className="rounded-md bg-app p-3">
+                  <div className="text-secondary">Horas restantes</div>
+                  <div className="font-semibold text-default">4</div>
                 </div>
-                <div className="rounded-md bg-gray-50 p-3 col-span-2">
-                  <div className="text-gray-600">Renovación</div>
-                  <div className="font-semibold text-gray-900">2026-03-01</div>
+                <div className="rounded-md bg-app p-3 col-span-2">
+                  <div className="text-secondary">Renovación</div>
+                  <div className="font-semibold text-default">2026-03-01</div>
                 </div>
               </div>
 
@@ -143,11 +143,11 @@ export const PaymentsPage: React.FC = () => {
               ].map((pl) => (
                 <div
                   key={pl.name}
-                  className="rounded-md border border-gray-200 p-4 flex items-center justify-between"
+                  className="rounded-md border border-default p-4 flex items-center justify-between"
                 >
                   <div>
-                    <div className="font-medium text-gray-900">{pl.name}</div>
-                    <div className="text-sm text-gray-600">
+                    <div className="font-medium text-default">{pl.name}</div>
+                    <div className="text-sm text-secondary">
                       {pl.price} / mes · {pl.hours} horas
                     </div>
                   </div>
@@ -167,7 +167,7 @@ export const PaymentsPage: React.FC = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Estado</div>
+                <div className="text-sm font-medium text-secondary mb-1">Estado</div>
                 <Select defaultValue="all">
                   <option value="all">Todos</option>
                   <option value="success">Exitoso</option>
@@ -176,11 +176,11 @@ export const PaymentsPage: React.FC = () => {
                 </Select>
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Desde</div>
+                <div className="text-sm font-medium text-secondary mb-1">Desde</div>
                 <Input type="date" />
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Hasta</div>
+                <div className="text-sm font-medium text-secondary mb-1">Hasta</div>
                 <Input type="date" />
               </div>
               <div className="flex items-end">
@@ -207,7 +207,7 @@ export const PaymentsPage: React.FC = () => {
                   <TR key={idx}>
                     <TD>{h.date}</TD>
                     <TD>{h.concept}</TD>
-                    <TD className="font-semibold text-gray-900">{h.amount}</TD>
+                    <TD className="font-semibold text-default">{h.amount}</TD>
                     <TD>{h.method}</TD>
                     <TD>
                       <Badge variant={badgeVariant(h.status)}>{h.status}</Badge>
@@ -240,20 +240,20 @@ export const PaymentsPage: React.FC = () => {
         }
       >
         <div className="space-y-4">
-          <div className="rounded-md border border-dashed border-gray-300 p-4 text-sm text-gray-600">
+          <div className="rounded-md border border-dashed border-default p-4 text-sm text-secondary">
             PaymentForm reutilizable (Stripe Elements) iría aquí.
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <div className="text-sm font-medium text-gray-700 mb-1">Nombre</div>
+              <div className="text-sm font-medium text-secondary mb-1">Nombre</div>
               <Input placeholder="Nombre Apellido" />
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-700 mb-1">Código postal</div>
+              <div className="text-sm font-medium text-secondary mb-1">Código postal</div>
               <Input placeholder="00000" />
             </div>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-sm text-secondary">
             <Calendar className="h-4 w-4" />
             Manejo de 3D Secure / webhooks (mencionado en specs).
           </div>
@@ -323,12 +323,12 @@ export const AdminPaymentsPage: React.FC = () => {
           {stats.map((s) => (
             <Card key={s.label}>
               <CardHeader>
-                <CardTitle className="text-sm font-medium text-gray-600">
+                <CardTitle className="text-sm font-medium text-secondary">
                   {s.label}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-900">{s.value}</div>
+                <div className="text-2xl font-bold text-default">{s.value}</div>
               </CardContent>
             </Card>
           ))}
@@ -359,7 +359,7 @@ export const AdminPaymentsPage: React.FC = () => {
                     { name: "Ilimitado", price: 2499, hours: 0, allow: false },
                   ].map((p) => (
                     <TR key={p.name}>
-                      <TD className="font-medium text-gray-900">{p.name}</TD>
+                      <TD className="font-medium text-default">{p.name}</TD>
                       <TD>${p.price}</TD>
                       <TD>{p.hours === 0 ? "Ilimitado" : p.hours}</TD>
                       <TD>
@@ -393,19 +393,19 @@ export const AdminPaymentsPage: React.FC = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Nombre</div>
+                <div className="text-sm font-medium text-secondary mb-1">Nombre</div>
                 <Input placeholder="Nombre del plan" />
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Precio</div>
+                <div className="text-sm font-medium text-secondary mb-1">Precio</div>
                 <Input type="number" placeholder="0" />
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Horas</div>
+                <div className="text-sm font-medium text-secondary mb-1">Horas</div>
                 <Input type="number" placeholder="0 = ilimitado" />
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">
+                <div className="text-sm font-medium text-secondary mb-1">
                   Permite cancelaciones
                 </div>
                 <Select defaultValue="yes">
@@ -427,7 +427,7 @@ export const AdminPaymentsPage: React.FC = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Usuario</div>
+                <div className="text-sm font-medium text-secondary mb-1">Usuario</div>
                 <Select defaultValue="">
                   <option value="" disabled>
                     Selecciona usuario
@@ -437,15 +437,15 @@ export const AdminPaymentsPage: React.FC = () => {
                 </Select>
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Monto</div>
+                <div className="text-sm font-medium text-secondary mb-1">Monto</div>
                 <Input type="number" placeholder="0" />
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Fecha</div>
+                <div className="text-sm font-medium text-secondary mb-1">Fecha</div>
                 <Input type="date" />
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Método</div>
+                <div className="text-sm font-medium text-secondary mb-1">Método</div>
                 <Select defaultValue="cash">
                   <option value="cash">Efectivo</option>
                   <option value="transfer">Transferencia</option>
@@ -453,13 +453,13 @@ export const AdminPaymentsPage: React.FC = () => {
                 </Select>
               </div>
               <div className="md:col-span-2">
-                <div className="text-sm font-medium text-gray-700 mb-1">
+                <div className="text-sm font-medium text-secondary mb-1">
                   Referencia/Comprobante
                 </div>
                 <Input placeholder="Folio, referencia, etc." />
               </div>
               <div className="md:col-span-3">
-                <div className="text-sm font-medium text-gray-700 mb-1">Concepto</div>
+                <div className="text-sm font-medium text-secondary mb-1">Concepto</div>
                 <Input placeholder="Descripción" />
               </div>
             </div>
@@ -478,11 +478,11 @@ export const AdminPaymentsPage: React.FC = () => {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Usuario</div>
+                <div className="text-sm font-medium text-secondary mb-1">Usuario</div>
                 <Input placeholder="ID o nombre" />
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Estado</div>
+                <div className="text-sm font-medium text-secondary mb-1">Estado</div>
                 <Select defaultValue="all">
                   <option value="all">Todos</option>
                   <option value="success">Exitoso</option>
@@ -491,7 +491,7 @@ export const AdminPaymentsPage: React.FC = () => {
                 </Select>
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Método</div>
+                <div className="text-sm font-medium text-secondary mb-1">Método</div>
                 <Select defaultValue="all">
                   <option value="all">Todos</option>
                   <option value="stripe">Stripe</option>
@@ -500,11 +500,11 @@ export const AdminPaymentsPage: React.FC = () => {
                 </Select>
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Desde</div>
+                <div className="text-sm font-medium text-secondary mb-1">Desde</div>
                 <Input type="date" />
               </div>
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-1">Hasta</div>
+                <div className="text-sm font-medium text-secondary mb-1">Hasta</div>
                 <Input type="date" />
               </div>
             </div>
@@ -525,11 +525,11 @@ export const AdminPaymentsPage: React.FC = () => {
               <TBody>
                 {rows.map((r) => (
                   <TR key={r.id}>
-                    <TD className="font-medium text-gray-900">{r.id}</TD>
+                    <TD className="font-medium text-default">{r.id}</TD>
                     <TD>{r.date}</TD>
                     <TD>{r.user}</TD>
                     <TD>{r.concept}</TD>
-                    <TD className="font-semibold text-gray-900">{r.amount}</TD>
+                    <TD className="font-semibold text-default">{r.amount}</TD>
                     <TD>{r.method}</TD>
                     <TD>
                       <Badge variant={badgeVariant(r.status)}>{r.status}</Badge>
@@ -561,13 +561,13 @@ export const AdminPaymentsPage: React.FC = () => {
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
-                  className="rounded-md border border-gray-200 p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+                  className="rounded-md border border-default p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
                 >
                   <div>
-                    <div className="font-medium text-gray-900">
+                    <div className="font-medium text-default">
                       Usuario Demo {i + 1} · Plan Pro
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-secondary">
                       Inicio: 2026-01-01 · Próxima renovación: 2026-03-01
                     </div>
                   </div>
@@ -603,17 +603,17 @@ export const AdminPaymentsPage: React.FC = () => {
         maxWidthClassName="max-w-2xl"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          <div className="rounded-md border border-gray-200 p-3">
-            <div className="text-gray-600">Stripe PaymentIntent</div>
-            <div className="font-medium text-gray-900">pi_1234567890</div>
+          <div className="rounded-md border border-default p-3">
+            <div className="text-secondary">Stripe PaymentIntent</div>
+            <div className="font-medium text-default">pi_1234567890</div>
           </div>
-          <div className="rounded-md border border-gray-200 p-3">
-            <div className="text-gray-600">Moneda</div>
-            <div className="font-medium text-gray-900">MXN</div>
+          <div className="rounded-md border border-default p-3">
+            <div className="text-secondary">Moneda</div>
+            <div className="font-medium text-default">MXN</div>
           </div>
-          <div className="md:col-span-2 rounded-md border border-gray-200 p-3">
-            <div className="text-gray-600">Historial de intentos</div>
-            <div className="font-medium text-gray-900">
+          <div className="md:col-span-2 rounded-md border border-default p-3">
+            <div className="text-secondary">Historial de intentos</div>
+            <div className="font-medium text-default">
               Intento #1: ok · Intento #2: ok
             </div>
           </div>

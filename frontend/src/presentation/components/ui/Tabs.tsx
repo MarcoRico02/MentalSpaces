@@ -16,9 +16,7 @@ export const Tabs: React.FC<TabsProps> = ({
   className = "",
 }) => {
   return (
-    <div
-      className={`inline-flex rounded-md border border-gray-200 bg-white p-1 ${className}`}
-    >
+    <div className={`inline-flex rounded-md border border-default bg-surface p-1 ${className}`}>
       {options.map((opt) => {
         const active = opt.value === value;
         return (
@@ -28,8 +26,8 @@ export const Tabs: React.FC<TabsProps> = ({
             onClick={() => onValueChange?.(opt.value)}
             className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
               active
-                ? "bg-blue-600 text-white"
-                : "text-gray-700 hover:bg-gray-100"
+                ? "bg-primary text-white"
+                : "text-default hover:bg-surface-2"
             }`}
           >
             {opt.label}

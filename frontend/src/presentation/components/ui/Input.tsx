@@ -6,8 +6,8 @@ export const Input: React.FC<
   return (
     <div>
       <input
-        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-          error ? "border-red-500" : "border-gray-300"
+        className={`w-full px-3 py-2 border rounded-md bg-surface text-default placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+          error ? "border-red-500" : "border-default"
         } ${className}`}
         {...props}
       />
@@ -23,7 +23,7 @@ export const Label: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({
 }) => {
   return (
     <label
-      className={`block text-sm font-medium text-gray-700 mb-1 ${className}`}
+      className={`block text-sm font-medium text-default mb-1 ${className}`}
       {...props}
     >
       {children}

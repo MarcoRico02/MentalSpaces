@@ -36,8 +36,8 @@ INSERT INTO roles (id, nombre) VALUES
 
 ### Caracteristicas de cubiculos
 | id | nombre                   |
-| -- | ------------------------ |
-| 1  | REFIGERADO               |
+| -- |--------------------------|
+| 1  | REFRIGERADO              |
 | 2  | SIN_VENTANAS_EXTERNAS    |
 | 3  | CLIMATIZACION            |
 | 4  | VENTILACION_NATURAL      |
@@ -57,7 +57,7 @@ INSERT INTO roles (id, nombre) VALUES
 | 18 | ENCHUFES_DISPONIBLES     |
 
 INSERT INTO caracteristicas (id, nombre) VALUES
-(1, 'REFIGERADO'),
+(1, 'REFRIGERADO'),
 (2, 'SIN_VENTANAS_EXTERNAS'),
 (3, 'CLIMATIZACION'),
 (4, 'VENTILACION_NATURAL'),
@@ -75,3 +75,14 @@ INSERT INTO caracteristicas (id, nombre) VALUES
 (16, 'CONEXION_INTERNET'),
 (17, 'CAMARA_SEGURIDAD_EXTERNA'),
 (18, 'ENCHUFES_DISPONIBLES');
+
+
+## Configuración del sistema
+
+INSERT INTO configuracion_sistema
+(clave, valor_maximo, valor_minimo, tipo_uso, descripcion)
+VALUES
+('ANTICIPACION_CREACION_HORAS', 168, 1, 'RESERVA_CREACION', 'Anticipación mínima 1 hora, máxima 7 días'),
+('DURACION_RESERVA_MINUTOS', 240, 30, 'RESERVA_CREACION', 'Duración entre 30 minutos y 4 horas'),
+('INTERVALO_RESERVA_MINUTOS', NULL, 30, 'RESERVA_CREACION', 'Reservas en intervalos de 30 minutos')
+ON CONFLICT (clave) DO NOTHING;

@@ -8,7 +8,7 @@ export const Table: React.FC<TableProps> = ({ className = "", ...props }) => {
   return (
     <div className="w-full overflow-x-auto">
       <table
-        className={`w-full text-sm text-left text-gray-700 ${className}`}
+        className={`w-full text-sm text-left text-default ${className}`}
         {...props}
       />
     </div>
@@ -21,7 +21,7 @@ export const THead: React.FC<React.HTMLAttributes<HTMLTableSectionElement>> = ({
 }) => {
   return (
     <thead
-      className={`text-xs uppercase bg-gray-50 text-gray-600 ${className}`}
+      className={`text-xs uppercase bg-surface-2 text-muted-foreground ${className}`}
       {...props}
     />
   );
@@ -38,7 +38,7 @@ export const TR: React.FC<React.HTMLAttributes<HTMLTableRowElement>> = ({
   className = "",
   ...props
 }) => {
-  return <tr className={`border-b border-gray-100 ${className}`} {...props} />;
+  return <tr className={`border-b border-default ${className}`} {...props} />;
 };
 
 export const TH: React.FC<React.ThHTMLAttributes<HTMLTableCellElement>> = ({

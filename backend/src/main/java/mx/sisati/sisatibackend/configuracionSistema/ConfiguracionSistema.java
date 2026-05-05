@@ -27,7 +27,7 @@ public class ConfiguracionSistema {
 
     private Long valorMinimo;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoUso tipoUso;
 

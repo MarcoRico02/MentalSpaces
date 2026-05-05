@@ -17,7 +17,7 @@ export const LoginPage: React.FC = () => {
   }, [user, isLoading, navigate, location]);
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
+    <div className="min-h-screen flex flex-col md:flex-row bg-app">
       {/* Login on the left */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-8">
         <LoginForm />
@@ -34,7 +34,7 @@ export const LoginPage: React.FC = () => {
 
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
-              <div className="bg-white/20 p-2 rounded-full">
+              <div className="bg-surface/20 p-2 rounded-full">
                 <svg
                   className="w-5 h-5"
                   fill="none"
@@ -54,7 +54,7 @@ export const LoginPage: React.FC = () => {
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="bg-white/20 p-2 rounded-full">
+              <div className="bg-surface/20 p-2 rounded-full">
                 <svg
                   className="w-5 h-5"
                   fill="none"
@@ -74,7 +74,7 @@ export const LoginPage: React.FC = () => {
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="bg-white/20 p-2 rounded-full">
+              <div className="bg-surface/20 p-2 rounded-full">
                 <svg
                   className="w-5 h-5"
                   fill="none"

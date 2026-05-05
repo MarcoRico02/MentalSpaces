@@ -16,10 +16,12 @@ import {
   Tabs,
   Textarea,
 } from "../../components/ui";
+import { useTheme } from "../../../core/aplicacion/contexto/ThemeContext";
 
 export const ProfilePage: React.FC = () => {
   const [tab, setTab] = useState("info");
   const [previewOpen, setPreviewOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="space-y-6">
@@ -93,8 +95,8 @@ export const ProfilePage: React.FC = () => {
               <CardTitle>Imagen de perfil</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="rounded-md border border-gray-200 p-4 flex items-center gap-4">
-                <div className="h-14 w-14 rounded-full bg-gray-100 flex items-center justify-center text-gray-600">
+              <div className="rounded-md border border-default p-4 flex items-center gap-4">
+                <div className="h-14 w-14 rounded-full bg-surface-2 flex items-center justify-center text-secondary">
                   <ImageIcon className="h-6 w-6" />
                 </div>
                 <div className="flex-1">
@@ -106,7 +108,7 @@ export const ProfilePage: React.FC = () => {
                 </Button>
               </div>
 
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-secondary">
                 Posibilidad de actualizar y previsualizar (maqueta).
               </div>
 
@@ -135,7 +137,7 @@ export const ProfilePage: React.FC = () => {
                 <Input id="new" type="password" />
               </div>
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-secondary">
               Validación de seguridad, bcrypt, tokens (mencionado) - solo UI.
             </div>
             <Button>Cambiar contraseña</Button>
@@ -158,7 +160,7 @@ export const ProfilePage: React.FC = () => {
                 <Label htmlFor="diploma">Título profesional (Diploma/Cédula)</Label>
                 <Input id="diploma" type="file" />
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-secondary">
                 Formatos permitidos: JPG, PNG, PDF, DOC, DOCX · Máx 5MB (maqueta).
               </div>
               <Button>
@@ -173,17 +175,17 @@ export const ProfilePage: React.FC = () => {
               <CardTitle>Estado de validación</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex items-center justify-between rounded-md border border-gray-200 p-4">
+              <div className="flex items-center justify-between rounded-md border border-default p-4">
                 <div>
-                  <div className="font-medium text-gray-900">Identificación</div>
-                  <div className="text-sm text-gray-600">Última actualización: 2026-02-01</div>
+                  <div className="font-medium text-default">Identificación</div>
+                  <div className="text-sm text-secondary">Última actualización: 2026-02-01</div>
                 </div>
                 <Badge variant="success">Aprobado</Badge>
               </div>
-              <div className="flex items-center justify-between rounded-md border border-gray-200 p-4">
+              <div className="flex items-center justify-between rounded-md border border-default p-4">
                 <div>
-                  <div className="font-medium text-gray-900">Título profesional</div>
-                  <div className="text-sm text-gray-600">Última actualización: 2026-02-01</div>
+                  <div className="font-medium text-default">Título profesional</div>
+                  <div className="text-sm text-secondary">Última actualización: 2026-02-01</div>
                 </div>
                 <Badge variant="warning">Pendiente</Badge>
               </div>
@@ -204,35 +206,18 @@ export const ProfilePage: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between rounded-md border border-gray-200 p-4">
+            <div className="flex items-center justify-between rounded-md border border-default p-4">
               <div>
-                <div className="font-medium text-gray-900">Modo oscuro</div>
-                <div className="text-sm text-gray-600">Persistencia localStorage (maqueta)</div>
-              </div>
-              <Switch />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="preset">Color primario (preset)</Label>
-                <Select id="preset" defaultValue="green">
-                  <option value="green">Verde (default)</option>
-                  <option value="blue">Azul</option>
-                  <option value="purple">Morado</option>
-                  <option value="pink">Rosa</option>
-                  <option value="orange">Naranja</option>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="hex">HEX personalizado</Label>
-                <Input id="hex" placeholder="#22c55e" />
-                <div className="text-xs text-gray-500 mt-1">
-                  Validación formato HEX + preview en tiempo real (maqueta)
+                <div className="font-medium text-default">Modo oscuro</div>
+                <div className="text-sm text-muted-foreground">
+                  {theme === "dark" ? "Activado — interfaz en escala de grises" : "Desactivado — interfaz en modo claro"}
                 </div>
               </div>
+              <Switch
+                checked={theme === "dark"}
+                onCheckedChange={toggleTheme}
+              />
             </div>
-
-            <Button>Guardar apariencia</Button>
           </CardContent>
         </Card>
       )}
@@ -252,7 +237,7 @@ export const ProfilePage: React.FC = () => {
         }
         maxWidthClassName="max-w-3xl"
       >
-        <div className="rounded-md border border-dashed border-gray-300 bg-gray-50 p-10 text-center text-gray-600">
+        <div className="rounded-md border border-dashed border-default bg-surface-2 p-10 text-center text-muted-foreground">
           Preview de imagen/PDF embebido (maqueta).
         </div>
       </Dialog>

@@ -83,7 +83,8 @@ public class GestionarLocations {
                 location.getAddress(),
                 location.getLatitude(),
                 location.getLongitude(),
-                location.isActive()
+                location.isActive(),
+                location.getImageUrl()
         );
     }
 

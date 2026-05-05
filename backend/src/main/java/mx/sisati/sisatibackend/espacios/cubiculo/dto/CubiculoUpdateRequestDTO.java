@@ -1,11 +1,13 @@
 package mx.sisati.sisatibackend.espacios.cubiculo.dto;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 public record CubiculoUpdateRequestDTO(
         String nombre,
         String descripcion,
-        Double precio,
+        BigDecimal precio,
         String imageUrl,
-        Set<Long> caracteristicasIds
+        Set<Long> caracteristicasIds,
+        Boolean active
 ) {}

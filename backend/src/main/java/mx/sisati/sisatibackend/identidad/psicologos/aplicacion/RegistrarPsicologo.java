@@ -8,23 +8,25 @@ import mx.sisati.sisatibackend.identidad.roles.Rol;
 import mx.sisati.sisatibackend.identidad.roles.RolService;
 import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 import mx.sisati.sisatibackend.identidad.usuarios.UsuarioService;
+import mx.sisati.sisatibackend.identidad.usuarios.aplicacion.GestionarUsuarios;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class RegistrarPsicologo {
-    private final UsuarioService usuarioService;
     private final PsicologoService psicologoService;
     private final RolService rolService;
+    private final GestionarUsuarios gestionarUsuarios;
 
-    public RegistrarPsicologo(UsuarioService usuarioService, PsicologoService psicologoService, RolService rolService) {
-        this.usuarioService = usuarioService;
+    public RegistrarPsicologo(PsicologoService psicologoService, RolService rolService, GestionarUsuarios gestionarUsuarios) {
         this.psicologoService = psicologoService;
         this.rolService = rolService;
+        this.gestionarUsuarios = gestionarUsuarios;
     }
 
     @Transactional
     public Psicologo execute(PsicologoRegisterRequestDTO dto) {
-        Usuario usuario = usuarioService.saveUser(dto.usuarioRegisterDTO());
+        Usuario usuario = gestionarUsuarios.save(dto.usuarioRegisterDTO());
         Rol rol = rolService.psicologo();
         return psicologoService.savePsychologist(usuario, dto, rol);
     }

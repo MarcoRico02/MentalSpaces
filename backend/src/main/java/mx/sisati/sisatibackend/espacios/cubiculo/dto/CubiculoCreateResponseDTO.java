@@ -3,6 +3,7 @@ package mx.sisati.sisatibackend.espacios.cubiculo.dto;
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 import mx.sisati.sisatibackend.espacios.locations.Location;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +14,7 @@ public record CubiculoCreateResponseDTO(
         Long locationId,
         String nombre,
         String descripcion,
-        Double precio,
+        BigDecimal precio,
         String imageUrl,
         List<CaracteristicaDTO> caracteristicas,
         boolean active

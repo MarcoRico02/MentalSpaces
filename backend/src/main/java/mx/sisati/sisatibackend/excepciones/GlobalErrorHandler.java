@@ -24,12 +24,12 @@ public class GlobalErrorHandler {
 
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ErrorResponse> DomainExceptionHandler(DomainException exception){
-        return BuilderResponse.build(HttpStatus.BAD_REQUEST, "INVALID_ENTITY_FIELDS", exception.getMessage());
+        return BuilderResponse.build(HttpStatus.BAD_REQUEST, "INVALID_ENTITY_FIELDS", exception.getDomainEntity() + ": " + exception.getMessage());
     }
 
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ErrorResponse> ServiceExceptionHandler(ServiceException exception){
-        return BuilderResponse.build(HttpStatus.BAD_REQUEST, "SERVICE_REJECTED", exception.getMessage());
+        return BuilderResponse.build(HttpStatus.BAD_REQUEST, "SERVICE_REJECTED", exception.getService() + ": " + exception.getMessage());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
