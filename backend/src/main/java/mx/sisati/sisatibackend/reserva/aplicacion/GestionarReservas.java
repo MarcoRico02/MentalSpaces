@@ -43,7 +43,7 @@ public class GestionarReservas {
     @Transactional
     public ReservaCreateResponseDTO create(ReservaCreateRequestDTO createDTO, Long usuarioId){
         Psicologo psicologo = psicologoService.getByUsuarioIdOrThrow(usuarioId);
-        pagoReservaService.tienePagosPendientes(psicologo);
+        pagoReservaService.validarSinPagosPendientes(psicologo);
         Cubiculo cubiculo = cubiculoService.getByCubiculoActiveIdOrThrow(createDTO.cubiculoId());
         disponibilidadService.validarReservaDentroDeDisponibilidad(createDTO.cubiculoId(), createDTO.inicio(), createDTO.fin());
         List<ConfiguracionSistema> configuracionesSistema = configuracionSistemaService.getConfiguracionPorTipo(TipoUso.RESERVA_CREACION);
