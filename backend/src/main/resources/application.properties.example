@@ -1,0 +1,31 @@
+spring.application.name=MentalSpaces
+server.port=8080
+
+
+# Datasource para la base de datos local
+spring.datasource.url=${DB_URL:jdbc:postgresql://localhost:5432/database_name}
+spring.datasource.username=${DB_USERNAME:database_user}
+spring.datasource.password=${DB_PASSWORD:database_user_password}
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+server.servlet.context-path=/api
+spring.security.user.name=user #Este y el de abajo x, no recuerdo ni por que lo puse, dejenlo como sea
+spring.security.user.password=password
+
+
+security.jwt.secret=${JWT_SECRET:3f9a7c1d8e5b4a6f2c9d1e0b7a3c5f8d6e2a1b4c9d8f0e7a6b5c4d3e2f1a9c8}
+# Tiempo de expiraciÃ³n en milisegundos (1 hora = 3600000)
+security.jwt.expiration=${JWT_EXPIRATION:604800000}
+
+logging.level.org.springframework=INFO
+logging.level.mx.sisati=DEBUG
+
+cloudflare.r2.bucket=r2test
+cloudflare.r2.access-key=test
+cloudflare.r2.secret-key=test
+cloudflare.r2.endpoint=https://test.com
