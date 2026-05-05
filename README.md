@@ -36,8 +36,8 @@ INSERT INTO roles (id, nombre) VALUES
 
 ### Caracteristicas de cubiculos
 | id | nombre                   |
-| -- | ------------------------ |
-| 1  | REFIGERADO               |
+| -- |--------------------------|
+| 1  | REFRIGERADO              |
 | 2  | SIN_VENTANAS_EXTERNAS    |
 | 3  | CLIMATIZACION            |
 | 4  | VENTILACION_NATURAL      |
@@ -57,7 +57,7 @@ INSERT INTO roles (id, nombre) VALUES
 | 18 | ENCHUFES_DISPONIBLES     |
 
 INSERT INTO caracteristicas (id, nombre) VALUES
-(1, 'REFIGERADO'),
+(1, 'REFRIGERADO'),
 (2, 'SIN_VENTANAS_EXTERNAS'),
 (3, 'CLIMATIZACION'),
 (4, 'VENTILACION_NATURAL'),
