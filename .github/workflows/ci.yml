@@ -7,6 +7,20 @@ on:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: mental_spaces_test
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     defaults:
       run:
         working-directory: backend
@@ -20,6 +34,10 @@ jobs:
           cache: maven
       - name: Build & Test with coverage
         run: mvn verify
+        env:
+          DB_URL: jdbc:postgresql://localhost:5432/mental_spaces_test
+          DB_USERNAME: test_user
+          DB_PASSWORD: test_pass
       - name: Upload JaCoCo coverage report
         uses: actions/upload-artifact@v4
         with:
