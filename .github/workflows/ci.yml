@@ -19,7 +19,7 @@ jobs:
           distribution: temurin
           cache: maven
       - name: Build & Test with coverage
-        run: ./mvnw verify
+        run: mvn verify
       - name: Upload JaCoCo coverage report
         uses: actions/upload-artifact@v4
         with:
