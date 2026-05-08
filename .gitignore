@@ -30,7 +30,7 @@ secrets/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
-
+/htmlReport
 ### VS Code ###
 .vscode/
 backend/src/main/resources/application.properties
