@@ -33,11 +33,7 @@ jobs:
           distribution: temurin
           cache: maven
       - name: Build & Test with coverage
-        run: mvn verify
-        env:
-          DB_URL: jdbc:postgresql://localhost:5432/mental_spaces_test
-          DB_USERNAME: test_user
-          DB_PASSWORD: test_pass
+        run: mvn verify -Dspring.datasource.url=jdbc:postgresql://localhost:5432/mental_spaces_test -Dspring.datasource.username=test_user -Dspring.datasource.password=test_pass
       - name: Upload JaCoCo coverage report
         uses: actions/upload-artifact@v4
         with:
