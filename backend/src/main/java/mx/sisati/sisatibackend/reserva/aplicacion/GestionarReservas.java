@@ -15,9 +15,11 @@ import mx.sisati.sisatibackend.espacios.cubiculo.CubiculoService;
 import mx.sisati.sisatibackend.espacios.disponibilidad.DisponibilidadService;
 import mx.sisati.sisatibackend.identidad.psicologos.Psicologo;
 import mx.sisati.sisatibackend.identidad.psicologos.PsicologoService;
+import mx.sisati.sisatibackend.reserva.dto.ReservaDTO;
 import mx.sisati.sisatibackend.validador.reserva.creacion.ReservaValidadorCreacionService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -52,4 +54,16 @@ public class GestionarReservas {
         PagoResponse pagoResponse = pagoReservaService.crearPagoParaReserva(reserva, 15);
         return new ReservaCreateResponseDTO(reserva, cubiculo, pagoResponse);
     }
+
+    /* Sin terminar
+    public List<ReservaDTO> buscarReservas(
+            LocalDateTime inicio,
+            LocalDateTime fin,
+            List<Long> cubiculoIds,
+            List<Long> locationIds
+    ) {
+        List<Reserva> reservas = reservaService.buscarPorFiltros(inicio, fin, cubiculoIds, locationIds);
+        return reservas.stream().map(ReservaDTO::new).toList();
+    }
+     */
 }
