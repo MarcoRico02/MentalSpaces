@@ -156,6 +156,10 @@ export const authAPI = {
 
   // Reservas endpoints
   reservas: {
+    getMine: (filtro?: import("../../dominio/tipos/api").FiltroTemporal) =>
+      apiClient.get<import("../../dominio/tipos/api").ReservaConsultaResponseDTO>("/reservas", {
+        params: filtro ? { filtro } : undefined,
+      }),
     crear: (data: import("../../dominio/tipos/api").ReservaCreateRequestDTO) =>
       apiClient.post<import("../../dominio/tipos/api").ReservaCreateResponseDTO>(
         "/reservas",

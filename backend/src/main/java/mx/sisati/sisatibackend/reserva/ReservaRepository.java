@@ -21,23 +21,27 @@ AND r.fin > :inicioNueva
                                LocalDateTime inicioNueva,
                                LocalDateTime finNueva);
 
-    List<Reserva> findByPsicologoId(Long psicologoId);
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.psicologo.id = :pid")
+    List<Reserva> findByPsicologoId(@Param("pid") Long psicologoId);
 
-    @Query("SELECT r FROM Reserva r WHERE r.cubiculo.location.propietario.id = :propietarioId")
-    List<Reserva> findByPropietarioId(@Param("propietarioId") Long propietarioId);
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.cubiculo.location.propietario.id = :pid")
+    List<Reserva> findByPropietarioId(@Param("pid") Long propietarioId);
 
-    List<Reserva> findByPsicologoIdAndInicioAfter(Long psicologoId, LocalDateTime now);
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.psicologo.id = :pid AND r.inicio > :now AND r.estadoReserva <> 'CANCELADA'")
+    List<Reserva> findFuturasByPsicologoId(@Param("pid") Long psicologoId, @Param("now") LocalDateTime now);
 
-    List<Reserva> findByPsicologoIdAndInicioBefore(Long psicologoId, LocalDateTime now);
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.cubiculo.location.propietario.id = :pid AND r.inicio > :now AND r.estadoReserva <> 'CANCELADA'")
+    List<Reserva> findFuturasByPropietarioId(@Param("pid") Long propietarioId, @Param("now") LocalDateTime now);
 
-    List<Reserva> findByPsicologoIdAndEstadoReserva(Long psicologoId, EstadoReserva estado);
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.psicologo.id = :pid AND r.fin < :now")
+    List<Reserva> findPasadasByPsicologoId(@Param("pid") Long psicologoId, @Param("now") LocalDateTime now);
 
-    @Query("SELECT r FROM Reserva r WHERE r.cubiculo.location.propietario.id = :pid AND r.inicio > :now")
-    List<Reserva> findReservasFuturasByPropietarioId(@Param("pid") Long propietarioId, @Param("now") LocalDateTime now);
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.cubiculo.location.propietario.id = :pid AND r.fin < :now")
+    List<Reserva> findPasadasByPropietarioId(@Param("pid") Long propietarioId, @Param("now") LocalDateTime now);
 
-    @Query("SELECT r FROM Reserva r WHERE r.cubiculo.location.propietario.id = :pid AND r.inicio < :now")
-    List<Reserva> findReservasPasadasByPropietarioId(@Param("pid") Long propietarioId, @Param("now") LocalDateTime now);
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.psicologo.id = :pid AND r.estadoReserva = :estado")
+    List<Reserva> findByPsicologoIdAndEstadoReserva(@Param("pid") Long psicologoId, @Param("estado") EstadoReserva estado);
 
-    @Query("SELECT r FROM Reserva r WHERE r.cubiculo.location.propietario.id = :pid AND r.estadoReserva = :estado")
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.cubiculo.location.propietario.id = :pid AND r.estadoReserva = :estado")
     List<Reserva> findReservasByPropietarioIdAndEstado(@Param("pid") Long propietarioId, @Param("estado") EstadoReserva estado);
 }

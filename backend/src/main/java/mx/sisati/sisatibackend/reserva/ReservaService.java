@@ -50,12 +50,12 @@ public class ReservaService {
 
         switch (filtro) {
             case FUTURA:
-                reservasPropias = reservaRepository.findByPsicologoIdAndInicioAfter(usuario.getId(), now);
-                reservasEnMisCubiculos = reservaRepository.findReservasFuturasByPropietarioId(usuario.getId(), now);
+                reservasPropias = reservaRepository.findFuturasByPsicologoId(usuario.getId(), now);
+                reservasEnMisCubiculos = reservaRepository.findFuturasByPropietarioId(usuario.getId(), now);
                 break;
             case PASADA:
-                reservasPropias = reservaRepository.findByPsicologoIdAndInicioBefore(usuario.getId(), now);
-                reservasEnMisCubiculos = reservaRepository.findReservasPasadasByPropietarioId(usuario.getId(), now);
+                reservasPropias = reservaRepository.findPasadasByPsicologoId(usuario.getId(), now);
+                reservasEnMisCubiculos = reservaRepository.findPasadasByPropietarioId(usuario.getId(), now);
                 break;
             case CANCELADA:
                 reservasPropias = reservaRepository.findByPsicologoIdAndEstadoReserva(usuario.getId(), EstadoReserva.CANCELADA);

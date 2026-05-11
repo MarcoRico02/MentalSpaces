@@ -15,6 +15,6 @@ export {
   CardContent,
   CardFooter,
 } from "./Card";
-export { Tabs } from "./Tabs";
+export { Tabs, type TabsOption } from "./Tabs";
 export { Dialog } from "./Dialog";
 export { Table, THead, TBody, TR, TH, TD, TableToolbar } from "./Table";

@@ -15,7 +15,6 @@ import { SettingsPage } from "../presentation/pages/settings/SettingsPage";
 import { NotFoundPage } from "../presentation/pages/not-found/NotFoundPage";
 import { DocumentsPage } from "../presentation/pages/documents/DocumentsPage";
 import { ChatPage } from "../presentation/pages/chat/ChatPage";
-import { MyBookingsPage } from "../presentation/pages/bookings/MyBookingsPage";
 import { NewBookingPage } from "../presentation/pages/bookings/NewBookingPage";
 import { BookingsPage } from "../presentation/pages/bookings/BookingsPage";
 import { RoomsPage } from "../presentation/pages/rooms/RoomsPage";
@@ -29,7 +28,7 @@ import { LogsPage } from "../presentation/pages/logs/LogsPage";
 import { MonitoringPage} from "@/presentation/pages/system/SystemMonitoringPage.tsx";
 import { TrustLevelPage} from "@/presentation/pages/trust-level/TrustLevelPage.tsx";
 import { SubscriptionManagementPage } from "../presentation/pages/account/SubscriptionManagementPage";
-
+import { MyAppointmentsPage } from "../presentation/pages/bookings/MyAppointmentsPage";
 
 export const AppRoutes: React.FC = () => {
   const { isLoading } = useAuth();
@@ -207,15 +206,9 @@ export const AppRoutes: React.FC = () => {
           path="/my-bookings"
           element={
             <ProtectedRoute>
-              <MyBookingsPage />
+              <MyAppointmentsPage />
             </ProtectedRoute>
           }
-        />
-
-        {/* Alias: equivalente semántico */}
-        <Route
-          path="/bookings/mine"
-          element={<Navigate to="/my-bookings" replace />}
         />
 
         <Route
