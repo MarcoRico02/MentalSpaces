@@ -162,4 +162,23 @@ export const authAPI = {
         data,
       ),
   },
+
+  // FAQs endpoints
+  faqs: {
+    getCategorias: () =>
+      apiClient.get<import("../../dominio/tipos/api").CategoriaFAQDTO[]>("/faqs/categorias"),
+    getPreguntasByCategoria: (categoriaId: number) =>
+      apiClient.get<import("../../dominio/tipos/api").PreguntaFAQDTO[]>(
+        `/faqs/categorias/${categoriaId}/preguntas`,
+      ),
+    getAllCategoriesWithQuestions: () =>
+      apiClient.get<import("../../dominio/tipos/api").CategoriaPreguntasDTO[]>(
+        "/faqs/categorias-preguntas",
+      ),
+    searchPreguntas: (query: string) =>
+      apiClient.get<import("../../dominio/tipos/api").PreguntaFAQDTO[]>(
+        "/faqs/buscar",
+        { params: { query } },
+      ),
+  },
 };
