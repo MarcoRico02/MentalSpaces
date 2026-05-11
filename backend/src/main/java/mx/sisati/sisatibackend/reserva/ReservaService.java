@@ -5,6 +5,7 @@ import mx.sisati.sisatibackend.excepciones.ServiceException;
 import mx.sisati.sisatibackend.identidad.psicologos.Psicologo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.time.Clock;
 import java.time.LocalDateTime;
 
@@ -33,4 +34,6 @@ public class ReservaService {
         Reserva reserva = new Reserva(cubiculo, psicologo, inicio, fin, notas);
         return reservaRepository.save(reserva);
     }
+
+    /*public List<Reserva> buscarReservasPorFiltros(fechaInicio, fechaFin, cubiculoId, locationId, psicologoIds){}*/
 }

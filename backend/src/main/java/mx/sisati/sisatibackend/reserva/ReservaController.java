@@ -31,7 +31,7 @@ public class ReservaController {
 
     /* Sin terminar
     @GetMapping
-    public ResponseEntity<List<ReservaDTO>> getReservas(
+    public ResponseEntity<List<ReservaDTO>> getReservasCalendarios(
             @RequestParam LocalDateTime inicio,
             @RequestParam LocalDateTime fin,
             @RequestParam(required = false) List<Long> cubiculoIds,

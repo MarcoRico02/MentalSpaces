@@ -56,7 +56,8 @@ public class GestionarReservas {
     }
 
     /* Sin terminar
-    public List<ReservaDTO> buscarReservas(
+    public List<ReservaDTO> getReservasCalendario(
+            ReservaCalendarioReadRequestDTO readDto,
             LocalDateTime inicio,
             LocalDateTime fin,
             List<Long> cubiculoIds,
