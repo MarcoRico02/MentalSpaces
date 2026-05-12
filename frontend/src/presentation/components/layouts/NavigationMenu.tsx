@@ -3,7 +3,7 @@ import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 import { NavItem } from "./NavItem";
 import {
   Home,
-  Calendar,
+  CalendarCheck,
   HelpCircle,
   FileText,
   CreditCard,
@@ -19,7 +19,7 @@ export const NavigationMenu: React.FC = () => {
         Inicio
       </NavItem>
 
-      <NavItem to="/my-bookings" icon={Calendar}>
+      <NavItem to="/my-bookings" icon={CalendarCheck}>
         Mis Reservas
       </NavItem>
 

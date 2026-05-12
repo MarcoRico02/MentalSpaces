@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Calendar, FileText, HelpCircle, Settings } from "lucide-react";
+import { Home, CalendarCheck, FileText, HelpCircle, Settings } from "lucide-react";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 
 type Item = {
@@ -11,7 +11,7 @@ type Item = {
 
 const items: Item[] = [
   { to: "/dashboard", label: "Inicio", icon: Home },
-  { to: "/my-bookings", label: "Reservas", icon: Calendar },
+  { to: "/my-bookings", label: "Reservas", icon: CalendarCheck },
   { to: "/profile", label: "Perfil", icon: FileText },
   { to: "/chat", label: "Ayuda", icon: HelpCircle },
   { to: "/settings", label: "Ajustes", icon: Settings },

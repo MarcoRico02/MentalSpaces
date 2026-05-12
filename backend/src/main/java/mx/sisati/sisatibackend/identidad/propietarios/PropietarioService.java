@@ -30,7 +30,7 @@ public class PropietarioService {
     }
 
     public Propietario getByUsuarioIdOrThrow(Long id) {
-        return propietarioRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(), "No se encontro el psicologo"));
+        return propietarioRepository.findById(id).orElseThrow(() -> new ServiceException(this.getClass(), "No se encontro el propietario"));
     }
 
     public Optional<Propietario> getByUsuarioId(Long id) {

@@ -284,6 +284,8 @@ export interface CrearSuscripcionRequest {
 }
 
 // ─── Reservas ────────────────────────────────────────────────────────────────
+export type FiltroTemporal = "FUTURA" | "PASADA" | "CANCELADA";
+
 export const EstadoReserva = {
   PENDIENTE: "PENDIENTE",
   RECHAZADO: "RECHAZADO",
@@ -325,6 +327,11 @@ export interface PagoResponse {
   requiereFactura: boolean;
   fechaExpiracion?: string;
   createdAt: string;
+}
+
+export interface ReservaConsultaResponseDTO {
+  reservasPropias: ReservaDTO[];
+  reservasEnMisCubiculos: ReservaDTO[];
 }
 
 export interface ReservaCreateResponseDTO {
