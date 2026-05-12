@@ -20,5 +20,10 @@ public interface PreguntaFaqRepository extends JpaRepository<PreguntaFaq, Long> 
      * Obtiene todas las preguntas activas ordenadas por categoría y orden
      */
     List<PreguntaFaq> findByActivaTrueOrderByCategoria_OrdenAscOrdenAsc();
+
+    /**
+     * Obtiene todas las preguntas de una categoría
+     */
+    List<PreguntaFaq> findByCategoriaId(Long categoriaId);
 }
 

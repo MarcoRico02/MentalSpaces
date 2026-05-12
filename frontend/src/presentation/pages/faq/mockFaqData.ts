@@ -1,8 +1,7 @@
 import type {
-  CategoriaFAQDTO,
   PreguntaFAQDTO,
   CategoriaPreguntasDTO,
-} from "../../core/dominio/tipos/api";
+} from "../../../core/dominio/tipos/api";
 
 // Datos mockados para pruebas y desarrollo
 export const MOCK_FAQ_DATA: CategoriaPreguntasDTO[] = [
