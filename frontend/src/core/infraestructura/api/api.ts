@@ -156,10 +156,12 @@ export const authAPI = {
 
   // Reservas endpoints
   reservas: {
+    getAll: () => apiClient.get<import("../../dominio/tipos/api").ReservaDTO[]>("/reservas"),
     crear: (data: import("../../dominio/tipos/api").ReservaCreateRequestDTO) =>
       apiClient.post<import("../../dominio/tipos/api").ReservaCreateResponseDTO>(
         "/reservas",
         data,
       ),
+    cancelar: (id: number) => apiClient.delete(`/reservas/${id}`),
   },
 };

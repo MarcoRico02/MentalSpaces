@@ -12,10 +12,81 @@ import {
   Label,
   Select,
 } from "../../components/ui";
+import { useCrearReservaMutation } from "../../../core/aplicacion/hooks/useCrearReservaMutation";
+import { showToast } from "../../../core/infraestructura/utilidades/toast";
+import { useQuery } from "@tanstack/react-query";
+import { authAPI } from "../../../core/infraestructura/api/api";
 
 export const NewBookingPage: React.FC = () => {
   // Solo UI: simula modo crear/editar con un toggle
   const [mode, setMode] = useState<"create" | "edit">("create");
+  // Campos controlados mínimos para crear reserva
+  const [cubiculoId, setCubiculoId] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  const [start, setStart] = useState<string>("08:00");
+  const [end, setEnd] = useState<string>("09:00");
+  const [notes, setNotes] = useState<string>("");
+
+  const crearReservaMutation = useCrearReservaMutation();
+
+  // --- Nueva consulta: obtener cubículos activos desde la API (por ubicación) ---
+  const { data: cubiculos = [], isLoading: isLoadingCubiculos } = useQuery({
+    queryKey: ["cubiculos", "all"],
+    queryFn: async (): Promise<any[]> => {
+      // Obtener locaciones y luego listar cubículos activos por cada locación
+      const locRes = await authAPI.locations.getAll({ page: 0, size: 100 });
+      const locations = locRes.data.content ?? [];
+      const pages = await Promise.all(
+        locations.map((loc: any) =>
+          authAPI.cubiculos
+            .getActiveByLocation(loc.id, { page: 0, size: 200 })
+            .then((r) => (r.data?.content ?? []).map((c: any) => ({ ...c, locationName: loc.name }))),
+        ),
+      );
+      return pages.flat();
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const handleCreate = async () => {
+    if (!cubiculoId) {
+      showToast.error("Selecciona un consultorio");
+      return;
+    }
+    if (!date) {
+      showToast.error("Selecciona una fecha");
+      return;
+    }
+    if (!start || !end) {
+      showToast.error("Selecciona horario inicio y fin");
+      return;
+    }
+    // Validación básica de horas: start < end
+    if (start >= end) {
+      showToast.error("La hora de inicio debe ser anterior a la hora de fin");
+      return;
+    }
+
+    const payload = {
+      cubiculoId: Number(cubiculoId),
+      inicio: `${date}T${start}:00`,
+      fin: `${date}T${end}:00`,
+      notas: notes || undefined,
+    };
+
+    try {
+      await crearReservaMutation.mutateAsync(payload as any);
+      // limpiar campos al crear
+      setCubiculoId("");
+      setDate("");
+      setStart("08:00");
+      setEnd("09:00");
+      setNotes("");
+    } catch (e) {
+      // El hook ya muestra toast de error; solo logueamos en consola
+      console.error("Error creating reserva", e);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -52,13 +123,25 @@ export const NewBookingPage: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="room">Consultorio</Label>
-                <Select id="room" defaultValue="">
+                <Select id="room" value={cubiculoId} onChange={(e) => setCubiculoId(e.target.value)}>
                   <option value="" disabled>
-                    Selecciona una sala
+                    {isLoadingCubiculos ? "Cargando consultorios..." : "Selecciona una sala"}
                   </option>
-                  <option>Consultorio 1 · Sede Roma · $450/h</option>
-                  <option>Consultorio 2 · Sede Condesa · $450/h</option>
-                  <option>Consultorio 3 · Sede Roma · $500/h</option>
+                  {isLoadingCubiculos ? (
+                    <option value="" disabled>
+                      Cargando...
+                    </option>
+                  ) : cubiculos.length === 0 ? (
+                    <option value="" disabled>
+                      No hay consultorios disponibles
+                    </option>
+                  ) : (
+                    cubiculos.map((c: any) => (
+                      <option key={c.id} value={String(c.id)}>
+                        {c.nombre} {c.locationName ? `· ${c.locationName}` : ""} · ${c.precio}/h
+                      </option>
+                    ))
+                  )}
                 </Select>
               </div>
 
@@ -78,7 +161,7 @@ export const NewBookingPage: React.FC = () => {
                 <Label htmlFor="date">Fecha</Label>
                 <div className="relative">
                   <CalendarDays className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
-                  <Input id="date" type="date" className="pl-9" />
+                  <Input id="date" type="date" className="pl-9" value={date} onChange={(e) => setDate(e.target.value)} />
                 </div>
               </div>
 
@@ -86,7 +169,7 @@ export const NewBookingPage: React.FC = () => {
                 <Label htmlFor="start">Hora inicio</Label>
                 <div className="relative">
                   <Clock className="h-4 w-4 text-muted-foreground absolute left-3 top-3" />
-                  <Select id="start" className="pl-9">
+                  <Select id="start" className="pl-9" value={start} onChange={(e) => setStart(e.target.value)}>
                     <option>08:00</option>
                     <option>09:00</option>
                     <option>10:00</option>
@@ -105,7 +188,7 @@ export const NewBookingPage: React.FC = () => {
 
               <div>
                 <Label htmlFor="end">Hora fin</Label>
-                <Select id="end">
+                <Select id="end" value={end} onChange={(e) => setEnd(e.target.value)}>
                   <option>09:00</option>
                   <option>10:00</option>
                   <option>11:00</option>
@@ -123,17 +206,17 @@ export const NewBookingPage: React.FC = () => {
 
               <div>
                 <Label htmlFor="notes">Notas</Label>
-                <Input id="notes" placeholder="Opcional" />
+                <Input id="notes" placeholder="Opcional" value={notes} onChange={(e) => setNotes(e.target.value)} />
               </div>
             </div>
 
             <div className="flex items-center gap-2">
-              <Button>
+              <Button onClick={() => (mode === "create" ? handleCreate() : showToast.info("Guardar (demo)"))} disabled={crearReservaMutation.isPending}>
                 <Save className="h-4 w-4 mr-2" />
-                {mode === "create" ? "Crear reserva" : "Guardar cambios"}
+                {crearReservaMutation.isPending ? "Guardando..." : mode === "create" ? "Crear reserva" : "Guardar cambios"}
               </Button>
-              <Button variant="secondary">Cancelar</Button>
-            </div>
+               <Button variant="secondary">Cancelar</Button>
+             </div>
 
             <div className="text-xs text-muted-foreground">
               Estados UI: isSubmitting, spinner en botón, validación de traslapes,

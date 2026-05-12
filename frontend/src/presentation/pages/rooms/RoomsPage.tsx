@@ -74,6 +74,28 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
     },
   });
 
+  const createQuickMutation = useMutation({
+    mutationFn: async () => {
+      const payload = {
+        locationId: location.id,
+        nombre: "Nuevo cubículo",
+        descripcion: "",
+        precio: 0,
+        imageUrl: "",
+        caracteristicasIds: [],
+        active: true,
+      } as any;
+      return authAPI.cubiculos.create(payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cubiculos", location.id] });
+      toast.success("Cubículo creado exitosamente");
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || "Error al crear el cubículo");
+    },
+  });
+
   // Filtro local por búsqueda
   const allCubiculos = cubiculosData?.content ?? [];
   const filtered = searchTerm.trim()
@@ -144,10 +166,14 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
           {showInactive ? "Todos" : "Solo activos"}
         </button>
 
-        {/* Botón crear */}
-        <Button className="h-15 whitespace-nowrap shrink-0" onClick={() => setIsCreateOpen(true)}>
+        {/* Botón crear (creación rápida) */}
+        <Button
+          className="h-15 whitespace-nowrap shrink-0"
+          onClick={() => createQuickMutation.mutate()}
+          disabled={createQuickMutation.isPending}
+        >
           <Plus className="h-4 w-4 mr-2" />
-          Nuevo Cubículo
+          {createQuickMutation.isPending ? "Creando..." : "Nuevo Cubículo"}
         </Button>
       </div>
 
@@ -189,9 +215,9 @@ const CubiculosPanel: React.FC<CubiculosPanelProps> = ({
                   : "Agrega el primer cubículo a esta locación."}
               </p>
               {!searchTerm && (
-                <Button onClick={() => setIsCreateOpen(true)} className="mt-2">
+                <Button onClick={() => createQuickMutation.mutate()} className="mt-2" disabled={createQuickMutation.isPending}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Crear Cubículo
+                  {createQuickMutation.isPending ? "Creando..." : "Crear Cubículo"}
                 </Button>
               )}
             </div>
@@ -404,7 +430,7 @@ export const RoomsPage: React.FC = () => {
               <MapPin className="mx-auto h-10 w-10 text-gray-300" />
               <p className="font-medium text-secondary">Sin locaciones registradas</p>
               <p className="text-sm text-muted-foreground">
-                Crea una locación desde el menú "Locaciones" para empezar.
+                Crea una locación desde el menú Locaciones para empezar.
               </p>
             </div>
           </CardContent>

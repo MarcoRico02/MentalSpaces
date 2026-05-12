@@ -10,9 +10,11 @@ import {
   CardHeader,
   CardTitle,
   Dialog,
-  Skeleton,
   Tabs,
 } from "../../components/ui";
+import { useCancelarReservaMutation } from "../../../core/aplicacion/hooks/useCancelarReservaMutation";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { authAPI } from "../../../core/infraestructura/api/api";
 
 type BookingStatus = "Upcoming" | "Past" | "Cancelled" | "Pending";
 
@@ -31,48 +33,32 @@ export const MyBookingsPage: React.FC = () => {
   const [tab, setTab] = useState<BookingStatus>("Upcoming");
   const [detailOpen, setDetailOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState<BookingCard | null>(null);
+  const queryClient = useQueryClient();
 
-  const all: BookingCard[] = [
-    {
-      id: "BK-1201",
-      room: "Consultorio 3",
-      date: "2026-02-10",
-      time: "10:00 - 11:00",
-      location: "Sede Roma",
-      status: "Upcoming",
-      price: "$450.00",
+  const { data: reservasData, isLoading, error } = useQuery({
+    queryKey: ["reservas","me"],
+    queryFn: async () => {
+      const res = await authAPI.reservas.getAll();
+      return res.data as any[];
     },
-    {
-      id: "BK-1191",
-      room: "Consultorio 1",
-      date: "2026-01-20",
-      time: "18:00 - 19:00",
-      location: "Sede Condesa",
-      status: "Past",
-      price: "$450.00",
-    },
-    {
-      id: "BK-1170",
-      room: "Consultorio 2",
-      date: "2026-01-10",
-      time: "12:00 - 13:00",
-      location: "Sede Roma",
-      status: "Cancelled",
-      price: "$450.00",
-      cancellationReason: "No pude asistir",
-    },
-    {
-      id: "BK-1210",
-      room: "Consultorio 4",
-      date: "2026-02-12",
-      time: "09:00 - 10:00",
-      location: "Sede Roma",
-      status: "Pending",
-      price: "$450.00",
-    },
-  ];
+    staleTime: 1000 * 60 * 1,
+  });
 
-  const filtered = all.filter((b) => b.status === tab);
+  const cancelarMutation = useCancelarReservaMutation();
+
+  const bookings: BookingCard[] = (reservasData ?? []).map((r: any) => ({
+    id: `BK-${r.id}`,
+    room: r.cubiculoNombre ?? "-",
+    date: r.inicio ? new Date(r.inicio).toISOString().split("T")[0] : "-",
+    time: r.inicio && r.fin ? `${new Date(r.inicio).toTimeString().slice(0,5)} - ${new Date(r.fin).toTimeString().slice(0,5)}` : "-",
+    location: r.cubiculoNombre ? "" : "", // si tu DTO incluye location, mapear aquí
+    status: r.estadoReserva ? (r.estadoReserva === "PENDIENTE" ? "Pending" : r.estadoReserva === "CANCELADA" ? "Cancelled" : r.estadoReserva === "CONFIRMADA" ? "Upcoming" : "Past") : "Pending",
+    price: "$0.00",
+    cancellationReason: undefined,
+  }));
+
+  const filtered = bookings.filter((b) => b.status === tab);
 
   const badgeVariant = (s: BookingStatus) => {
     if (s === "Upcoming") return "info";
@@ -85,9 +71,9 @@ export const MyBookingsPage: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="Mis Reservas"
-        description="Gestiona tus reservas por estado (maqueta)."
+        description="Gestiona tus reservas por estado."
         right={
-          <Button variant="secondary">
+          <Button variant="secondary" onClick={() => queryClient.invalidateQueries({queryKey:["reservas","me"]})}>
             <RefreshCcw className="h-4 w-4 mr-2" />
             Refrescar
           </Button>
@@ -105,20 +91,15 @@ export const MyBookingsPage: React.FC = () => {
         ]}
       />
 
-      {/* Skeleton demo */}
-      <div className="hidden">
-        <Card>
-          <CardContent>
-            <Skeleton lines={3} />
-          </CardContent>
-        </Card>
-      </div>
-
-      {filtered.length === 0 ? (
-        <EmptyState
-          title="Sin reservas"
-          description="No hay reservas en esta sección."
-        />
+      {isLoading ? (
+        <div className="py-16 flex flex-col items-center gap-3 text-muted-foreground">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+          <span className="text-sm">Cargando reservas...</span>
+        </div>
+      ) : error ? (
+        <div className="py-10 text-center text-red-600 text-sm">Error al cargar reservas. Intenta de nuevo.</div>
+      ) : (filtered.length === 0 ? (
+        <EmptyState title="Sin reservas" description="No hay reservas en esta sección." />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {filtered.map((b) => (
@@ -149,7 +130,13 @@ export const MyBookingsPage: React.FC = () => {
                     Ver detalles
                   </Button>
                   {b.status === "Upcoming" && (
-                    <Button variant="danger" onClick={() => setCancelOpen(true)}>
+                    <Button
+                      variant="danger"
+                      onClick={() => {
+                        setSelectedBooking(b);
+                        setCancelOpen(true);
+                      }}
+                    >
                       Cancelar
                     </Button>
                   )}
@@ -157,13 +144,12 @@ export const MyBookingsPage: React.FC = () => {
 
                 <div className="text-xs text-muted-foreground">
                   Reglas de cancelación: validación por configuración del sistema (demo)
-                  · Refetch cada 5s (demo)
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
-      )}
+      ))}
 
       <Dialog
         open={detailOpen}
@@ -200,15 +186,32 @@ export const MyBookingsPage: React.FC = () => {
 
       <Dialog
         open={cancelOpen}
-        onOpenChange={setCancelOpen}
+        onOpenChange={(open) => {
+          setCancelOpen(open);
+          if (!open) setSelectedBooking(null);
+        }}
         title="Cancelar reserva"
-        description="Confirmación de cancelación (maqueta)."
+        description="Confirmación de cancelación"
         footer={
           <div className="flex justify-end gap-2">
             <Button variant="secondary" onClick={() => setCancelOpen(false)}>
               Volver
             </Button>
-            <Button variant="danger">
+            <Button
+              variant="danger"
+              onClick={async () => {
+                if (!selectedBooking) return;
+                try {
+                  await cancelarMutation.mutateAsync(Number(selectedBooking.id.replace(/[^0-9]/g, "")));
+                  // Refrescar lista real
+                  queryClient.invalidateQueries({ queryKey: ["reservas", "me"] });
+                  setCancelOpen(false);
+                  setSelectedBooking(null);
+                } catch (error) {
+                  console.error("Error al cancelar reserva:", error);
+                }
+              }}
+            >
               <XCircle className="h-4 w-4 mr-2" />
               Confirmar cancelación
             </Button>
@@ -220,7 +223,7 @@ export const MyBookingsPage: React.FC = () => {
             Validación de plazo mínimo · permisos del plan · mensajes de error (demo)
           </div>
           <div className="text-sm text-secondary">
-            ¿Seguro que deseas cancelar? Esta acción puede tener penalizaciones.
+            ¿Seguro que deseas cancelar la reserva {selectedBooking?.id}? Esta acción puede tener penalizaciones.
           </div>
         </div>
       </Dialog>
