@@ -31,6 +31,7 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((autorize) -> autorize
                         .requestMatchers(HttpMethod.POST, "/auth/login","/psicologos","/propietarios").permitAll() //Solo los metodo POST permitir a todos
+                        .requestMatchers(HttpMethod.GET, "/faqs/**").permitAll() //FAQs endpoints son públicos
                         .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll() //Cualquier tipo de metodo, permitir a todo el mundo
                         .requestMatchers(HttpMethod.POST, "/admins").hasRole("ADMIN") //Solo metodo post permitir a Admin
                         .requestMatchers("/actuator/**").hasRole("ADMIN") // Cualquier tipo de metodo permitir solo a admins

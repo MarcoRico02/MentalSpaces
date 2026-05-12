@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mx.sisati.sisatibackend.faq.dto.CategoriaPreguntasDto;
+import mx.sisati.sisatibackend.faq.dto.PreguntaFaqDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,53 @@ import java.util.List;
 public class FaqController {
 
     private final FaqService faqService;
+
+    /**
+     * Obtiene todas las categorías de FAQs con sus preguntas
+     * Endpoint disponible sin autenticación
+     */
+    @GetMapping("/categorias-preguntas")
+    @Operation(
+        summary = "Obtener todas las categorías con sus preguntas",
+        description = "Retorna todas las categorías de FAQs con sus preguntas asociadas"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Categorías FAQs encontradas exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    type = "array",
+                    implementation = CategoriaPreguntasDto.class
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "204",
+            description = "No se encontraron FAQs"
+        )
+    })
+    public ResponseEntity<?> obtenerTodasLasCategorias() {
+        log.info("GET /faqs/categorias-preguntas - Solicitando todas las categorías con preguntas");
+
+        try {
+            List<CategoriaPreguntasDto> faqs = faqService.obtenerTodas();
+
+            if (faqs.isEmpty()) {
+                log.info("No se encontraron FAQs");
+                return ResponseEntity.noContent().build();
+            }
+
+            log.info("Retornando {} categoría(s) con FAQs", faqs.size());
+            return ResponseEntity.ok(faqs);
+
+        } catch (Exception e) {
+            log.error("Error al obtener todas las categorías con preguntas: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Error al obtener FAQs: " + e.getMessage()));
+        }
+    }
 
     /**
      * Obtiene todas las categorías de FAQs con sus preguntas
@@ -104,6 +152,59 @@ public class FaqController {
                 .body(new ErrorResponse("Error al obtener FAQs"));
         }
     }
+
+    /**
+     * Busca preguntas sin importar acentos
+     * El búsqueda busca en pregunta y respuesta
+     */
+    @GetMapping("/buscar")
+    @Operation(
+        summary = "Buscar preguntas por término",
+        description = "Busca preguntas y respuestas por término sin importar acentos. Ej: 'psicologia' encontrará 'Psicología'"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Búsqueda completada exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    type = "array",
+                    implementation = PreguntaFaqDto.class
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "204",
+            description = "No se encontraron resultados para la búsqueda"
+        )
+    })
+    public ResponseEntity<?> buscarPreguntas(
+        @Parameter(
+            name = "query",
+            description = "Término de búsqueda (sin importar acentos)",
+            example = "reserva"
+        )
+        @RequestParam(value = "query", required = true) String query
+    ) {
+        log.info("GET /faqs/buscar - Buscando preguntas con query: {}", query);
+
+        try {
+            List<PreguntaFaqDto> resultados = faqService.buscarPreguntas(query);
+
+            if (resultados.isEmpty()) {
+                log.info("No se encontraron resultados para la búsqueda: {}", query);
+                return ResponseEntity.noContent().build();
+            }
+
+            log.info("Se encontraron {} resultados para la búsqueda: {}", resultados.size(), query);
+            return ResponseEntity.ok(resultados);
+
+        } catch (Exception e) {
+            log.error("Error al buscar preguntas: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Error al buscar FAQs: " + e.getMessage()));
+        }
 
     /**
      * DTO para respuestas de error
