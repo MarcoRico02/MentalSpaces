@@ -108,6 +108,10 @@ public class GestionarReservas {
             }
             // aplicar efectos sobre el pago si existe antes de cancelar la reserva
             String[] resultadoPago = procesarPagoEnCancelacion(reserva);
+            // VALIDACIÓN CONFIGURABLE: delegar a reservaService la verificación de ventana horaria
+            reservaService.cancelarComoRolPsicologo(reserva);
+
+            // proceder a cambiar el estado en la entidad y persistir
             reserva.cancelar();
             reservaRepository.save(reserva);
             PagoResponse pago = null;
@@ -174,3 +178,4 @@ public class GestionarReservas {
         return java.util.Collections.emptyList();
     }
 }
+
