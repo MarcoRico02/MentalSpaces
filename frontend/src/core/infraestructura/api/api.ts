@@ -165,5 +165,6 @@ export const authAPI = {
         "/reservas",
         data,
       ),
+    cancelar: (id: number) => apiClient.delete(`/reservas/${id}`),
   },
 };

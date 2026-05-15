@@ -9,7 +9,6 @@ import mx.sisati.sisatibackend.identidad.psicologos.Psicologo;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
@@ -100,5 +99,22 @@ public class Reserva {
         if(psicologo == null){
             throw new DomainException(this.getClass(), "PSICOLOGO_REQUERIDO");
         }
+    }
+
+    // Cambia el estado de la reserva a CANCELADA. Lanza DomainException si el estado actual
+    // no permite la cancelación (por ejemplo, si ya está CANCELADA o FINALIZADA).
+    public void cancelar() {
+        if (this.estadoReserva == EstadoReserva.CANCELADA) {
+            throw new DomainException(this.getClass(), "RESERVA_YA_CANCELADA");
+        }
+        if (this.estadoReserva == EstadoReserva.FINALIZADA) {
+            throw new DomainException(this.getClass(), "NO_SE_PUEDE_CANCELAR_RESERVA_FINALIZADA");
+        }
+        // Solo se permite cancelar si está PENDIENTE, RECHAZADO o CONFIRMADA según la regla de negocio.
+        if (this.estadoReserva != EstadoReserva.PENDIENTE && this.estadoReserva != EstadoReserva.CONFIRMADA && this.estadoReserva != EstadoReserva.RECHAZADO) {
+            throw new DomainException(this.getClass(), "NO_SE_PUEDE_CANCELAR_RESERVA");
+        }
+
+        this.estadoReserva = EstadoReserva.CANCELADA;
     }
 }
