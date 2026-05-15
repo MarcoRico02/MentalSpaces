@@ -17,6 +17,7 @@ import mx.sisati.sisatibackend.reserva.reagendamiento.SolicitudReagendamiento;
 import mx.sisati.sisatibackend.reserva.reagendamiento.SolicitudReagendamientoService;
 import mx.sisati.sisatibackend.reserva.reagendamiento.dto.CrearSolicitudReagendamientoRequestDTO;
 import mx.sisati.sisatibackend.reserva.reagendamiento.dto.SolicitudReagendamientoResponseDTO;
+import mx.sisati.sisatibackend.validador.reserva.creacion.ReservaValidadorCreacionService;
 import mx.sisati.sisatibackend.validador.reserva.reagendamiento.ReservaValidadorReagendamientoService;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ import java.util.List;
 public class GestionarSolicitudReagendamiento {
 
     private final PsicologoService psicologoService;
+    private final ReservaValidadorCreacionService reservaValidadorCreacionService;
     private final ReservaService reservaService;
     private final DisponibilidadService disponibilidadService;
     private final CubiculoService cubiculoService;
@@ -41,6 +43,7 @@ public class GestionarSolicitudReagendamiento {
                                             ConfiguracionSistemaService configuracionSistemaService,
                                             ReservaValidadorReagendamientoService reservaValidadorReagendamientoService,
                                             SolicitudReagendamientoService solicitudReagendamientoService,
+                                            ReservaValidadorCreacionService reservaValidadorCreacionService,
                                             Clock clock) {
         this.psicologoService = psicologoService;
         this.reservaService = reservaService;
@@ -49,6 +52,7 @@ public class GestionarSolicitudReagendamiento {
         this.configuracionSistemaService = configuracionSistemaService;
         this.reservaValidadorReagendamientoService = reservaValidadorReagendamientoService;
         this.solicitudReagendamientoService = solicitudReagendamientoService;
+        this.reservaValidadorCreacionService = reservaValidadorCreacionService;
         this.clock = clock;
     }
 
@@ -64,8 +68,10 @@ public class GestionarSolicitudReagendamiento {
 
         Cubiculo cubiculo = cubiculoService.getByCubiculoActiveIdOrThrow(reserva.getCubiculo().getId());
         disponibilidadService.validarReservaDentroDeDisponibilidad(cubiculo.getId(), request.inicio(), request.fin());
-        List<ConfiguracionSistema> configuraciones = configuracionSistemaService.getConfiguracionPorTipo(TipoUso.RESERVA_REAGENDAMIENTO);
-        reservaValidadorReagendamientoService.validarReglasReagendamiento(configuraciones, request.inicio(), request.fin());
+        List<ConfiguracionSistema> configuracionesReagendamiento = configuracionSistemaService.getConfiguracionPorTipo(TipoUso.RESERVA_REAGENDAMIENTO);
+        List<ConfiguracionSistema> configuracionesReserva = configuracionSistemaService.getConfiguracionPorTipo(TipoUso.RESERVA_CREACION);
+        reservaValidadorCreacionService.validarReglasCreacion(configuracionesReserva, request.inicio(), request.fin());
+        reservaValidadorReagendamientoService.validarReglasReagendamiento(configuracionesReagendamiento, request.inicio(), request.fin());
 
         SolicitudReagendamiento solicitud = solicitudReagendamientoService.crearSolicitudReagendamiento(reserva, request);
         return SolicitudReagendamientoResponseDTO.fromEntity(solicitud);
