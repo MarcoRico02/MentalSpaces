@@ -21,7 +21,6 @@ import mx.sisati.sisatibackend.validador.reserva.reagendamiento.ReservaValidador
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -66,7 +65,7 @@ public class GestionarSolicitudReagendamiento {
         Cubiculo cubiculo = cubiculoService.getByCubiculoActiveIdOrThrow(reserva.getCubiculo().getId());
         disponibilidadService.validarReservaDentroDeDisponibilidad(cubiculo.getId(), request.inicio(), request.fin());
         List<ConfiguracionSistema> configuraciones = configuracionSistemaService.getConfiguracionPorTipo(TipoUso.RESERVA_REAGENDAMIENTO);
-        reservaValidadorReagendamientoService.validarReglasReagendamiento(configuraciones, request.inicio(), request.fin(), LocalDateTime.now(clock));
+        reservaValidadorReagendamientoService.validarReglasReagendamiento(configuraciones, request.inicio(), request.fin());
 
         SolicitudReagendamiento solicitud = solicitudReagendamientoService.crearSolicitudReagendamiento(reserva, request);
         return SolicitudReagendamientoResponseDTO.fromEntity(solicitud);
