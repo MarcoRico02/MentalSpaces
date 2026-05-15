@@ -24,6 +24,18 @@ public class ReservaService {
         this.clock = clock;
     }
 
+    public Reserva getByIdOrThrow(Long id) {
+        return reservaRepository.findById(id)
+                .orElseThrow(() -> new ServiceException(Reserva.class, "RESERVA_NO_ENCONTRADA"));
+    }
+
+    public Reserva getByIdAndPsicologoOrThrow(Long reservaId, Long psicologoId) {
+        Reserva reserva = getByIdOrThrow(reservaId);
+        if (!reserva.getPsicologo().getId().equals(psicologoId))
+            throw new ServiceException(Reserva.class, "RESERVA_NO_PERTENECE_AL_PSICOLOGO");
+        return reserva;
+    }
+
     public Reserva crearReserva(Cubiculo cubiculo, Psicologo psicologo, LocalDateTime inicio, LocalDateTime fin, String notas) {
         LocalDateTime now = LocalDateTime.now(clock);
         if (inicio.isBefore(now))
