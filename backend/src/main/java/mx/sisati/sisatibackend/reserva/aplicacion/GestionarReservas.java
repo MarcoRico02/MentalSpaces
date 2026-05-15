@@ -27,8 +27,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
-import mx.sisati.sisatibackend.reserva.dto.ReservaDTO;
-import java.util.stream.Collectors;
 
 @Service
 public class GestionarReservas {
@@ -164,18 +162,4 @@ public class GestionarReservas {
             return new String[]{null, null};
         }
     }
-
-    @Transactional
-    public java.util.List<ReservaDTO> listarReservasPorUsuario(Long usuarioId) {
-        // Intentamos encontrar reservas para el usuario si es psicólogo
-        var psicologoOpt = psicologoService.getByUsuarioId(usuarioId);
-        if (psicologoOpt.isPresent()) {
-            var psicologo = psicologoOpt.get();
-            var reservas = reservaRepository.findByPsicologoIdOrderByInicioDesc(psicologo.getId());
-            return reservas.stream().map(ReservaDTO::fromEntity).collect(Collectors.toList());
-        }
-        // Si no es psicólogo, devolver lista vacía (puedes extender para admins/propietarios)
-        return java.util.Collections.emptyList();
-    }
 }
-

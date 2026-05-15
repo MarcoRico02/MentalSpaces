@@ -16,6 +16,7 @@ FROM Reserva r
 WHERE r.cubiculo.id = :cubiculoId
 AND r.inicio < :finNueva
 AND r.fin > :inicioNueva
+AND r.estadoReserva <> mx.sisati.sisatibackend.reserva.EstadoReserva.CANCELADA
 """)
     boolean existeSolapamiento(Long cubiculoId,
                                LocalDateTime inicioNueva,
@@ -27,10 +28,10 @@ AND r.fin > :inicioNueva
     @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.cubiculo.location.propietario.id = :pid")
     List<Reserva> findByPropietarioId(@Param("pid") Long propietarioId);
 
-    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.psicologo.id = :pid AND r.inicio > :now AND r.estadoReserva <> 'CANCELADA'")
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.psicologo.id = :pid AND r.inicio > :now AND r.estadoReserva <> mx.sisati.sisatibackend.reserva.EstadoReserva.CANCELADA")
     List<Reserva> findFuturasByPsicologoId(@Param("pid") Long psicologoId, @Param("now") LocalDateTime now);
 
-    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.cubiculo.location.propietario.id = :pid AND r.inicio > :now AND r.estadoReserva <> 'CANCELADA'")
+    @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.cubiculo.location.propietario.id = :pid AND r.inicio > :now AND r.estadoReserva <> mx.sisati.sisatibackend.reserva.EstadoReserva.CANCELADA")
     List<Reserva> findFuturasByPropietarioId(@Param("pid") Long propietarioId, @Param("now") LocalDateTime now);
 
     @Query("SELECT r FROM Reserva r JOIN FETCH r.cubiculo JOIN FETCH r.psicologo WHERE r.psicologo.id = :pid AND r.fin < :now")

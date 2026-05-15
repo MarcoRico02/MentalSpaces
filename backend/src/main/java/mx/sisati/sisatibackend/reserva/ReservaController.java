@@ -8,13 +8,10 @@ import mx.sisati.sisatibackend.reserva.dto.ReservaCreateRequestDTO;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateResponseDTO;
 import mx.sisati.sisatibackend.reserva.dto.ReservaConsultaResponseDTO;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCancelResponseDTO;
-import mx.sisati.sisatibackend.auth.UsuarioDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import mx.sisati.sisatibackend.reserva.dto.ReservaDTO;
 
 @RestController
 @RequestMapping("/reservas")
@@ -59,12 +56,5 @@ public class ReservaController {
             @AuthenticationPrincipal UsuarioDetails usuarioDetails) {
         ReservaCancelResponseDTO response = gestionarReservas.cancelar(reservaId, usuarioDetails.getUsuario().getId());
         return ResponseEntity.ok(response);
-    }
-
-    // Nuevo endpoint: obtener reservas del usuario autenticado (si es psicólogo)
-    @GetMapping
-    public ResponseEntity<List<ReservaDTO>> listarReservas(@AuthenticationPrincipal UsuarioDetails usuarioDetails) {
-        List<ReservaDTO> result = gestionarReservas.listarReservasPorUsuario(usuarioDetails.getUsuario().getId());
-        return ResponseEntity.ok(result);
     }
 }
