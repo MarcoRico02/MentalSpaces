@@ -114,7 +114,7 @@ export const AppRoutes: React.FC = () => {
           }
         />
 
-        {/* Configuraciones (alias usado por el menú) */}
+        {/* Configuraciones (usado por el menú) */}
         <Route
           path="/config"
           element={
