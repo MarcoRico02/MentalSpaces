@@ -6,10 +6,13 @@ import lombok.NoArgsConstructor;
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 import mx.sisati.sisatibackend.excepciones.DomainException;
 import mx.sisati.sisatibackend.identidad.psicologos.Psicologo;
+import mx.sisati.sisatibackend.reserva.reagendamiento.SolicitudReagendamiento;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -52,6 +55,9 @@ public class Reserva {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SolicitudReagendamiento> solicitudesReagendamiento = new ArrayList<>();
 
     public Reserva(Cubiculo cubiculo, Psicologo psicologo, LocalDateTime inicio, LocalDateTime fin, String notas) {
         validate(cubiculo, psicologo, inicio, fin, notas);
