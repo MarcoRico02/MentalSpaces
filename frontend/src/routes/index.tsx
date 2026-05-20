@@ -11,6 +11,7 @@ import { AccountSummaryPage } from "../presentation/pages/account/AccountSummary
 import { AccountHistoryPage } from "../presentation/pages/account/AccountHistoryPage";
 import {PaymentsPage} from "../presentation/pages/account/PaymentsPage";
 import { FaqPage } from "../presentation/pages/faq/FaqPage";
+import { FaqManagementPage } from "../presentation/pages/faq/FaqManagementPage";
 import { SettingsPage } from "../presentation/pages/settings/SettingsPage";
 import { NotFoundPage } from "../presentation/pages/not-found/NotFoundPage";
 import { DocumentsPage } from "../presentation/pages/documents/DocumentsPage";
@@ -57,6 +58,16 @@ export const AppRoutes: React.FC = () => {
         {/* Public pages */}
         <Route path="/faq" element={<FaqPage />} />
         <Route path="/tutorial" element={<TutorialPage />} />
+
+        {/* FAQ Management (Admin only) */}
+        <Route
+          path="/faq-management"
+          element={
+            <ProtectedRoute requiredRole="ADMIN">
+              <FaqManagementPage />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Protected Routes */}
         <Route

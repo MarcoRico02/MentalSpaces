@@ -13,7 +13,7 @@ const items: Item[] = [
   { to: "/dashboard", label: "Inicio", icon: Home },
   { to: "/my-bookings", label: "Reservas", icon: CalendarCheck },
   { to: "/profile", label: "Perfil", icon: FileText },
-  { to: "/chat", label: "Ayuda", icon: HelpCircle },
+  { to: "/faq", label: "FAQs", icon: HelpCircle },
   { to: "/settings", label: "Ajustes", icon: Settings },
 ];
 

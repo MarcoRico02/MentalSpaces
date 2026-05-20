@@ -167,4 +167,48 @@ export const authAPI = {
       ),
     cancelar: (id: number) => apiClient.delete(`/reservas/${id}`),
   },
+
+  // FAQs endpoints
+  faqs: {
+    getCategorias: () =>
+      apiClient.get<import("../../dominio/tipos/api").CategoriaFAQDTO[]>("/faqs/categorias"),
+    getPreguntasByCategoria: (categoriaId: number) =>
+      apiClient.get<import("../../dominio/tipos/api").PreguntaFAQDTO[]>(
+        `/faqs/categorias/${categoriaId}/preguntas`,
+      ),
+    getAllCategoriesWithQuestions: () =>
+      apiClient.get<import("../../dominio/tipos/api").CategoriaPreguntasDTO[]>(
+        "/faqs/categorias-preguntas",
+      ),
+    searchPreguntas: (query: string) =>
+      apiClient.get<import("../../dominio/tipos/api").PreguntaFAQDTO[]>(
+        "/faqs/buscar",
+        { params: { query } },
+      ),
+    // Admin CRUD endpoints
+    createCategoria: (data: import("../../dominio/tipos/api").CreateUpdateCategoriaFaqDto) =>
+      apiClient.post<import("../../dominio/tipos/api").CategoriaFAQDTO>(
+        "/faqs/categorias",
+        data,
+      ),
+    updateCategoria: (id: number, data: import("../../dominio/tipos/api").CreateUpdateCategoriaFaqDto) =>
+      apiClient.put<import("../../dominio/tipos/api").CategoriaFAQDTO>(
+        `/faqs/categorias/${id}`,
+        data,
+      ),
+    deleteCategoria: (id: number) =>
+      apiClient.delete(`/faqs/categorias/${id}`),
+    createPregunta: (data: import("../../dominio/tipos/api").CreateUpdatePreguntaFaqDto) =>
+      apiClient.post<import("../../dominio/tipos/api").PreguntaFAQDTO>(
+        "/faqs/preguntas",
+        data,
+      ),
+    updatePregunta: (id: number, data: import("../../dominio/tipos/api").CreateUpdatePreguntaFaqDto) =>
+      apiClient.put<import("../../dominio/tipos/api").PreguntaFAQDTO>(
+        `/faqs/preguntas/${id}`,
+        data,
+      ),
+    deletePregunta: (id: number) =>
+      apiClient.delete(`/faqs/preguntas/${id}`),
+  },
 };

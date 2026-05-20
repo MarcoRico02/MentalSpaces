@@ -13,6 +13,7 @@ import {
     BarChart3,
     CreditCard,
     Lock, History,
+    FileQuestion,
 } from "lucide-react";
 
 export const AdminNavigation: React.FC = () => {
@@ -36,6 +37,10 @@ export const AdminNavigation: React.FC = () => {
 
       <NavItem to="/logs" icon={ClipboardList}>
         Registro de Auditoría
+      </NavItem>
+
+      <NavItem to="/faq-management" icon={FileQuestion}>
+        Gestionar FAQs
       </NavItem>
 
       <NavItem to="/locations" icon={Building}>

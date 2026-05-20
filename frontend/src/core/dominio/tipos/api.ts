@@ -358,3 +358,46 @@ export interface CubiculoPage extends Page<CubiculoResponse> {
   numberOfElements: number;
   empty: boolean;
 }
+
+// ─── FAQs / Preguntas Frecuentes ───────────────────────────────────────────
+export interface CategoriaFAQDTO {
+  id: number;
+  nombre: string;
+  descripcion?: string;
+  icono?: string;
+  orden: number;
+  activa: boolean;
+}
+
+export interface PreguntaFAQDTO {
+  id: number;
+  categoriaId: number;
+  pregunta: string;
+  respuesta: string;
+  orden: number;
+  activa: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CategoriaPreguntasDTO {
+  categoria: CategoriaFAQDTO;
+  preguntas: PreguntaFAQDTO[];
+}
+
+export interface CreateUpdateCategoriaFaqDto {
+  nombre: string;
+  descripcion?: string;
+  icono?: string;
+  orden: number;
+  activa: boolean;
+}
+
+export interface CreateUpdatePreguntaFaqDto {
+  categoriaId: number;
+  pregunta: string;
+  respuesta: string;
+  orden: number;
+  activa: boolean;
+}
+

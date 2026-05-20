@@ -66,3 +66,6 @@ export const useUserQuery = () => {
     refetchOnWindowFocus: false,
   });
 };
+
+export class useAuthQuery {
+}

@@ -30,8 +30,8 @@ export const NavigationMenu: React.FC = () => {
       <AuthenticatedNavigation />
 
       {/* Help */}
-      <NavItem to="/chat" icon={HelpCircle}>
-        Ayuda y Soporte
+      <NavItem to="/faq" icon={HelpCircle}>
+        FAQs
       </NavItem>
     </nav>
   );

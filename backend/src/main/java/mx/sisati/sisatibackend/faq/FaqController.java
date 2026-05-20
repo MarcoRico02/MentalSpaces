@@ -1,0 +1,396 @@
+package mx.sisati.sisatibackend.faq;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import mx.sisati.sisatibackend.faq.dto.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * Controlador para gestionar Preguntas Frecuentes (FAQs)
+ * Endpoints públicos - sin requerimiento de autenticación
+ */
+@RestController
+@RequestMapping("/faqs")
+@RequiredArgsConstructor
+@Slf4j
+@Tag(
+    name = "FAQs",
+    description = "Endpoints públicos para gestionar Preguntas Frecuentes"
+)
+public class FaqController {
+
+    private final FaqService faqService;
+
+    /**
+     * Obtiene todas las categorías de FAQs con sus preguntas
+     * Endpoint disponible sin autenticación
+     */
+    @GetMapping("/categorias-preguntas")
+    @Operation(
+        summary = "Obtener todas las categorías con sus preguntas",
+        description = "Retorna todas las categorías de FAQs con sus preguntas asociadas"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Categorías FAQs encontradas exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    type = "array",
+                    implementation = CategoriaPreguntasDto.class
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "204",
+            description = "No se encontraron FAQs"
+        )
+    })
+    public ResponseEntity<?> obtenerTodasLasCategorias() {
+        log.info("GET /faqs/categorias-preguntas - Solicitando todas las categorías con preguntas");
+
+        try {
+            List<CategoriaPreguntasDto> faqs = faqService.obtenerTodas();
+
+            if (faqs.isEmpty()) {
+                log.info("No se encontraron FAQs");
+                return ResponseEntity.noContent().build();
+            }
+
+            log.info("Retornando {} categoría(s) con FAQs", faqs.size());
+            return ResponseEntity.ok(faqs);
+
+        } catch (Exception e) {
+            log.error("Error al obtener todas las categorías con preguntas: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Error al obtener FAQs: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Obtiene todas las categorías de FAQs con sus preguntas
+     * o preguntas de una categoría específica si se proporciona el parámetro
+     */
+    @GetMapping
+    @Operation(
+        summary = "Obtener FAQs por categoría",
+        description = "Obtiene las preguntas frecuentes. Si se especifica una categoría, retorna solo las preguntas de esa categoría. Si no se especifica, retorna todas las categorías con sus preguntas."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "FAQs encontrados exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    type = "array",
+                    implementation = CategoriaPreguntasDto.class
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "204",
+            description = "No se encontraron FAQs para la categoría especificada"
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Parámetro inválido"
+        )
+    })
+    public ResponseEntity<?> obtenerFaqs(
+        @Parameter(
+            name = "categoria",
+            description = "Nombre de la categoría para filtrar FAQs (opcional)",
+            example = "Pagos"
+        )
+        @RequestParam(value = "categoria", required = false) String categoria
+    ) {
+        log.info("GET /faqs - Solicitando FAQs. Categoría: {}", categoria);
+
+        try {
+            List<CategoriaPreguntasDto> faqs;
+
+            if (categoria != null && !categoria.trim().isEmpty()) {
+                // Obtener FAQs de una categoría específica
+                CategoriaPreguntasDto faq = faqService.obtenerPorCategoria(categoria);
+
+                if (faq == null || faq.getPreguntas().isEmpty()) {
+                    log.info("No se encontraron FAQs para la categoría: {}", categoria);
+                    return ResponseEntity.noContent().build();
+                }
+
+                faqs = List.of(faq);
+            } else {
+                // Obtener todas las categorías con sus preguntas
+                faqs = faqService.obtenerTodas();
+
+                if (faqs.isEmpty()) {
+                    log.info("No se encontraron FAQs");
+                    return ResponseEntity.noContent().build();
+                }
+            }
+
+            log.info("Retornando {} categoría(s) con FAQs", faqs.size());
+            return ResponseEntity.ok(faqs);
+
+        } catch (Exception e) {
+            log.error("Error al obtener FAQs: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Error al obtener FAQs"));
+        }
+    }
+
+    /**
+     * Busca preguntas sin importar acentos
+     * El búsqueda busca en pregunta y respuesta
+     */
+    @GetMapping("/buscar")
+    @Operation(
+        summary = "Buscar preguntas por término",
+        description = "Busca preguntas y respuestas por término sin importar acentos. Ej: 'psicologia' encontrará 'Psicología'"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Búsqueda completada exitosamente",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(
+                    type = "array",
+                    implementation = PreguntaFaqDto.class
+                )
+            )
+        ),
+        @ApiResponse(
+            responseCode = "204",
+            description = "No se encontraron resultados para la búsqueda"
+        )
+    })
+    public ResponseEntity<?> buscarPreguntas(
+        @Parameter(
+            name = "query",
+            description = "Término de búsqueda (sin importar acentos)",
+            example = "reserva"
+        )
+        @RequestParam(value = "query") String query
+    ) {
+        log.info("GET /faqs/buscar - Buscando preguntas con query: {}", query);
+
+        try {
+            List<PreguntaFaqDto> resultados = faqService.buscarPreguntas(query);
+
+            if (resultados.isEmpty()) {
+                log.info("No se encontraron resultados para la búsqueda: {}", query);
+                return ResponseEntity.noContent().build();
+            }
+
+            log.info("Se encontraron {} resultados para la búsqueda: {}", resultados.size(), query);
+            return ResponseEntity.ok(resultados);
+
+        } catch (Exception e) {
+            log.error("Error al buscar preguntas: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Error al buscar FAQs: " + e.getMessage()));
+        }
+    }
+
+    // ============ ADMIN CRUD ENDPOINTS ============
+
+    /**
+     * Crea una nueva categoría de FAQ (Admin only)
+     */
+    @PostMapping("/categorias")
+    @Operation(
+        summary = "Crear nueva categoría",
+        description = "Crea una nueva categoría de FAQs (requiere rol ADMIN)"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Categoría creada exitosamente"
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Datos inválidos"
+        ),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Acceso denegado - se requiere rol ADMIN"
+        )
+    })
+    public ResponseEntity<?> crearCategoria(
+        @RequestBody CreateUpdateCategoriaFaqDto dto
+    ) {
+        log.info("POST /faqs/categorias - Creando nueva categoría: {}", dto.getNombre());
+
+        try {
+            CategoriaFaqDto resultado = faqService.crearCategoria(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+        } catch (IllegalArgumentException e) {
+            log.warn("Error al crear categoría: {}", e.getMessage());
+            return ResponseEntity.badRequest()
+                .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error al crear categoría: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Error al crear categoría: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Actualiza una categoría de FAQ (Admin only)
+     */
+    @PutMapping("/categorias/{id}")
+    @Operation(
+        summary = "Actualizar categoría",
+        description = "Actualiza una categoría de FAQs (requiere rol ADMIN)"
+    )
+    public ResponseEntity<?> actualizarCategoria(
+        @PathVariable Long id,
+        @RequestBody CreateUpdateCategoriaFaqDto dto
+    ) {
+        log.info("PUT /faqs/categorias/{} - Actualizando categoría", id);
+
+        try {
+            CategoriaFaqDto resultado = faqService.actualizarCategoria(id, dto);
+            return ResponseEntity.ok(resultado);
+        } catch (IllegalArgumentException e) {
+            log.warn("Error al actualizar categoría: {}", e.getMessage());
+            return ResponseEntity.badRequest()
+                .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error al actualizar categoría: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Error al actualizar categoría: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Elimina una categoría de FAQ (Admin only)
+     */
+    @DeleteMapping("/categorias/{id}")
+    @Operation(
+        summary = "Eliminar categoría",
+        description = "Elimina una categoría de FAQs (requiere rol ADMIN)"
+    )
+    public ResponseEntity<?> eliminarCategoria(@PathVariable Long id) {
+        log.info("DELETE /faqs/categorias/{} - Eliminando categoría", id);
+
+        try {
+            faqService.eliminarCategoria(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            log.warn("Error al eliminar categoría: {}", e.getMessage());
+            return ResponseEntity.badRequest()
+                .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error al eliminar categoría: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Error al eliminar categoría: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Crea una nueva pregunta de FAQ (Admin only)
+     */
+    @PostMapping("/preguntas")
+    @Operation(
+        summary = "Crear nueva pregunta",
+        description = "Crea una nueva pregunta de FAQs (requiere rol ADMIN)"
+    )
+    public ResponseEntity<?> crearPregunta(
+        @RequestBody CreateUpdatePreguntaFaqDto dto
+    ) {
+        log.info("POST /faqs/preguntas - Creando nueva pregunta");
+
+        try {
+            PreguntaFaqDto resultado = faqService.crearPregunta(dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+        } catch (IllegalArgumentException e) {
+            log.warn("Error al crear pregunta: {}", e.getMessage());
+            return ResponseEntity.badRequest()
+                .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error al crear pregunta: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Error al crear pregunta: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Actualiza una pregunta de FAQ (Admin only)
+     */
+    @PutMapping("/preguntas/{id}")
+    @Operation(
+        summary = "Actualizar pregunta",
+        description = "Actualiza una pregunta de FAQs (requiere rol ADMIN)"
+    )
+    public ResponseEntity<?> actualizarPregunta(
+        @PathVariable Long id,
+        @RequestBody CreateUpdatePreguntaFaqDto dto
+    ) {
+        log.info("PUT /faqs/preguntas/{} - Actualizando pregunta", id);
+
+        try {
+            PreguntaFaqDto resultado = faqService.actualizarPregunta(id, dto);
+            return ResponseEntity.ok(resultado);
+        } catch (IllegalArgumentException e) {
+            log.warn("Error al actualizar pregunta: {}", e.getMessage());
+            return ResponseEntity.badRequest()
+                .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error al actualizar pregunta: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Error al actualizar pregunta: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Elimina una pregunta de FAQ (Admin only)
+     */
+    @DeleteMapping("/preguntas/{id}")
+    @Operation(
+        summary = "Eliminar pregunta",
+        description = "Elimina una pregunta de FAQs (requiere rol ADMIN)"
+    )
+    public ResponseEntity<?> eliminarPregunta(@PathVariable Long id) {
+        log.info("DELETE /faqs/preguntas/{} - Eliminando pregunta", id);
+
+        try {
+            faqService.eliminarPregunta(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            log.warn("Error al eliminar pregunta: {}", e.getMessage());
+            return ResponseEntity.badRequest()
+                .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error al eliminar pregunta: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Error al eliminar pregunta: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * DTO para respuestas de error
+     */
+    private static class ErrorResponse {
+        public String mensaje;
+
+        public ErrorResponse(String mensaje) {
+            this.mensaje = mensaje;
+        }
+    }
+}
+
