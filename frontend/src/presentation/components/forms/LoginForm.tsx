@@ -55,7 +55,15 @@ export const LoginForm: React.FC = () => {
                   ${selected ? "bg-surface shadow" : "text-blue-100 hover:bg-surface/[0.12] hover:text-blue-600"}`
               }
             >
-              Registrarse
+              Psicólogo
+            </Tab>
+            <Tab
+              className={({ selected }) =>
+                `w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700
+                  ${selected ? "bg-surface shadow" : "text-blue-100 hover:bg-surface/[0.12] hover:text-blue-600"}`
+              }
+            >
+              Propietario
             </Tab>
           </Tab.List>
 
@@ -63,7 +71,6 @@ export const LoginForm: React.FC = () => {
             {/* Login Panel */}
             <Tab.Panel className="space-y-6">
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                {/* General error */}
                 {errors.root && (
                   <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
                     {errors.root.message}
@@ -71,7 +78,6 @@ export const LoginForm: React.FC = () => {
                 )}
 
                 <div className="space-y-4">
-                  {/* Username */}
                   <div>
                     <Label htmlFor="username">Usuario</Label>
                     <Input
@@ -83,7 +89,6 @@ export const LoginForm: React.FC = () => {
                     />
                   </div>
 
-                  {/* Password */}
                   <div>
                     <Label htmlFor="password">Contraseña</Label>
                     <Input
@@ -135,60 +140,14 @@ export const LoginForm: React.FC = () => {
               </form>
             </Tab.Panel>
 
-            {/* Register Panel */}
+            {/* Psicólogo Register Panel */}
             <Tab.Panel className="space-y-6">
-              <div className="space-y-6">
-                {/* Registration type tabs */}
-                <Tab.Group>
-                  <Tab.List className="flex space-x-1 rounded-lg bg-surface-2 p-1">
-                    <Tab
-                      className={({ selected }) =>
-                        `w-full rounded-lg py-2 text-sm font-medium leading-5 text-blue-700
-                          ${selected ? "bg-surface shadow" : "text-blue-100 hover:bg-surface/[0.12] hover:text-blue-600"}`
-                      }
-                    >
-                      Psicólogo
-                    </Tab>
-                    <Tab
-                      className={({ selected }) =>
-                        `w-full rounded-lg py-2 text-sm font-medium leading-5 text-blue-700
-                          ${selected ? "bg-surface shadow" : "text-blue-100 hover:bg-surface/[0.12] hover:text-blue-600"}`
-                      }
-                    >
-                      Propietario
-                    </Tab>
-                  </Tab.List>
+              <PsicologoRegisterForm />
+            </Tab.Panel>
 
-                  <Tab.Panels className="mt-6">
-                    <Tab.Panel>
-                      <div className="space-y-4">
-                        <div className="text-center">
-                          <h3 className="text-lg font-medium text-default mb-2">
-                            Registro de Psicólogo
-                          </h3>
-                          <p className="text-sm text-secondary">
-                            Regístrate como profesional de la salud mental
-                          </p>
-                        </div>
-                        <PsicologoRegisterForm />
-                      </div>
-                    </Tab.Panel>
-                    <Tab.Panel>
-                      <div className="space-y-4">
-                        <div className="text-center">
-                          <h3 className="text-lg font-medium text-default mb-2">
-                            Registro de Propietario
-                          </h3>
-                          <p className="text-sm text-secondary">
-                            Publica tus consultorios para reservas
-                          </p>
-                        </div>
-                        <PropietarioRegisterForm />
-                      </div>
-                    </Tab.Panel>
-                  </Tab.Panels>
-                </Tab.Group>
-              </div>
+            {/* Propietario Register Panel */}
+            <Tab.Panel className="space-y-6">
+              <PropietarioRegisterForm />
             </Tab.Panel>
           </Tab.Panels>
         </Tab.Group>
