@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Plus, MoreVertical, Edit, Trash2 } from "lucide-react";
+import { toast } from "react-hot-toast";
 import { useFaqAllCategoriesWithQuestionsQuery } from "../../../core/aplicacion/hooks/useFaqQueries";
 import {
   useCreateCategoryMutation,
@@ -23,6 +24,182 @@ import type {
   PreguntaFAQDTO,
   CategoriaPreguntasDTO,
 } from "../../../core/dominio/tipos/api";
+import {
+  HelpCircle,
+  BookOpen,
+  Settings,
+  CreditCard,
+  FileText,
+  AlertCircle,
+  User,
+  Shield,
+  Calendar,
+  Clock,
+  MapPin,
+  Home,
+  Phone,
+  Mail,
+  DollarSign,
+  Wallet,
+  CheckCircle,
+  XCircle,
+  Info,
+  MessageCircle,
+  FileCheck,
+  Users,
+  Lock,
+  Search,
+  Star,
+  Heart,
+  Briefcase,
+  GraduationCap,
+  Stethoscope,
+  Building,
+  Key,
+  Bell,
+  Camera,
+  Image,
+  Monitor,
+  Smartphone,
+  Globe,
+  FolderOpen,
+  List,
+  Layers,
+  Zap,
+  Award,
+  Bookmark,
+  Tag,
+  Package,
+  Truck,
+  ShoppingBag,
+  BarChart3,
+  PieChart,
+  TrendingUp,
+  Activity,
+  Eye,
+  Printer,
+  Download,
+  Upload,
+  Share2,
+  Link,
+  Paperclip,
+  Clipboard,
+  File,
+  Edit3,
+  Save,
+  Trash,
+  RotateCcw,
+  RefreshCw,
+  Filter,
+  SlidersHorizontal,
+  ChevronDown,
+  ChevronRight,
+  ArrowRight,
+  ArrowLeft,
+  Menu,
+  X,
+  PlusCircle,
+  MinusCircle,
+  Check,
+  XOctagon,
+  AlertTriangle,
+  ThumbsUp,
+  ThumbsDown,
+  Smile,
+  Frown,
+  Meh,
+  Lightbulb,
+  Target,
+  Flag,
+  Rocket,
+  Sparkles,
+  Wand2,
+  Palette,
+  Music,
+  Video,
+  Radio,
+  Tv,
+  Gamepad2,
+  Puzzle,
+  Gift,
+  Crown,
+  Diamond,
+  Gem,
+} from "lucide-react";
+
+const ICON_OPTIONS = [
+  { name: "HelpCircle", component: HelpCircle, label: "Ayuda" },
+  { name: "BookOpen", component: BookOpen, label: "Libro" },
+  { name: "Settings", component: Settings, label: "Configuración" },
+  { name: "CreditCard", component: CreditCard, label: "Tarjeta" },
+  { name: "FileText", component: FileText, label: "Documento" },
+  { name: "AlertCircle", component: AlertCircle, label: "Alerta" },
+  { name: "User", component: User, label: "Usuario" },
+  { name: "Shield", component: Shield, label: "Seguridad" },
+  { name: "Calendar", component: Calendar, label: "Calendario" },
+  { name: "Clock", component: Clock, label: "Reloj" },
+  { name: "MapPin", component: MapPin, label: "Ubicación" },
+  { name: "Home", component: Home, label: "Inicio" },
+  { name: "Phone", component: Phone, label: "Teléfono" },
+  { name: "Mail", component: Mail, label: "Correo" },
+  { name: "DollarSign", component: DollarSign, label: "Dinero" },
+  { name: "Wallet", component: Wallet, label: "Billetera" },
+  { name: "CheckCircle", component: CheckCircle, label: "Verificado" },
+  { name: "XCircle", component: XCircle, label: "Error" },
+  { name: "Info", component: Info, label: "Información" },
+  { name: "MessageCircle", component: MessageCircle, label: "Mensaje" },
+  { name: "FileCheck", component: FileCheck, label: "Archivo OK" },
+  { name: "Users", component: Users, label: "Grupo" },
+  { name: "Lock", component: Lock, label: "Candado" },
+  { name: "Search", component: Search, label: "Buscar" },
+  { name: "Star", component: Star, label: "Estrella" },
+  { name: "Heart", component: Heart, label: "Corazón" },
+  { name: "Briefcase", component: Briefcase, label: "Maletín" },
+  { name: "GraduationCap", component: GraduationCap, label: "Educación" },
+  { name: "Stethoscope", component: Stethoscope, label: "Salud" },
+  { name: "Building", component: Building, label: "Edificio" },
+  { name: "Key", component: Key, label: "Llave" },
+  { name: "Bell", component: Bell, label: "Notificación" },
+  { name: "Camera", component: Camera, label: "Cámara" },
+  { name: "Image", component: Image, label: "Imagen" },
+  { name: "Monitor", component: Monitor, label: "Monitor" },
+  { name: "Smartphone", component: Smartphone, label: "Celular" },
+  { name: "Globe", component: Globe, label: "Internet" },
+  { name: "FolderOpen", component: FolderOpen, label: "Carpeta" },
+  { name: "List", component: List, label: "Lista" },
+  { name: "Layers", component: Layers, label: "Capas" },
+  { name: "Zap", component: Zap, label: "Rápido" },
+  { name: "Award", component: Award, label: "Premio" },
+  { name: "Bookmark", component: Bookmark, label: "Marcador" },
+  { name: "Tag", component: Tag, label: "Etiqueta" },
+  { name: "Package", component: Package, label: "Paquete" },
+  { name: "BarChart3", component: BarChart3, label: "Gráfica" },
+  { name: "Activity", component: Activity, label: "Actividad" },
+  { name: "Eye", component: Eye, label: "Ojo" },
+  { name: "Download", component: Download, label: "Descarga" },
+  { name: "Upload", component: Upload, label: "Subida" },
+  { name: "Share2", component: Share2, label: "Compartir" },
+  { name: "Link", component: Link, label: "Enlace" },
+  { name: "Clipboard", component: Clipboard, label: "Portapapeles" },
+  { name: "File", component: File, label: "Archivo" },
+  { name: "Trash", component: Trash, label: "Basura" },
+  { name: "RefreshCw", component: RefreshCw, label: "Actualizar" },
+  { name: "Filter", component: Filter, label: "Filtro" },
+  { name: "ChevronDown", component: ChevronDown, label: "Flecha abajo" },
+  { name: "ArrowRight", component: ArrowRight, label: "Flecha derecha" },
+  { name: "Menu", component: Menu, label: "Menú" },
+  { name: "PlusCircle", component: PlusCircle, label: "Agregar" },
+  { name: "Check", component: Check, label: "Check" },
+  { name: "AlertTriangle", component: AlertTriangle, label: "Advertencia" },
+  { name: "ThumbsUp", component: ThumbsUp, label: "Me gusta" },
+  { name: "Lightbulb", component: Lightbulb, label: "Idea" },
+  { name: "Target", component: Target, label: "Objetivo" },
+  { name: "Rocket", component: Rocket, label: "Cohete" },
+  { name: "Sparkles", component: Sparkles, label: "Brillos" },
+  { name: "Palette", component: Palette, label: "Paleta" },
+  { name: "Gift", component: Gift, label: "Regalo" },
+  { name: "Crown", component: Crown, label: "Corona" },
+];
 
 type TabType = "categories" | "questions";
 
@@ -66,12 +243,15 @@ export const FaqManagementPage: React.FC = () => {
           id: category.id,
           data: category,
         });
+        toast.success("Categoría actualizada exitosamente");
       } else {
         await createCategoryMutation.mutateAsync(category as any);
+        toast.success("Categoría creada exitosamente");
       }
       setEditingCategory(null);
     } catch (error) {
       console.error("Error saving category:", error);
+      toast.error("Error al guardar la categoría");
     }
   };
 
@@ -81,8 +261,10 @@ export const FaqManagementPage: React.FC = () => {
     }
     try {
       await deleteCategoryMutation.mutateAsync(categoryId);
+      toast.success("Categoría eliminada exitosamente");
     } catch (error) {
       console.error("Error deleting category:", error);
+      toast.error("Error al eliminar la categoría");
     }
   };
 
@@ -93,12 +275,15 @@ export const FaqManagementPage: React.FC = () => {
           id: question.id,
           data: question,
         });
+        toast.success("Pregunta actualizada exitosamente");
       } else {
         await createQuestionMutation.mutateAsync(question as any);
+        toast.success("Pregunta creada exitosamente");
       }
       setEditingQuestion(null);
     } catch (error) {
       console.error("Error saving question:", error);
+      toast.error("Error al guardar la pregunta");
     }
   };
 
@@ -108,8 +293,10 @@ export const FaqManagementPage: React.FC = () => {
     }
     try {
       await deleteQuestionMutation.mutateAsync(questionId);
+      toast.success("Pregunta eliminada exitosamente");
     } catch (error) {
       console.error("Error deleting question:", error);
+      toast.error("Error al eliminar la pregunta");
     }
   };
 
@@ -267,7 +454,7 @@ const CategoriesTab: React.FC<CategoriesTabProps> = ({
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => onDelete(item.categoria.id!)}
-                    className="gap-2 text-red-600"
+                    className="gap-2 text-red-600 dark:text-red-400"
                   >
                     <Trash2 size={16} />
                     Eliminar
@@ -298,10 +485,16 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   const [formData, setFormData] = React.useState<EditingCategory>(
     category || { nombre: "", descripcion: "", orden: 0, activa: true, icono: "" }
   );
+  const [iconSearch, setIconSearch] = useState("");
 
   if (!category) {
     return null;
   }
+
+  const filteredIcons = ICON_OPTIONS.filter((icon) =>
+    icon.label.toLowerCase().includes(iconSearch.toLowerCase()) ||
+    icon.name.toLowerCase().includes(iconSearch.toLowerCase())
+  );
 
   return (
     <div className="p-4 border border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-900/20 rounded-lg space-y-4">
@@ -330,16 +523,39 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="text-sm font-medium text-default">Ícono</label>
-            <Input
-              value={formData.icono || ""}
-              onChange={(e) => setFormData({ ...formData, icono: e.target.value })}
-              placeholder="Nombre del ícono"
-            />
+        <div>
+          <label className="text-sm font-medium text-default mb-2 block">Ícono</label>
+          <Input
+            value={iconSearch}
+            onChange={(e) => setIconSearch(e.target.value)}
+            placeholder="Buscar ícono..."
+            className="mb-3"
+          />
+          <div className="grid grid-cols-8 gap-2 max-h-48 overflow-y-auto p-2 border border-sidebar-border rounded-lg bg-surface">
+            {filteredIcons.map((icon) => (
+              <button
+                key={icon.name}
+                type="button"
+                onClick={() => setFormData({ ...formData, icono: icon.name })}
+                className={`flex flex-col items-center justify-center p-2 rounded-lg transition-colors ${
+                  formData.icono === icon.name
+                    ? "bg-blue-100 dark:bg-blue-900 border-2 border-blue-500"
+                    : "hover:bg-sidebar-border border-2 border-transparent"
+                }`}
+                title={icon.label}
+              >
+                <icon.component size={20} className="text-default" />
+              </button>
+            ))}
           </div>
+          {formData.icono && (
+            <p className="text-xs text-muted-foreground mt-2">
+              Ícono seleccionado: {formData.icono}
+            </p>
+          )}
+        </div>
 
+        <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="text-sm font-medium text-default">Orden</label>
             <Input
@@ -351,17 +567,19 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
               placeholder="1"
             />
           </div>
-        </div>
 
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={formData.activa ?? true}
-            onChange={(e) => setFormData({ ...formData, activa: e.target.checked })}
-            className="w-4 h-4"
-          />
-          <span className="text-sm text-default">Activa</span>
-        </label>
+          <div>
+            <label className="flex items-center gap-2 mt-6">
+              <input
+                type="checkbox"
+                checked={formData.activa ?? true}
+                onChange={(e) => setFormData({ ...formData, activa: e.target.checked })}
+                className="w-4 h-4"
+              />
+              <span className="text-sm text-default">Activa</span>
+            </label>
+          </div>
+        </div>
       </div>
 
       <div className="flex gap-2 justify-end">
@@ -505,7 +723,7 @@ const QuestionsTab: React.FC<QuestionsTabProps> = ({
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => onDelete(question.id!)}
-                        className="gap-2 text-red-600"
+                        className="gap-2 text-red-600 dark:text-red-400"
                       >
                         <Trash2 size={16} />
                         Eliminar

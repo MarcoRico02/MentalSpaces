@@ -20,5 +20,10 @@ public interface CategoriaFaqRepository extends JpaRepository<CategoriaFaq, Long
      * Obtiene una categoría por nombre
      */
     CategoriaFaq findByNombre(String nombre);
+
+    /**
+     * Obtiene categorías activas con orden mayor o igual al especificado
+     */
+    List<CategoriaFaq> findByActivaTrueAndOrdenGreaterThanEqualOrderByOrdenAsc(Integer orden);
 }
 

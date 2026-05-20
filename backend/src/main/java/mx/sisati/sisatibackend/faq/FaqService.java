@@ -136,11 +136,22 @@ public class FaqService {
                 throw new IllegalArgumentException("Ya existe una categoría con el nombre: " + dto.getNombre());
             }
 
+            Integer nuevoOrden = dto.getOrden() != null ? dto.getOrden() : 0;
+
+            // Incrementar en 1 el orden de las categorías existentes con orden >= nuevoOrden
+            List<CategoriaFaq> categoriasAReordenar = categoriaFaqRepository
+                    .findByActivaTrueAndOrdenGreaterThanEqualOrderByOrdenAsc(nuevoOrden);
+            
+            for (CategoriaFaq categoria : categoriasAReordenar) {
+                categoria.setOrden(categoria.getOrden() + 1);
+            }
+            categoriaFaqRepository.saveAll(categoriasAReordenar);
+
             CategoriaFaq categoria = CategoriaFaq.builder()
                     .nombre(dto.getNombre())
                     .descripcion(dto.getDescripcion())
                     .icono(dto.getIcono())
-                    .orden(dto.getOrden() != null ? dto.getOrden() : 0)
+                    .orden(nuevoOrden)
                     .activa(dto.getActiva() != null ? dto.getActiva() : true)
                     .build();
 
@@ -173,10 +184,38 @@ public class FaqService {
                 }
             }
 
+            // Ajustar orden si cambió
+            Integer ordenActual = categoria.getOrden();
+            Integer nuevoOrden = dto.getOrden() != null ? dto.getOrden() : ordenActual;
+
+            if (!ordenActual.equals(nuevoOrden)) {
+                if (nuevoOrden < ordenActual) {
+                    // Se mueve hacia arriba: incrementar orden de las categorías entre nuevoOrden y ordenActual-1
+                    List<CategoriaFaq> categoriasAReordenar = categoriaFaqRepository
+                            .findByActivaTrueAndOrdenGreaterThanEqualOrderByOrdenAsc(nuevoOrden);
+                    for (CategoriaFaq c : categoriasAReordenar) {
+                        if (!c.getId().equals(id) && c.getOrden() < ordenActual) {
+                            c.setOrden(c.getOrden() + 1);
+                        }
+                    }
+                    categoriaFaqRepository.saveAll(categoriasAReordenar);
+                } else if (nuevoOrden > ordenActual) {
+                    // Se mueve hacia abajo: decrementar orden de las categorías entre ordenActual+1 y nuevoOrden
+                    List<CategoriaFaq> categoriasAReordenar = categoriaFaqRepository
+                            .findByActivaTrueAndOrdenGreaterThanEqualOrderByOrdenAsc(ordenActual + 1);
+                    for (CategoriaFaq c : categoriasAReordenar) {
+                        if (c.getOrden() <= nuevoOrden) {
+                            c.setOrden(c.getOrden() - 1);
+                        }
+                    }
+                    categoriaFaqRepository.saveAll(categoriasAReordenar);
+                }
+            }
+
             categoria.setNombre(dto.getNombre());
             categoria.setDescripcion(dto.getDescripcion());
             categoria.setIcono(dto.getIcono());
-            categoria.setOrden(dto.getOrden() != null ? dto.getOrden() : categoria.getOrden());
+            categoria.setOrden(nuevoOrden);
             categoria.setActiva(dto.getActiva() != null ? dto.getActiva() : categoria.getActiva());
 
             categoriaFaqRepository.save(categoria);
@@ -224,11 +263,22 @@ public class FaqService {
             CategoriaFaq categoria = categoriaFaqRepository.findById(dto.getCategoriaId())
                     .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada con id: " + dto.getCategoriaId()));
 
+            Integer nuevoOrden = dto.getOrden() != null ? dto.getOrden() : 0;
+
+            // Incrementar en 1 el orden de las preguntas existentes con orden >= nuevoOrden
+            List<PreguntaFaq> preguntasAReordenar = preguntaFaqRepository
+                    .findByCategoriaIdAndOrdenGreaterThanEqualOrderByOrdenAsc(dto.getCategoriaId(), nuevoOrden);
+            
+            for (PreguntaFaq pregunta : preguntasAReordenar) {
+                pregunta.setOrden(pregunta.getOrden() + 1);
+            }
+            preguntaFaqRepository.saveAll(preguntasAReordenar);
+
             PreguntaFaq pregunta = PreguntaFaq.builder()
                     .categoria(categoria)
                     .pregunta(dto.getPregunta())
                     .respuesta(dto.getRespuesta())
-                    .orden(dto.getOrden() != null ? dto.getOrden() : 0)
+                    .orden(nuevoOrden)
                     .activa(dto.getActiva() != null ? dto.getActiva() : true)
                     .build();
 
@@ -255,9 +305,57 @@ public class FaqService {
 
             // Si cambió la categoría, validar que exista
             if (!pregunta.getCategoria().getId().equals(dto.getCategoriaId())) {
+                // Decrementar orden en la categoría anterior
+                List<PreguntaFaq> preguntasCategoriaAnterior = preguntaFaqRepository
+                        .findByCategoriaIdAndOrdenGreaterThanEqualOrderByOrdenAsc(pregunta.getCategoria().getId(), pregunta.getOrden());
+                for (PreguntaFaq p : preguntasCategoriaAnterior) {
+                    if (!p.getId().equals(id)) {
+                        p.setOrden(p.getOrden() - 1);
+                    }
+                }
+                preguntaFaqRepository.saveAll(preguntasCategoriaAnterior);
+
                 CategoriaFaq nuevaCategoria = categoriaFaqRepository.findById(dto.getCategoriaId())
                         .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada con id: " + dto.getCategoriaId()));
+
+                // Incrementar orden en la nueva categoría
+                Integer nuevoOrden = dto.getOrden() != null ? dto.getOrden() : pregunta.getOrden();
+                List<PreguntaFaq> preguntasNuevaCategoria = preguntaFaqRepository
+                        .findByCategoriaIdAndOrdenGreaterThanEqualOrderByOrdenAsc(dto.getCategoriaId(), nuevoOrden);
+                for (PreguntaFaq p : preguntasNuevaCategoria) {
+                    p.setOrden(p.getOrden() + 1);
+                }
+                preguntaFaqRepository.saveAll(preguntasNuevaCategoria);
+
                 pregunta.setCategoria(nuevaCategoria);
+            } else {
+                // Misma categoría - ajustar orden si cambió
+                Integer ordenActual = pregunta.getOrden();
+                Integer nuevoOrden = dto.getOrden() != null ? dto.getOrden() : ordenActual;
+
+                if (!ordenActual.equals(nuevoOrden)) {
+                    if (nuevoOrden < ordenActual) {
+                        // Se mueve hacia arriba: incrementar orden de las preguntas entre nuevoOrden y ordenActual-1
+                        List<PreguntaFaq> preguntasAReordenar = preguntaFaqRepository
+                                .findByCategoriaIdAndOrdenGreaterThanEqualOrderByOrdenAsc(pregunta.getCategoria().getId(), nuevoOrden);
+                        for (PreguntaFaq p : preguntasAReordenar) {
+                            if (!p.getId().equals(id) && p.getOrden() < ordenActual) {
+                                p.setOrden(p.getOrden() + 1);
+                            }
+                        }
+                        preguntaFaqRepository.saveAll(preguntasAReordenar);
+                    } else if (nuevoOrden > ordenActual) {
+                        // Se mueve hacia abajo: decrementar orden de las preguntas entre ordenActual+1 y nuevoOrden
+                        List<PreguntaFaq> preguntasAReordenar = preguntaFaqRepository
+                                .findByCategoriaIdAndOrdenGreaterThanEqualOrderByOrdenAsc(pregunta.getCategoria().getId(), ordenActual + 1);
+                        for (PreguntaFaq p : preguntasAReordenar) {
+                            if (p.getOrden() <= nuevoOrden) {
+                                p.setOrden(p.getOrden() - 1);
+                            }
+                        }
+                        preguntaFaqRepository.saveAll(preguntasAReordenar);
+                    }
+                }
             }
 
             pregunta.setPregunta(dto.getPregunta());

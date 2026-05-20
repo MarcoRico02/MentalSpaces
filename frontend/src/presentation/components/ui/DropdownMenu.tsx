@@ -92,7 +92,7 @@ export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({
   return (
     <div
       ref={ref}
-      className={`absolute top-full ${alignClass} mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-[160px]`}
+      className={`absolute top-full ${alignClass} mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 min-w-[160px]`}
     >
       <div className="py-1">{children}</div>
     </div>
@@ -112,7 +112,7 @@ export const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({
         onClick?.();
         setIsOpen(false);
       }}
-      className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition-colors ${
+      className={`w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
         className || ""
       }`}
     >

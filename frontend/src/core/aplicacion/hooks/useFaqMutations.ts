@@ -21,10 +21,10 @@ export const useCreateCategoryMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["faqCategories"],
+        queryKey: ["faqs", "categorias"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["faqAllCategoriesWithQuestions"],
+        queryKey: ["faqs", "categorias-preguntas"],
       });
     },
   });
@@ -52,10 +52,10 @@ export const useUpdateCategoryMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["faqCategories"],
+        queryKey: ["faqs", "categorias"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["faqAllCategoriesWithQuestions"],
+        queryKey: ["faqs", "categorias-preguntas"],
       });
     },
   });
@@ -73,10 +73,10 @@ export const useDeleteCategoryMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["faqCategories"],
+        queryKey: ["faqs", "categorias"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["faqAllCategoriesWithQuestions"],
+        queryKey: ["faqs", "categorias-preguntas"],
       });
     },
   });
@@ -95,10 +95,7 @@ export const useCreateQuestionMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["faqQuestions"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["faqAllCategoriesWithQuestions"],
+        queryKey: ["faqs", "categorias-preguntas"],
       });
     },
   });
@@ -126,10 +123,7 @@ export const useUpdateQuestionMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["faqQuestions"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["faqAllCategoriesWithQuestions"],
+        queryKey: ["faqs", "categorias-preguntas"],
       });
     },
   });
@@ -147,10 +141,7 @@ export const useDeleteQuestionMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["faqQuestions"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["faqAllCategoriesWithQuestions"],
+        queryKey: ["faqs", "categorias-preguntas"],
       });
     },
   });
