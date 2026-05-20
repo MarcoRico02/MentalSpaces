@@ -63,24 +63,21 @@ public class ReservaService {
     public ReservaConsultaResponseDTO getReservas(Usuario usuario, FiltroTemporal filtro) {
         LocalDateTime now = LocalDateTime.now(clock);
         List<Reserva> reservasPropias;
-        List<Reserva> reservasEnMisCubiculos;
-
-        switch (filtro) {
-            case FUTURA:
+        List<Reserva> reservasEnMisCubiculos = switch (filtro) {
+            case FUTURA -> {
                 reservasPropias = reservaRepository.findFuturasByPsicologoId(usuario.getId(), now);
-                reservasEnMisCubiculos = reservaRepository.findFuturasByPropietarioId(usuario.getId(), now);
-                break;
-            case PASADA:
+                yield reservaRepository.findFuturasByPropietarioId(usuario.getId(), now);
+            }
+            case PASADA -> {
                 reservasPropias = reservaRepository.findPasadasByPsicologoId(usuario.getId(), now);
-                reservasEnMisCubiculos = reservaRepository.findPasadasByPropietarioId(usuario.getId(), now);
-                break;
-            case CANCELADA:
+                yield reservaRepository.findPasadasByPropietarioId(usuario.getId(), now);
+            }
+            case CANCELADA -> {
                 reservasPropias = reservaRepository.findByPsicologoIdAndEstadoReserva(usuario.getId(), EstadoReserva.CANCELADA);
-                reservasEnMisCubiculos = reservaRepository.findReservasByPropietarioIdAndEstado(usuario.getId(), EstadoReserva.CANCELADA);
-                break;
-            default:
-                throw new ServiceException(this.getClass(), "FILTRO_NO_SOPORTADO");
-        }
+                yield reservaRepository.findReservasByPropietarioIdAndEstado(usuario.getId(), EstadoReserva.CANCELADA);
+            }
+            default -> throw new ServiceException(this.getClass(), "FILTRO_NO_SOPORTADO");
+        };
 
         return ReservaConsultaResponseDTO.fromEntity(reservasPropias, reservasEnMisCubiculos);
     }
@@ -93,9 +90,13 @@ public class ReservaService {
     public void cancelarComoRolPsicologo(Reserva reserva) {
         // Intentamos obtener la configuración por TipoUso.RESERVA_CANCELACION (si existe),
         // aunque la regla de negocio actual exige 6 horas mínimas para permitir cancelaciones.
+        // TODO: Les dije que NINGUN service puede usar otro service, mas que los de aplicacion que son orquestadores de servicio
+
         List<ConfiguracionSistema> configs = configuracionSistemaService.getConfiguracionPorTipo(TipoUso.RESERVA_CANCELACION);
 
         // Determinamos el límite de horas a usar; por defecto 6 horas si no hay configuración.
+        // TODO: Esta logica de "horas por defecto" minimo las hubias dejado en el configuracionSistemaService
+        //  (bueno, va en validador/reserva/cancelacion), aqui no tiene nada que ver
         long horasLimite = 6L;
         if (configs != null && !configs.isEmpty()) {
             ConfiguracionSistema cfg = configs.get(0);
@@ -105,7 +106,8 @@ public class ReservaService {
                 horasLimite = Math.max(6L, cfg.getValorMaximo());
             }
         }
-
+        // TODO: no se si te diste cuenta como esta implemenado la validacion de configuracion del sistema, pero hay una carpeta que se llama:
+        //  validadaor/reserva/creacion... osea, ASI deberias validarlos, no dentro del service directamente, mira el servicio de la reserva, la creacion
         LocalDateTime ahora = LocalDateTime.now(clock);
         Duration tiempoRestante = Duration.between(ahora, reserva.getInicio());
         long horasDisponibles = tiempoRestante.toHours();
@@ -121,6 +123,7 @@ public class ReservaService {
      */
     public void cancelarComoRolDueno(Reserva reserva) {
         // La entidad valida estados no permitidos (por ejemplo FINALIZADA o ya CANCELADA)
+        // TODO: Ah, por sus huevos JAJAJA
         reserva.cancelar();
         reservaRepository.save(reserva);
     }
