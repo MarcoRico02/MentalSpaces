@@ -9,6 +9,7 @@ import {
   CreditCard,
   FileDown,
   Building,
+  CalendarDays,
 } from "lucide-react";
 
 export const NavigationMenu: React.FC = () => {
@@ -32,6 +33,10 @@ export const NavigationMenu: React.FC = () => {
       {/* Help */}
       <NavItem to="/chat" icon={HelpCircle}>
         Ayuda y Soporte
+      </NavItem>
+
+      <NavItem to="/booking-calendar-test" icon={CalendarDays}>
+        Prueba Calendario
       </NavItem>
     </nav>
   );
