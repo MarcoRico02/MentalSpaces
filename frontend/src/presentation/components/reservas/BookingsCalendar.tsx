@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { Calendar, momentLocalizer, type View } from "react-big-calendar";
 import moment from "moment";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "../ui";
+import { Button, Input } from "../ui";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
@@ -11,6 +11,21 @@ const momentFn = (moment as unknown as { default: typeof moment }).default
     : moment;
 
 const localizer = momentLocalizer(momentFn);
+
+//  FORMATO IDEA: Al consultar las reservas, se pueden almacenar de esta forma en una tabla. Tambien serviria para testear con datos temporales.
+/*
+CalendarData = {
+  ["sede/location"] = {
+    ["21-5-2026"] = { //El dia deberia ser el mas alto en esta jerarquia.
+      ["cubiculo1"] = { //Guardar los cubiculos en los dias nos permitiria solo cargar algunos de los cubiculos y no todos.
+          ["10:00-11:00"] = {id = 1, nombre = Juan Carlos } //Gardarlos por hora asegura que no haya traslape.
+          //IMPORTANTE: Si no eres due;o, no se debe guardar el id ni nombre del creador de la reserva,
+          //por lo que en calendario se mostrara el nombre en el cuadro de la reserva si eres admin, y la hora de inicio y fin si eres psicologo o propietario.
+      }
+    }
+  }
+}
+*/
 
 interface CalendarEvent {
   id: number | string;
@@ -191,12 +206,19 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             <Button variant="secondary" onClick={() => navigate("PREV")}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button variant="secondary" onClick={() => navigate("TODAY")}>
-              Hoy
-            </Button>
             <Button variant="secondary" onClick={() => navigate("NEXT")}>
               <ChevronRight className="h-4 w-4" />
             </Button>
+            <Input
+              type="date"
+              className="w-40"
+              value={momentFn(currentDate).format("YYYY-MM-DD")}
+              onChange={(e) => {
+                if (e.target.value) {
+                  setCurrentDate(new Date(e.target.value + "T12:00:00"));
+                }
+              }}
+            />
           </div>
 
           <span className="text-sm font-medium text-default">
