@@ -13,7 +13,7 @@ const momentFn = (moment as unknown as { default: typeof moment }).default
 const localizer = momentLocalizer(momentFn);
 
 //  FORMATO IDEA: Al consultar las reservas, se pueden almacenar de esta forma en una tabla. Tambien serviria para testear con datos temporales.
-/*
+/* OJO, esta escrito en Lua el ejemplo xddddd
 CalendarData = {
   ["sede/location"] = {
     ["21-5-2026"] = { //El dia deberia ser el mas alto en esta jerarquia.
