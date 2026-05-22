@@ -67,6 +67,7 @@ interface CalendarEvent {
   title: string;
   start: Date;
   end: Date;
+  cubiculo?: string;
 }
 
 interface SlotInfo {
@@ -158,11 +159,23 @@ function getEventsForSede(sede: string, data: CalendarData, mostrarNombresReserv
         const start = new Date(year, month - 1, day, sh, sm);
         const end = new Date(year, month - 1, day, eh, em);
         const title = mostrarNombresReservantes ? entry.nombre : "";
-        events.push({ id: `${sede}-${dateKey}-${cub}-${slotKey}`, title, start, end });
+        events.push({ id: `${sede}-${dateKey}-${cub}-${slotKey}`, title, start, end, cubiculo: cub });
       }
     }
   }
   return events;
+}
+
+function getCubiculosForSede(sede: string, data: CalendarData): string[] {
+  const sedeData = data[sede];
+  if (!sedeData) return [];
+  const cubiculosSet = new Set<string>();
+  for (const cubiculos of Object.values(sedeData)) {
+    for (const cub of Object.keys(cubiculos)) {
+      cubiculosSet.add(cub);
+    }
+  }
+  return [...cubiculosSet].sort();
 }
 
 const sedes = Object.keys(demoData);
@@ -176,6 +189,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const { isAdmin } = useAuth();
 
   const [selectedSede, setSelectedSede] = useState(defaultSede);
+  const [selectedCubiculo, setSelectedCubiculo] = useState("");
   const [customEventsBySede, setCustomEventsBySede] = useState<Record<string, CalendarEvent[]>>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -185,6 +199,10 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    setSelectedCubiculo("");
+  }, [selectedSede]);
+
+  useEffect(() => {
     if (modalOpen) {
       inputRef.current?.focus();
     }
@@ -192,16 +210,26 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
 
   const mostrarNombresReservantes = isAdmin() || DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES;
 
+  const cubiculos = useMemo(
+    () => getCubiculosForSede(selectedSede, demoData),
+    [selectedSede],
+  );
+
   const baseEvents = useMemo(
     () => getEventsForSede(selectedSede, demoData, mostrarNombresReservantes),
     [selectedSede, mostrarNombresReservantes],
   );
 
+  const filteredBaseEvents = useMemo(
+    () => selectedCubiculo ? baseEvents.filter((e) => e.cubiculo === selectedCubiculo) : baseEvents,
+    [baseEvents, selectedCubiculo],
+  );
+
   const customEvents = customEventsBySede[selectedSede] ?? [];
 
   const events = useMemo(
-    () => [...baseEvents, ...customEvents],
-    [baseEvents, customEvents],
+    () => [...filteredBaseEvents, ...customEvents],
+    [filteredBaseEvents, customEvents],
   );
 
   const moveIsInvalid = useCallback(
@@ -291,6 +319,16 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             >
               {sedes.map((sede) => (
                 <option key={sede} value={sede}>{sede}</option>
+              ))}
+            </Select>
+            <Select
+              value={selectedCubiculo}
+              onChange={(e) => setSelectedCubiculo(e.target.value)}
+              className="w-44"
+            >
+              <option value="">Todos los consultorios</option>
+              {cubiculos.map((cub) => (
+                <option key={cub} value={cub}>{cub}</option>
               ))}
             </Select>
           </div>
