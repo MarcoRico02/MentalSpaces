@@ -229,6 +229,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const [currentView, setCurrentView] = useState<CalendarView>("day");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isDraggingOverlap, setDraggingOverlap] = useState(false);
+  const [slotGeneration, setSlotGeneration] = useState(0);
 
   const formatDateToInput = (date: Date) => {
     const y = date.getFullYear();
@@ -321,6 +322,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
           return;
         }
         setTempSlot({ start, end });
+        setSlotGeneration(g => g + 1);
         setModalOpen(true);
       },
       [findConflictingEvent, currentView]
@@ -402,7 +404,6 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
 
   const handleCloseForm = useCallback(() => {
     setModalOpen(false);
-    setTempSlot(null);
   }, []);
 
   return (
@@ -521,12 +522,14 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
         />
 
         <ReservaForm
+          key={slotGeneration}
           open={modalOpen}
           onOpenChange={handleCloseForm}
           mode="create"
           defaultFecha={tempSlot ? formatDateToInput(tempSlot.start) : ""}
           defaultHoraInicio={tempSlot ? formatTime(tempSlot.start) : "09:00"}
           defaultHoraFin={tempSlot ? formatTime(tempSlot.end) : "10:00"}
+          defaultCubiculoId={selectedCubiculo ? Number(selectedCubiculo) : undefined}
           cubiculos={allCubiculos}
           onConfirm={handleFormConfirm}
         />

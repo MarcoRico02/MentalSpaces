@@ -62,6 +62,7 @@ interface ReservaFormProps {
   defaultFecha?: string;
   defaultHoraInicio?: string;
   defaultHoraFin?: string;
+  defaultCubiculoId?: number;
   cubiculos: FormCubiculo[];
   onConfirm: (data: ReservaFormConfirmData) => void;
   isSubmitting?: boolean;
@@ -75,6 +76,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
   defaultFecha = "",
   defaultHoraInicio = "09:00",
   defaultHoraFin = "10:00",
+  defaultCubiculoId,
   cubiculos,
   onConfirm,
   isSubmitting = false,
@@ -98,6 +100,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
       fecha: defaultFecha,
       horaInicio: defaultHoraInicio,
       horaFin: defaultHoraFin,
+      cubiculoId: defaultCubiculoId,
       notas: "",
     },
   });
@@ -138,7 +141,6 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
   };
 
   const handleClose = () => {
-    reset();
     onOpenChange(false);
   };
 
@@ -177,7 +179,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
                 <Label htmlFor="usuario">Usuario</Label>
                 <Select
                   id="usuario"
-                  value={field.value ?? ""}
+                  value={field.value != null ? String(field.value) : ""}
                   onChange={(e) => {
                     const val = e.target.value;
                     field.onChange(val ? Number(val) : undefined);
@@ -186,7 +188,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
                 >
                   <option value="">Selecciona un usuario</option>
                   {DEMO_USUARIOS.map((u) => (
-                    <option key={u.id} value={u.id}>
+                    <option key={u.id} value={String(u.id)}>
                       {u.nombre}
                     </option>
                   ))}
@@ -259,7 +261,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
               <Label htmlFor="cubiculoId">Cubículo</Label>
               <Select
                 id="cubiculoId"
-                value={field.value ?? ""}
+                value={field.value != null ? String(field.value) : ""}
                 onChange={(e) => {
                   const val = e.target.value;
                   field.onChange(val ? Number(val) : undefined);
@@ -268,7 +270,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
               >
                 <option value="">Selecciona un cubículo</option>
                 {cubiculos.map((c) => (
-                  <option key={c.id} value={c.id}>
+                  <option key={c.id} value={String(c.id)}>
                     {c.nombre} · {c.sede} · ${c.precioPorHora}/h
                   </option>
                 ))}
