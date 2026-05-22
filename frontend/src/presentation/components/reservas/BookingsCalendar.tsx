@@ -133,6 +133,14 @@ const VIEW_OPTIONS: { key: CalendarView; label: string }[] = [
   { key: "agenda", label: "Agenda" },
 ];
 
+const DIAS_CORTOS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+const DIAS_LARGOS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+function formatFechaHeader(date: Date): string {
+  return `${DIAS_LARGOS[date.getDay()]}, ${date.getDate()} de ${MESES[date.getMonth()]} de ${date.getFullYear()}`;
+}
+
 function parseDateKey(dateStr: string): { d: number; m: number; y: number } {
   const [d, m, y] = dateStr.split("-").map(Number);
   return { d, m, y };
@@ -385,7 +393,29 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             className="flex-1 min-h-0"
             dayLayoutAlgorithm="no-overlap"
             localizer={localizer}
-            culture="es"
+            formats={{
+              dateFormat: "D",
+              dayFormat: (date: Date) => `${DIAS_CORTOS[date.getDay()]} ${date.getDate()}`,
+              weekdayFormat: (date: Date) => DIAS_CORTOS[date.getDay()],
+              monthHeaderFormat: (date: Date) => `${MESES[date.getMonth()]} ${date.getFullYear()}`,
+              dayHeaderFormat: (date: Date) => formatFechaHeader(date),
+              dayRangeHeaderFormat: ({ start, end }: { start: Date; end: Date }) =>
+                `${start.getDate()} ${MESES[start.getMonth()]} – ${end.getDate()} ${MESES[end.getMonth()]} de ${end.getFullYear()}`,
+            }}
+            messages={{
+              today: "Hoy",
+              previous: "Anterior",
+              next: "Siguiente",
+              month: "Mes",
+              week: "Semana",
+              day: "Día",
+              agenda: "Agenda",
+              date: "Fecha",
+              time: "Hora",
+              event: "Usuario",
+              noEventsInRange: "No hay usuarios en este rango",
+              showMore: (count: number) => `+${count} más`,
+            }}
             events={events}
             step={60}
             timeslots={1}
