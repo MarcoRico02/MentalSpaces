@@ -6,25 +6,30 @@ import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-//import "moment/locale/es";
-
-moment.locale("es");
-
 const momentFn = (moment as unknown as { default: typeof moment }).default
     ? (moment as unknown as { default: typeof moment }).default
     : moment;
 
 const localizer = momentLocalizer(momentFn);
 
+const DIAS_CORTOS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+const DIAS_LARGOS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const MESES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
 const formats = {
-  agendaDateFormat: (date: Date, _culture?: string, localizer?: { format: (d: Date, f: string, c?: string) => string }) =>
-    localizer?.format(date, "ddd DD MMM", "es") ?? "",
-  agendaHeaderFormat: ({ start, end }: { start: Date; end: Date }, _culture?: string, localizer?: { format: (d: Date, f: string, c?: string) => string }) =>
-    `${localizer?.format(start, "DD MMM", "es") ?? ""} – ${localizer?.format(end, "DD MMM YYYY", "es") ?? ""}`,
-  dayFormat: (date: Date, _culture?: string, localizer?: { format: (d: Date, f: string, c?: string) => string }) =>
-    localizer?.format(date, "ddd DD", "es") ?? "",
-  weekdayFormat: (date: Date, _culture?: string, localizer?: { format: (d: Date, f: string, c?: string) => string }) =>
-    localizer?.format(date, "ddd", "es") ?? "",
+  dateFormat: "D",
+  dayFormat: (date: Date) => `${DIAS_CORTOS[date.getDay()]} ${date.getDate()}`,
+  weekdayFormat: (date: Date) => DIAS_CORTOS[date.getDay()],
+  monthHeaderFormat: (date: Date) => `${MESES[date.getMonth()]} ${date.getFullYear()}`,
+  dayHeaderFormat: (date: Date) => `${DIAS_LARGOS[date.getDay()]}, ${date.getDate()} de ${MESES[date.getMonth()]} de ${date.getFullYear()}`,
+  dayRangeHeaderFormat: ({ start, end }: { start: Date; end: Date }) =>
+    `${start.getDate()} ${MESES[start.getMonth()]} – ${end.getDate()} ${MESES[end.getMonth()]} de ${end.getFullYear()}`,
+  agendaDateFormat: (date: Date) => `${DIAS_CORTOS[date.getDay()]} ${date.getDate()} ${MESES[date.getMonth()]}`,
+  agendaHeaderFormat: ({ start, end }: { start: Date; end: Date }) =>
+    `${start.getDate()} ${MESES[start.getMonth()]} – ${end.getDate()} ${MESES[end.getMonth()]} ${end.getFullYear()}`,
+  timeGutterFormat: "HH:mm",
+  eventTimeRangeFormat: ({ start, end }: { start: Date; end: Date }) =>
+    `${String(start.getHours()).padStart(2, "0")}:${String(start.getMinutes()).padStart(2, "0")} – ${String(end.getHours()).padStart(2, "0")}:${String(end.getMinutes()).padStart(2, "0")}`,
 };
 
 const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true;
