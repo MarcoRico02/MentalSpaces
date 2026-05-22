@@ -1,0 +1,92 @@
+.dark .rbc-calendar { background-color: rgb(var(--bg-surface)); }
+
+.dark .rbc-time-view,
+.dark .rbc-month-view,
+.dark .rbc-month-row,
+.dark .rbc-header,
+.dark .rbc-header + .rbc-header,
+.dark .rbc-month-row + .rbc-month-row,
+.dark .rbc-day-bg + .rbc-day-bg,
+.dark .rbc-time-header,
+.dark .rbc-time-header-content,
+.dark .rbc-time-content,
+.dark .rbc-timeslot-group,
+.dark .rbc-time-content > .rbc-day-slot,
+.dark .rbc-day-slot .rbc-time-slot,
+.dark .rbc-time-gutter,
+.dark .rbc-time-gutter > .rbc-label,
+.dark .rbc-time-gutter > .rbc-label > .rbc-label,
+.dark .rbc-current-time-indicator,
+.dark .rbc-agenda-table,
+.dark .rbc-agenda-table th,
+.dark .rbc-agenda-table th + th,
+.dark .rbc-agenda-table td,
+.dark .rbc-agenda-table td + td,
+.dark .rbc-time-content > * + * > *,
+.dark .rbc-time-header > .rbc-row:first-child,
+.dark .rbc-time-header.rbc-overflowing,
+.dark .rbc-agenda-table tbody > tr + tr,
+.dark .rbc-time-view .rbc-allday-cell + .rbc-allday-cell {
+  border-color: rgb(var(--border)) !important;
+}
+
+.dark .rbc-time-gutter .rbc-label {
+  color: rgb(var(--text-secondary));
+}
+
+.dark .rbc-day-slot {
+  background-color: rgb(var(--bg-surface));
+}
+
+.dark .rbc-today {
+  background-color: rgb(var(--primary) / 0.12);
+}
+
+.dark .rbc-off-range-bg {
+  background-color: rgb(var(--bg-surface-2));
+}
+
+.dark .rbc-month-header {
+  background-color: rgb(var(--bg-surface-2));
+}
+
+.dark .rbc-header {
+  color: rgb(var(--text-secondary));
+}
+
+.dark .rbc-day-bg {
+  background-color: rgb(var(--bg-surface));
+}
+
+.dark .rbc-date-cell {
+  color: rgb(var(--text-primary));
+}
+
+.dark .rbc-date-cell a {
+  color: rgb(var(--text-primary));
+}
+
+.dark .rbc-row-bg {
+  border-color: rgb(var(--border));
+}
+
+.dark .rbc-off-range {
+  color: rgb(var(--text-muted));
+}
+
+.dark .rbc-agenda-view {
+  background-color: rgb(var(--bg-surface));
+}
+
+.dark .rbc-agenda-table th {
+  background-color: rgb(var(--bg-surface-2));
+  color: rgb(var(--text-secondary));
+}
+
+.dark .rbc-agenda-table td {
+  color: rgb(var(--text-primary));
+}
+
+.dark .rbc-show-more {
+  color: rgb(var(--primary));
+}
