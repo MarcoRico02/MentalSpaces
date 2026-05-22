@@ -91,7 +91,6 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
     register,
     handleSubmit,
     watch,
-    reset,
     formState: { errors },
   } = useForm<ReservaFormData>({
     resolver: zodResolver(reservaFormSchema),
