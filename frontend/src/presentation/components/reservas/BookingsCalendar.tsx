@@ -1,15 +1,16 @@
 import React, { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { Calendar, momentLocalizer, type View } from "react-big-calendar";
 import moment from "moment";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button, Input, Select, Card, CardContent } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
-
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const momentFn = (moment as unknown as { default: typeof moment }).default
     ? (moment as unknown as { default: typeof moment }).default
     : moment;
+
+momentFn.locale("es");
 
 const localizer = momentLocalizer(momentFn);
 
@@ -386,6 +387,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             className="flex-1 min-h-0"
             dayLayoutAlgorithm="no-overlap"
             localizer={localizer}
+            culture="es"
             events={events}
             step={60}
             timeslots={1}
