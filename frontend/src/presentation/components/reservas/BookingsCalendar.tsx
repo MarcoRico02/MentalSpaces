@@ -176,17 +176,13 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const { isAdmin } = useAuth();
 
   const [selectedSede, setSelectedSede] = useState(defaultSede);
-  const [customEvents, setCustomEvents] = useState<CalendarEvent[]>([]);
+  const [customEventsBySede, setCustomEventsBySede] = useState<Record<string, CalendarEvent[]>>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [tempSlot, setTempSlot] = useState<SlotInfo | null>(null);
   const [currentView, setCurrentView] = useState<CalendarView>("day");
   const [currentDate, setCurrentDate] = useState(new Date());
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setCustomEvents([]); //error aqui
-  }, [selectedSede]);
 
   useEffect(() => {
     if (modalOpen) {
@@ -200,6 +196,8 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
     () => getEventsForSede(selectedSede, demoData, mostrarNombresReservantes),
     [selectedSede, mostrarNombresReservantes],
   );
+
+  const customEvents = customEventsBySede[selectedSede] ?? [];
 
   const events = useMemo(
     () => [...baseEvents, ...customEvents],
@@ -269,7 +267,10 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
       end: tempSlot.end,
     };
 
-    setCustomEvents((prev) => [...prev, newEvent]);
+    setCustomEventsBySede((prev) => ({
+      ...prev,
+      [selectedSede]: [...(prev[selectedSede] ?? []), newEvent],
+    }));
     setModalOpen(false);
     setTempSlot(null);
   };
