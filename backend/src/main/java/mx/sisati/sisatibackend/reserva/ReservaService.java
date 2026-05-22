@@ -3,6 +3,7 @@ package mx.sisati.sisatibackend.reserva;
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
 import mx.sisati.sisatibackend.identidad.psicologos.Psicologo;
+import mx.sisati.sisatibackend.reserva.dto.ReservaFilterRequestDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,5 +36,14 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
-    /*public List<Reserva> buscarReservasPorFiltros(fechaInicio, fechaFin, cubiculoId, locationId, psicologoIds){}*/
+    public List<Reserva> buscarReservasPorFiltros(ReservaFilterRequestDTO filtro) {
+        return reservaRepository.buscarPorFiltros(
+                filtro.fechaInicio(),
+                filtro.fechaFin(),
+                filtro.cubiculoIds(),
+                filtro.locationIds(),
+                filtro.usuarioIds(),
+                filtro.filtroTemporal()
+        );
+    }
 }

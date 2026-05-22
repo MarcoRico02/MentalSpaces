@@ -10,6 +10,7 @@ import mx.sisati.sisatibackend.reserva.Reserva;
 import mx.sisati.sisatibackend.reserva.ReservaService;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateRequestDTO;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateResponseDTO;
+import mx.sisati.sisatibackend.reserva.dto.ReservaFilterRequestDTO;
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 import mx.sisati.sisatibackend.espacios.cubiculo.CubiculoService;
 import mx.sisati.sisatibackend.espacios.disponibilidad.DisponibilidadService;
@@ -19,7 +20,6 @@ import mx.sisati.sisatibackend.reserva.dto.ReservaDTO;
 import mx.sisati.sisatibackend.validador.reserva.creacion.ReservaValidadorCreacionService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -55,16 +55,8 @@ public class GestionarReservas {
         return new ReservaCreateResponseDTO(reserva, cubiculo, pagoResponse);
     }
 
-    /* Sin terminar
-    public List<ReservaDTO> getReservasCalendario(
-            ReservaCalendarioReadRequestDTO readDto,
-            LocalDateTime inicio,
-            LocalDateTime fin,
-            List<Long> cubiculoIds,
-            List<Long> locationIds
-    ) {
-        List<Reserva> reservas = reservaService.buscarPorFiltros(inicio, fin, cubiculoIds, locationIds);
-        return reservas.stream().map(ReservaDTO::new).toList();
+    public List<ReservaDTO> getReservas(ReservaFilterRequestDTO filtro) {
+        List<Reserva> reservas = reservaService.buscarReservasPorFiltros(filtro);
+        return reservas.stream().map(ReservaDTO::fromEntity).toList();
     }
-     */
 }

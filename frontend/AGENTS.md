@@ -271,7 +271,7 @@ export const authAPI = {
   disponibilidades: { getByCubiculo, create, update, delete, deleteAll },
   caracteristicas: { getAll },
   suscripciones: { getAll, getById, getOrdenadosPorPrecio, crear, actualizar, eliminar },
-  reservas: { getMine, crear },
+  reservas: { getByFilter, crear },
 };
 ```
 
@@ -293,7 +293,7 @@ export const useReservasQuery = (filtro?: FiltroTemporal) => {
   return useQuery({
     queryKey: ["reservas", filtro],
     queryFn: async (): Promise<ReservaDTO[]> => {
-      const response = await authAPI.reservas.getMine(filtro);
+      const response = await authAPI.reservas.getByFilter(filtro);
       return response.data;
     },
     staleTime: 1000 * 60 * 5,  // 5 minutos
@@ -490,7 +490,7 @@ Contiene TODOS los DTOs del backend:
 
 **Suscripciones:** `SuscripcionDTO`, `CrearSuscripcionRequest`
 
-**Reservas:** `FiltroTemporal` ("FUTURA" | "PASADA" | "CANCELADA"), `EstadoReserva` (PENDIENTE, RECHAZADO, CONFIRMADA, CANCELADA, FINALIZADA), `ReservaCreateRequestDTO`, `ReservaDTO`, `ReservaCreateResponseDTO`, `ReservaConsultaResponseDTO`, `PagoResponse`
+**Reservas:** `FiltroTemporal` ("FUTURA" | "PASADA" | "CANCELADA"), `EstadoReserva` (PENDIENTE, RECHAZADO, CONFIRMADA, CANCELADA, FINALIZADA), `ReservaCreateRequestDTO`, `ReservaDTO` (con `psicologoNombreCompleto`), `ReservaCreateResponseDTO`, `ReservaFilterRequestDTO` (con `filtroTemporal`), `PagoResponse`
 
 **Paginación:** `BackendPage<T>`, `Page<T>`, `CubiculoPage`
 
@@ -549,10 +549,10 @@ Schemas Zod: `loginSchema`, `usuarioRegisterSchema`, `psicologoRegisterSchema`, 
 |---|---|
 | Ubicación | `src/presentation/pages/bookings/MyAppointmentsPage.tsx` |
 | Ruta | `/my-bookings` (protegida) |
-| API | `GET /api/reservas` → `ReservaConsultaResponseDTO` con `reservasPropias` + `reservasEnMisCubiculos` |
+| API | `GET /api/reservas` → `ReservaDTO[]` (filtrable por `ReservaFilterRequestDTO`) |
 | Hook | `useReservasQuery(filtro?)` en `core/aplicacion/hooks/` |
-| Endpoint | `authAPI.reservas.getMine(filtro?)` en `api.ts` |
-| Tipos | `FiltroTemporal`, `ReservaConsultaResponseDTO` en `api.ts` |
+| Endpoint | `authAPI.reservas.getByFilter(params?)` en `api.ts` |
+| Tipos | `FiltroTemporal`, `ReservaFilterRequestDTO` en `api.ts` |
 | Sidebar | NavItem "Mis Reservas" con icono `CalendarCheck` |
 | Mobile nav | 5 ítems: Inicio, Reservas (CalendarCheck), Perfil, Ayuda, Ajustes |
 
@@ -607,5 +607,5 @@ Schemas Zod: `loginSchema`, `usuarioRegisterSchema`, `psicologoRegisterSchema`, 
 | Pasadas | `PASADA` | `filtro=PASADA` |
 | Canceladas | `CANCELADA` | `filtro=CANCELADA` |
 
----*Última actualización: 20 Mayo 2026*  
+---*Última actualización: 22 Mayo 2026*  
 *Mantenedor: equipo SATI*

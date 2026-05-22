@@ -3,8 +3,10 @@ package mx.sisati.sisatibackend.reserva;
 import mx.sisati.sisatibackend.reserva.aplicacion.GestionarReservas;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateRequestDTO;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateResponseDTO;
+import mx.sisati.sisatibackend.reserva.dto.ReservaFilterRequestDTO;
 import mx.sisati.sisatibackend.auth.UsuarioDetails;
 import mx.sisati.sisatibackend.reserva.dto.ReservaDTO;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -29,16 +31,18 @@ public class ReservaController {
         return ResponseEntity.ok(gestionarReservas.create(dtos, usuarioDetails.getUsuario().getId()));
     }
 
-    /* Sin terminar
     @GetMapping
-    public ResponseEntity<List<ReservaDTO>> getReservasCalendarios(
-            @RequestParam LocalDateTime inicio,
-            @RequestParam LocalDateTime fin,
+    public ResponseEntity<List<ReservaDTO>> getReservas(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin,
             @RequestParam(required = false) List<Long> cubiculoIds,
-            @RequestParam(required = false) List<Long> locationIds
+            @RequestParam(required = false) List<Long> locationIds,
+            @RequestParam(required = false) List<Long> usuarioIds,
+            @RequestParam(required = false) String filtroTemporal
     ) {
-        return ResponseEntity.ok(gestionarReservas.buscarReservas(inicio, fin, cubiculoIds, locationIds));
+        ReservaFilterRequestDTO filtro = new ReservaFilterRequestDTO(
+                fechaInicio, fechaFin, cubiculoIds, locationIds, usuarioIds, filtroTemporal
+        );
+        return ResponseEntity.ok(gestionarReservas.getReservas(filtro));
     }
-
-     */
 }
