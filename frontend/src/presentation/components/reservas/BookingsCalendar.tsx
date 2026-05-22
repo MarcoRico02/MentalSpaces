@@ -10,8 +10,6 @@ const momentFn = (moment as unknown as { default: typeof moment }).default
     ? (moment as unknown as { default: typeof moment }).default
     : moment;
 
-momentFn.locale("es");
-
 const localizer = momentLocalizer(momentFn);
 
 const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true;
