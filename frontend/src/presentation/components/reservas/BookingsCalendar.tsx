@@ -333,7 +333,15 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
         <div className="flex flex-col h-full">
           <style>{`.rbc-day-slot .rbc-event { flex-flow: column !important; }
 .rbc-day-slot .rbc-event-label { width: 100%; }
-.rbc-timeslot-group { min-height: 70px; }`}</style>
+.rbc-timeslot-group { min-height: 70px; }
+.rbc-event, .rbc-day-slot .rbc-background-event { background-color: rgb(var(--primary)) !important; }
+.dark .rbc-timeslot-group { border-color: var(--border); }
+.dark .rbc-time-content { border-color: var(--border); }
+.dark .rbc-day-slot .rbc-time-slot { border-top-color: var(--border); }
+.dark .rbc-time-gutter .rbc-label { color: var(--text-secondary); }
+.dark .rbc-day-slot { background-color: var(--bg-surface); }
+.dark .rbc-today { background-color: rgb(var(--primary) / 0.12); }
+.dark .rbc-off-range-bg { background-color: oklch(0.2 0 0); }`}</style>
         <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-default bg-surface">
           <div className="flex items-center gap-1.5">
             <Select
