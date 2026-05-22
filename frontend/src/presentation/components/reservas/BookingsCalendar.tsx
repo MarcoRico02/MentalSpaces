@@ -1,9 +1,11 @@
-import React, { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Calendar, momentLocalizer, type View } from "react-big-calendar";
 import moment from "moment";
 import { Button, Input, Select, Card, CardContent } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 import { showToast } from "../../../core/infraestructura/utilidades/toast";
+import { ReservaForm } from "../forms/ReservaForm";
+import type { ReservaCreateRequestDTO } from "../../../core/dominio/tipos/api";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar-dark.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -136,56 +138,6 @@ interface SlotInfo {
 
 type CalendarView = View;
 
-const styles: Record<string, React.CSSProperties> = {
-  overlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 9999,
-  },
-  modal: {
-    backgroundColor: "white",
-    padding: "20px",
-    borderRadius: "8px",
-    width: "300px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    margin: "10px 0 20px 0",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-    boxSizing: "border-box",
-  },
-  buttons: {
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: "10px",
-  },
-  btnCancel: {
-    padding: "8px 16px",
-    border: "1px solid #ccc",
-    background: "transparent",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-  btnSave: {
-    padding: "8px 16px",
-    border: "none",
-    background: "#3174ad",
-    color: "white",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-};
-
 const VIEW_OPTIONS: { key: CalendarView; label: string }[] = [
   { key: "day", label: "Día" },
   { key: "week", label: "Semana" },
@@ -258,18 +210,20 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const [selectedCubiculo, setSelectedCubiculo] = useState<string>("");
   const [customEventsBySede, setCustomEventsBySede] = useState<Record<string, CalendarEvent[]>>({});
   const [modalOpen, setModalOpen] = useState(false);
-  const [title, setTitle] = useState("");
   const [tempSlot, setTempSlot] = useState<SlotInfo | null>(null);
   const [currentView, setCurrentView] = useState<CalendarView>("day");
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isDraggingOverlap, setDraggingOverlap] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (modalOpen) {
-      inputRef.current?.focus();
-    }
-  }, [modalOpen]);
+  const formatDateToInput = (date: Date) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  };
+
+  const formatTime = (date: Date) =>
+    `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 
   const mostrarNombresReservantes = isAdmin() || DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES;
 
@@ -340,7 +294,6 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
           return;
         }
         setTempSlot({ start, end });
-        setTitle("");
         setModalOpen(true);
       },
       [findConflictingEvent, currentView]
@@ -391,32 +344,32 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
     return `${DIAS_LARGOS[d.getDay()]}, ${d.getDate()} de ${MESES[d.getMonth()]} de ${d.getFullYear()}`;
   })();
 
-  const handleSave = (): void => {
-    if (!title.trim()) {
-      alert("Por favor escribe un nombre");
-      return;
-    }
-    if (!tempSlot) return;
+  const handleFormConfirm = useCallback(
+    (data: ReservaCreateRequestDTO) => {
+      if (!tempSlot) return;
 
-    const newEvent: CalendarEvent = {
-      id: Math.random(),
-      title,
-      start: tempSlot.start,
-      end: tempSlot.end,
-    };
+      const newEvent: CalendarEvent = {
+        id: Math.random(),
+        title: data.notas ?? "Reserva",
+        start: tempSlot.start,
+        end: tempSlot.end,
+        cubiculoId: data.cubiculoId,
+      };
 
-    setCustomEventsBySede((prev) => ({
-      ...prev,
-      [selectedSede]: [...(prev[selectedSede] ?? []), newEvent],
-    }));
+      setCustomEventsBySede((prev) => ({
+        ...prev,
+        [selectedSede]: [...(prev[selectedSede] ?? []), newEvent],
+      }));
+      setModalOpen(false);
+      setTempSlot(null);
+    },
+    [tempSlot, selectedSede],
+  );
+
+  const handleCloseForm = useCallback(() => {
     setModalOpen(false);
     setTempSlot(null);
-  };
-
-  const handleCancel = (): void => {
-    setModalOpen(false);
-    setTempSlot(null);
-  };
+  }, []);
 
   return (
       <Card className={className}>
@@ -533,37 +486,15 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             style={{ maxHeight: maxCalendarioAnchuraPixeles }}
         />
 
-        {modalOpen && (
-            <div style={styles.overlay}>
-              <div style={styles.modal}>
-                <h3>Nueva Reserva</h3>
-                <p style={{ fontSize: "0.9em", color: "#666" }}>
-                  {momentFn(tempSlot?.start).format("HH:mm")} –{" "}
-                  {momentFn(tempSlot?.end).format("HH:mm")}
-                </p>
-
-                <input
-                    ref={inputRef}
-                    type="text"
-                    placeholder="Nombre del cliente..."
-                    value={title}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setTitle(e.target.value)
-                    }
-                    style={styles.input}
-                />
-
-                <div style={styles.buttons}>
-                  <button onClick={handleCancel} style={styles.btnCancel}>
-                    Cancelar
-                  </button>
-                  <button onClick={handleSave} style={styles.btnSave}>
-                    Guardar
-                  </button>
-                </div>
-              </div>
-            </div>
-        )}
+        <ReservaForm
+          open={modalOpen}
+          onOpenChange={handleCloseForm}
+          mode="create"
+          defaultFecha={tempSlot ? formatDateToInput(tempSlot.start) : ""}
+          defaultHoraInicio={tempSlot ? formatTime(tempSlot.start) : "09:00"}
+          defaultHoraFin={tempSlot ? formatTime(tempSlot.end) : "10:00"}
+          onConfirm={handleFormConfirm}
+        />
       </div>
       </CardContent>
       </Card>
