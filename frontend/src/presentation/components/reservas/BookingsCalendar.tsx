@@ -4,8 +4,7 @@ import moment from "moment";
 import { Button, Input, Select, Card, CardContent } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 import { showToast } from "../../../core/infraestructura/utilidades/toast";
-import { ReservaForm } from "../forms/ReservaForm";
-import type { ReservaCreateRequestDTO } from "../../../core/dominio/tipos/api";
+import { ReservaForm, type ReservaFormConfirmData } from "../forms/ReservaForm";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar-dark.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -193,6 +192,22 @@ function getCubiculosForSede(sede: string, data: CalendarData): { id: number; no
     .sort((a, b) => a.nombre.localeCompare(b.nombre));
 }
 
+function getAllCubiculos(data: CalendarData): { id: number; nombre: string; sede: string }[] {
+  const map = new Map<number, { nombre: string; sede: string }>();
+  for (const [sede, fechas] of Object.entries(data)) {
+    for (const cubiculos of Object.values(fechas)) {
+      for (const cub of Object.values(cubiculos)) {
+        if (!map.has(cub.id)) {
+          map.set(cub.id, { nombre: cub.nombre, sede });
+        }
+      }
+    }
+  }
+  return Array.from(map.entries())
+    .map(([id, { nombre, sede }]) => ({ id, nombre, sede }))
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
+}
+
 const sedes = Object.keys(demoData);
 const defaultSede = sedes[0] ?? "";
 
@@ -227,6 +242,11 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
 
   const mostrarNombresReservantes = isAdmin() || DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES;
 
+  const allCubiculos = useMemo(
+    () => getAllCubiculos(demoData).map((c) => ({ ...c, precioPorHora: 450 })),
+    [],
+  );
+
   const cubiculos = useMemo(
     () => getCubiculosForSede(selectedSede, demoData),
     [selectedSede],
@@ -244,9 +264,16 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
 
   const customEvents = customEventsBySede[selectedSede] ?? [];
 
+  const filteredCustomEvents = useMemo(
+    () => selectedCubiculo
+      ? customEvents.filter((e) => e.cubiculoId === Number(selectedCubiculo))
+      : customEvents,
+    [customEvents, selectedCubiculo],
+  );
+
   const events = useMemo(
-    () => [...filteredBaseEvents, ...customEvents],
-    [filteredBaseEvents, customEvents],
+    () => [...filteredBaseEvents, ...filteredCustomEvents],
+    [filteredBaseEvents, filteredCustomEvents],
   );
 
   const moveIsInvalid = useCallback(
@@ -345,25 +372,32 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   })();
 
   const handleFormConfirm = useCallback(
-    (data: ReservaCreateRequestDTO) => {
-      if (!tempSlot) return;
+    (data: ReservaFormConfirmData) => {
+      const start = new Date(data.inicio);
+      const end = new Date(data.fin);
 
       const newEvent: CalendarEvent = {
         id: Math.random(),
-        title: data.notas ?? "Reserva",
-        start: tempSlot.start,
-        end: tempSlot.end,
+        title: data.usuarioNombre,
+        start,
+        end,
+        cubiculo: data.cubiculoNombre,
         cubiculoId: data.cubiculoId,
       };
 
       setCustomEventsBySede((prev) => ({
         ...prev,
-        [selectedSede]: [...(prev[selectedSede] ?? []), newEvent],
+        [data.sede]: [...(prev[data.sede] ?? []), newEvent],
       }));
+
+      setCurrentDate(start);
+      setCurrentView("day");
+      setSelectedSede(data.sede);
+      setSelectedCubiculo(String(data.cubiculoId));
       setModalOpen(false);
       setTempSlot(null);
     },
-    [tempSlot, selectedSede],
+    [],
   );
 
   const handleCloseForm = useCallback(() => {
@@ -493,6 +527,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
           defaultFecha={tempSlot ? formatDateToInput(tempSlot.start) : ""}
           defaultHoraInicio={tempSlot ? formatTime(tempSlot.start) : "09:00"}
           defaultHoraFin={tempSlot ? formatTime(tempSlot.end) : "10:00"}
+          cubiculos={allCubiculos}
           onConfirm={handleFormConfirm}
         />
       </div>

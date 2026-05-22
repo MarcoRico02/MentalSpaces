@@ -5,24 +5,16 @@ import { z } from "zod";
 import { CalendarDays, Clock } from "lucide-react";
 import { Button, Dialog, Input, Label, Select, Separator } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
-import type { ReservaCreateRequestDTO } from "../../../core/dominio/tipos/api";
 
 // ─── Constantes de depuración ────────────────────────────────────────────────
 const DEBUG_IS_ADMIN = true;
 const debugSuscriptionPrice: number | null = null;
 
-// ─── Datos demo ──────────────────────────────────────────────────────────────
+// ─── Datos demo de usuarios ──────────────────────────────────────────────────
 interface DemoUsuario {
   id: number;
   nombre: string;
   tipo: "psicologo" | "propietario";
-}
-
-interface DemoCubiculo {
-  id: number;
-  nombre: string;
-  sede: string;
-  precioPorHora: number;
 }
 
 const DEMO_USUARIOS: DemoUsuario[] = [
@@ -32,17 +24,9 @@ const DEMO_USUARIOS: DemoUsuario[] = [
   { id: 4, nombre: "Juan Pérez (Propietario)", tipo: "propietario" },
 ];
 
-const DEMO_CUBICULOS: DemoCubiculo[] = [
-  { id: 1, nombre: "Consultorio 1", sede: "Sede Roma", precioPorHora: 450 },
-  { id: 2, nombre: "Consultorio 2", sede: "Sede Condesa", precioPorHora: 450 },
-  { id: 3, nombre: "Consultorio 3", sede: "Sede Roma", precioPorHora: 500 },
-  { id: 4, nombre: "Consultorio A", sede: "Sede Condesa", precioPorHora: 400 },
-  { id: 5, nombre: "Consultorio B", sede: "Sede Condesa", precioPorHora: 350 },
-];
-
 // ─── Zod Schema ──────────────────────────────────────────────────────────────
 const reservaFormSchema = z.object({
-  usuarioId: z.number().optional(),
+  usuarioId: z.number().refine((v) => v && v > 0, "Selecciona un usuario"),
   fecha: z.string().min(1, "La fecha es requerida"),
   horaInicio: z.string().min(1, "La hora de inicio es requerida"),
   horaFin: z.string().min(1, "La hora de fin es requerida"),
@@ -52,6 +36,24 @@ const reservaFormSchema = z.object({
 
 type ReservaFormData = z.infer<typeof reservaFormSchema>;
 
+// ─── Tipos ───────────────────────────────────────────────────────────────────
+export interface ReservaFormConfirmData {
+  cubiculoId: number;
+  cubiculoNombre: string;
+  sede: string;
+  usuarioNombre: string;
+  inicio: string;
+  fin: string;
+  notas?: string;
+}
+
+interface FormCubiculo {
+  id: number;
+  nombre: string;
+  sede: string;
+  precioPorHora: number;
+}
+
 // ─── Props ───────────────────────────────────────────────────────────────────
 interface ReservaFormProps {
   open: boolean;
@@ -60,7 +62,8 @@ interface ReservaFormProps {
   defaultFecha?: string;
   defaultHoraInicio?: string;
   defaultHoraFin?: string;
-  onConfirm: (data: ReservaCreateRequestDTO) => void;
+  cubiculos: FormCubiculo[];
+  onConfirm: (data: ReservaFormConfirmData) => void;
   isSubmitting?: boolean;
 }
 
@@ -72,6 +75,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
   defaultFecha = "",
   defaultHoraInicio = "09:00",
   defaultHoraFin = "10:00",
+  cubiculos,
   onConfirm,
   isSubmitting = false,
 }) => {
@@ -99,10 +103,12 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
   });
 
   const selectedCubiculoId = watch("cubiculoId");
+  const selectedUsuarioId = watch("usuarioId");
   const horaInicio = watch("horaInicio");
   const horaFin = watch("horaFin");
 
-  const cubiculoSeleccionado = DEMO_CUBICULOS.find((c) => c.id === selectedCubiculoId);
+  const cubiculoSeleccionado = cubiculos.find((c) => c.id === selectedCubiculoId);
+  const usuarioSeleccionado = DEMO_USUARIOS.find((u) => u.id === selectedUsuarioId);
   const precioPorHora = cubiculoSeleccionado?.precioPorHora ?? 0;
 
   const horas = useMemo(() => {
@@ -122,6 +128,9 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
 
     onConfirm({
       cubiculoId: data.cubiculoId,
+      cubiculoNombre: cubiculoSeleccionado?.nombre ?? "Desconocido",
+      sede: cubiculoSeleccionado?.sede ?? "Desconocida",
+      usuarioNombre: usuarioSeleccionado?.nombre ?? "Sin usuario",
       inicio,
       fin,
       notas: data.notas,
@@ -173,6 +182,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
                     const val = e.target.value;
                     field.onChange(val ? Number(val) : undefined);
                   }}
+                  error={errors.usuarioId?.message}
                 >
                   <option value="">Selecciona un usuario</option>
                   {DEMO_USUARIOS.map((u) => (
@@ -257,7 +267,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
                 error={errors.cubiculoId?.message}
               >
                 <option value="">Selecciona un cubículo</option>
-                {DEMO_CUBICULOS.map((c) => (
+                {cubiculos.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.nombre} · {c.sede} · ${c.precioPorHora}/h
                   </option>
