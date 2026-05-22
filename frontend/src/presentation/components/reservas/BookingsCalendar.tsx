@@ -273,6 +273,11 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const onSelectSlot = useCallback(
       ({ start, end }: SlotInfo) => {
         setDraggingOverlap(false);
+        if (currentView === "month") {
+          setCurrentDate(start);
+          setCurrentView("day");
+          return;
+        }
         if (moveIsInvalid(start, end)) {
           alert("No puedes crear un evento encima de otro.");
           return;
@@ -281,7 +286,25 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
         setTitle("");
         setModalOpen(true);
       },
-      [moveIsInvalid]
+      [moveIsInvalid, currentView]
+  );
+
+  const onSelectEvent = useCallback(
+      (event: CalendarEvent) => {
+        if (currentView === "month") {
+          setCurrentDate(event.start);
+          setCurrentView("day");
+        }
+      },
+      [currentView]
+  );
+
+  const onDrillDown = useCallback(
+      (date: Date) => {
+        setCurrentDate(date);
+        setCurrentView("day");
+      },
+      []
   );
 
   const navigate = useCallback((action: "PREV" | "NEXT" | "TODAY") => {
@@ -447,6 +470,8 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             selectable
             onSelectSlot={onSelectSlot}
             onSelecting={handleSelecting}
+            onSelectEvent={onSelectEvent}
+            onDrillDown={onDrillDown}
             toolbar={false}
             style={{ maxHeight: maxCalendarioAnchuraPixeles }}
         />
