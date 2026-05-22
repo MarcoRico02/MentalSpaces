@@ -1,8 +1,9 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { Calendar, momentLocalizer, type View } from "react-big-calendar";
 import moment from "moment";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button, Input } from "../ui";
+import { Button, Input, Select } from "../ui";
+import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
@@ -12,20 +13,52 @@ const momentFn = (moment as unknown as { default: typeof moment }).default
 
 const localizer = momentLocalizer(momentFn);
 
-//  FORMATO IDEA: Al consultar las reservas, se pueden almacenar de esta forma en una tabla. Tambien serviria para testear con datos temporales.
-/* OJO, esta escrito en Lua el ejemplo xddddd imaginenlo en typescript
-CalendarData = {
-  ["sede/location"] = {
-    ["21-5-2026"] = { //El dia deberia ser el mas alto en esta jerarquia.
-      ["cubiculo1"] = { //Guardar los cubiculos en los dias nos permitiria solo cargar algunos de los cubiculos y no todos.
-          ["10:00-11:00"] = {id = 1, nombre = Juan Carlos } //Gardarlos por hora asegura que no haya traslape.
-          //IMPORTANTE: Si no eres due;o, no se debe guardar el id ni nombre del creador de la reserva,
-          //por lo que en calendario se mostrara el nombre en el cuadro de la reserva si eres admin, y la hora de inicio y fin si eres psicologo o propietario.
-      }
-    }
-  }
-}
-*/
+type TimeSlotEntry = { id: number; nombre: string };
+type CalendarData = Record<string, Record<string, Record<string, Record<string, TimeSlotEntry>>>>;
+
+const demoData: CalendarData = {
+  "Sede Roma": {
+    "21-5-2026": {
+      "Consultorio 1": {
+        "09:00-10:00": { id: 1, nombre: "Ana García" },
+        "11:00-12:00": { id: 2, nombre: "Carlos López" },
+      },
+      "Consultorio 2": {
+        "10:00-11:00": { id: 3, nombre: "María Fernández" },
+        "14:00-15:00": { id: 4, nombre: "Pedro Sánchez" },
+      },
+      "Consultorio 3": {
+        "08:00-09:00": { id: 5, nombre: "Laura Martínez" },
+        "13:00-14:00": { id: 6, nombre: "Diego Ramírez" },
+      },
+    },
+    "22-5-2026": {
+      "Consultorio 1": {
+        "10:00-11:00": { id: 7, nombre: "Sofía Torres" },
+      },
+      "Consultorio 2": {
+        "09:00-10:00": { id: 8, nombre: "Jorge Hernández" },
+        "16:00-17:00": { id: 9, nombre: "Elena Díaz" },
+      },
+    },
+  },
+  "Sede Condesa": {
+    "21-5-2026": {
+      "Consultorio A": {
+        "10:00-11:00": { id: 10, nombre: "Roberto Vega" },
+        "12:00-13:00": { id: 11, nombre: "Patricia Ruiz" },
+      },
+      "Consultorio B": {
+        "15:00-16:00": { id: 12, nombre: "Miguel Ángel" },
+      },
+    },
+    "22-5-2026": {
+      "Consultorio A": {
+        "09:00-10:00": { id: 13, nombre: "Lucía Mendoza" },
+      },
+    },
+  },
+};
 
 interface CalendarEvent {
   id: number | string;
@@ -98,20 +131,52 @@ const VIEW_OPTIONS: { key: CalendarView; label: string }[] = [
   { key: "agenda", label: "Agenda" },
 ];
 
+function parseDateKey(dateStr: string): { d: number; m: number; y: number } {
+  const [d, m, y] = dateStr.split("-").map(Number);
+  return { d, m, y };
+}
+
+function parseTimeSlot(slot: string): { sh: number; sm: number; eh: number; em: number } {
+  const [s, e] = slot.split("-");
+  const [sh, sm] = s.split(":").map(Number);
+  const [eh, em] = e.split(":").map(Number);
+  return { sh, sm, eh, em };
+}
+
+function getEventsForSede(sede: string, data: CalendarData, showNames: boolean): CalendarEvent[] {
+  const sedeData = data[sede];
+  if (!sedeData) return [];
+
+  const events: CalendarEvent[] = [];
+  for (const [dateKey, cubiculos] of Object.entries(sedeData)) {
+    const { d: day, m: month, y: year } = parseDateKey(dateKey);
+    for (const [cub, slots] of Object.entries(cubiculos)) {
+      for (const [slotKey, entry] of Object.entries(slots)) {
+        const { sh, sm, eh, em } = parseTimeSlot(slotKey);
+        const start = new Date(year, month - 1, day, sh, sm);
+        const end = new Date(year, month - 1, day, eh, em);
+        const title = showNames
+          ? entry.nombre
+          : `${String(sh).padStart(2, "0")}:${String(sm).padStart(2, "0")} – ${String(eh).padStart(2, "0")}:${String(em).padStart(2, "0")}`;
+        events.push({ id: `${sede}-${dateKey}-${cub}-${slotKey}`, title, start, end });
+      }
+    }
+  }
+  return events;
+}
+
+const sedes = Object.keys(demoData);
+const defaultSede = sedes[0] ?? "";
+
 interface BookingsCalendarProps {
   className?: string;
 }
 
 export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className }) => {
-  const [events, setEvents] = useState<CalendarEvent[]>([
-    {
-      id: 1,
-      title: "Evento fijo",
-      start: new Date(2025, 11, 2, 10, 0),
-      end: new Date(2025, 11, 2, 11, 0),
-    },
-  ]);
+  const { isAdmin } = useAuth();
 
+  const [selectedSede, setSelectedSede] = useState(defaultSede);
+  const [customEvents, setCustomEvents] = useState<CalendarEvent[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [tempSlot, setTempSlot] = useState<SlotInfo | null>(null);
@@ -120,10 +185,24 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    setCustomEvents([]);
+  }, [selectedSede]);
+
+  useEffect(() => {
     if (modalOpen) {
       inputRef.current?.focus();
     }
   }, [modalOpen]);
+
+  const baseEvents = useMemo(
+    () => getEventsForSede(selectedSede, demoData, isAdmin()),
+    [selectedSede, isAdmin],
+  );
+
+  const events = useMemo(
+    () => [...baseEvents, ...customEvents],
+    [baseEvents, customEvents],
+  );
 
   const moveIsInvalid = useCallback(
       (newStart: Date, newEnd: Date, ignoreId: number | string | null = null): boolean => {
@@ -188,7 +267,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
       end: tempSlot.end,
     };
 
-    setEvents((prev) => [...prev, newEvent]);
+    setCustomEvents((prev) => [...prev, newEvent]);
     setModalOpen(false);
     setTempSlot(null);
   };
@@ -200,7 +279,20 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
 
   return (
       <div className={`flex flex-col ${className ?? ""}`}>
-        {/* External toolbar */}
+        <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-default bg-surface">
+          <div className="flex items-center gap-1.5">
+            <Select
+              value={selectedSede}
+              onChange={(e) => setSelectedSede(e.target.value)}
+              className="w-44"
+            >
+              {sedes.map((sede) => (
+                <option key={sede} value={sede}>{sede}</option>
+              ))}
+            </Select>
+          </div>
+        </div>
+
         <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-default bg-surface">
           <div className="flex items-center gap-1.5">
             <Button variant="secondary" onClick={() => navigate("PREV")}>
