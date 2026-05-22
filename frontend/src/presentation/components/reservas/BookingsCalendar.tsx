@@ -185,7 +185,8 @@ interface BookingsCalendarProps {
   className?: string;
 }
 
-const minCalendarioAnchuraPixeles = 700;
+const maxCalendarioAnchuraPixeles = 800;
+const minCalendarioAnchuraPixelesCard = maxCalendarioAnchuraPixeles + 100;
 
 export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className }) => {
   const { isAdmin } = useAuth();
@@ -312,7 +313,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
 
   return (
       <Card className={className}>
-        <CardContent className="p-0" style={{ height: minCalendarioAnchuraPixeles + 32 }}>
+        <CardContent className="p-0" style={{ height: minCalendarioAnchuraPixelesCard }}>
         <div className="flex flex-col h-full">
           <style>{`.rbc-day-slot .rbc-event { flex-flow: column !important; }
 .rbc-day-slot .rbc-event-label { width: 100%; }
@@ -392,7 +393,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             selectable
             onSelectSlot={onSelectSlot}
             toolbar={false}
-            style={{ minHeight: minCalendarioAnchuraPixeles }}
+            style={{ maxHeight: maxCalendarioAnchuraPixeles }}
         />
 
         {modalOpen && (
