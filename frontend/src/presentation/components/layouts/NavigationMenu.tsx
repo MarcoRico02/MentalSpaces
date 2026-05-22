@@ -4,6 +4,7 @@ import { NavItem } from "./NavItem";
 import {
   Home,
   Calendar,
+  Plus,
   HelpCircle,
   FileText,
   CreditCard,
@@ -22,6 +23,10 @@ export const NavigationMenu: React.FC = () => {
 
       <NavItem to="/my-bookings" icon={Calendar}>
         Mis Reservas
+      </NavItem>
+
+      <NavItem to="/new-booking" icon={Plus}>
+        Nueva Reserva
       </NavItem>
 
       <NavItem to="/profile" icon={FileText}>

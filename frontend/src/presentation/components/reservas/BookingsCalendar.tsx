@@ -37,47 +37,84 @@ const formats = {
 const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true;
 
 type TimeSlotEntry = { id: number; nombre: string };
-type CalendarData = Record<string, Record<string, Record<string, Record<string, TimeSlotEntry>>>>;
+type CubiculoEntry = {
+  id: number;
+  nombre: string;
+  slots: Record<string, TimeSlotEntry>;
+};
+type CalendarData = Record<string, Record<string, Record<string, CubiculoEntry>>>;
 
 const demoData: CalendarData = {
   "Sede Roma": {
     "21-5-2026": {
       "Consultorio 1": {
-        "09:00-10:00": { id: 1, nombre: "Ana García" },
-        "11:00-12:00": { id: 2, nombre: "Carlos López" },
+        id: 1,
+        nombre: "Consultorio 1",
+        slots: {
+          "09:00-10:00": { id: 1, nombre: "Ana García" },
+          "11:00-12:00": { id: 2, nombre: "Carlos López" },
+        },
       },
       "Consultorio 2": {
-        "10:00-11:00": { id: 3, nombre: "María Fernández" },
-        "14:00-15:00": { id: 4, nombre: "Pedro Sánchez" },
+        id: 2,
+        nombre: "Consultorio 2",
+        slots: {
+          "10:00-11:00": { id: 3, nombre: "María Fernández" },
+          "14:00-15:00": { id: 4, nombre: "Pedro Sánchez" },
+        },
       },
       "Consultorio 3": {
-        "08:00-09:00": { id: 5, nombre: "Laura Martínez" },
-        "13:00-14:00": { id: 6, nombre: "Diego Ramírez" },
+        id: 3,
+        nombre: "Consultorio 3",
+        slots: {
+          "08:00-09:00": { id: 5, nombre: "Laura Martínez" },
+          "13:00-14:00": { id: 6, nombre: "Diego Ramírez" },
+        },
       },
     },
     "22-5-2026": {
       "Consultorio 1": {
-        "10:00-11:00": { id: 7, nombre: "Sofía Torres" },
+        id: 1,
+        nombre: "Consultorio 1",
+        slots: {
+          "10:00-11:00": { id: 7, nombre: "Sofía Torres" },
+        },
       },
       "Consultorio 2": {
-        "09:00-10:00": { id: 8, nombre: "Jorge Hernández" },
-        "16:00-17:00": { id: 9, nombre: "Elena Díaz" },
+        id: 2,
+        nombre: "Consultorio 2",
+        slots: {
+          "09:00-10:00": { id: 8, nombre: "Jorge Hernández" },
+          "16:00-17:00": { id: 9, nombre: "Elena Díaz" },
+        },
       },
     },
   },
   "Sede Condesa": {
     "21-5-2026": {
       "Consultorio A": {
-        "10:00-11:00": { id: 10, nombre: "Roberto Vega" },
-        "12:00-13:00": { id: 11, nombre: "Patricia Ruiz" },
+        id: 4,
+        nombre: "Consultorio A",
+        slots: {
+          "10:00-11:00": { id: 10, nombre: "Roberto Vega" },
+          "12:00-13:00": { id: 11, nombre: "Patricia Ruiz" },
+        },
       },
       "Consultorio B": {
-        "15:00-16:00": { id: 12, nombre: "Miguel Ángel" },
+        id: 5,
+        nombre: "Consultorio B",
+        slots: {
+          "15:00-16:00": { id: 12, nombre: "Miguel Ángel" },
+        },
       },
     },
     "22-5-2026": {
       "Consultorio A": {
-        "09:00-10:00": { id: 13, nombre: "Lucía Mendoza" },
+        id: 4,
+        nombre: "Consultorio A",
+        slots: {
+          "09:00-10:00": { id: 13, nombre: "Lucía Mendoza" },
+        },
       },
     },
   },
@@ -89,6 +126,7 @@ interface CalendarEvent {
   start: Date;
   end: Date;
   cubiculo?: string;
+  cubiculoId?: number;
 }
 
 interface SlotInfo {
@@ -174,29 +212,33 @@ function getEventsForSede(sede: string, data: CalendarData, mostrarNombresReserv
   const events: CalendarEvent[] = [];
   for (const [dateKey, cubiculos] of Object.entries(sedeData)) {
     const { d: day, m: month, y: year } = parseDateKey(dateKey);
-    for (const [cub, slots] of Object.entries(cubiculos)) {
-      for (const [slotKey, entry] of Object.entries(slots)) {
+    for (const [, cubObj] of Object.entries(cubiculos)) {
+      for (const [slotKey, entry] of Object.entries(cubObj.slots)) {
         const { sh, sm, eh, em } = parseTimeSlot(slotKey);
         const start = new Date(year, month - 1, day, sh, sm);
         const end = new Date(year, month - 1, day, eh, em);
         const title = mostrarNombresReservantes ? entry.nombre : "";
-        events.push({ id: `${sede}-${dateKey}-${cub}-${slotKey}`, title, start, end, cubiculo: cub });
+        events.push({ id: `${sede}-${dateKey}-${cubObj.nombre}-${slotKey}`, title, start, end, cubiculo: cubObj.nombre, cubiculoId: cubObj.id });
       }
     }
   }
   return events;
 }
 
-function getCubiculosForSede(sede: string, data: CalendarData): string[] {
+function getCubiculosForSede(sede: string, data: CalendarData): { id: number; nombre: string }[] {
   const sedeData = data[sede];
   if (!sedeData) return [];
-  const cubiculosSet = new Set<string>();
+  const map = new Map<number, string>();
   for (const cubiculos of Object.values(sedeData)) {
-    for (const cub of Object.keys(cubiculos)) {
-      cubiculosSet.add(cub);
+    for (const cub of Object.values(cubiculos)) {
+      if (!map.has(cub.id)) {
+        map.set(cub.id, cub.nombre);
+      }
     }
   }
-  return [...cubiculosSet].sort();
+  return Array.from(map.entries())
+    .map(([id, nombre]) => ({ id, nombre }))
+    .sort((a, b) => a.nombre.localeCompare(b.nombre));
 }
 
 const sedes = Object.keys(demoData);
@@ -213,7 +255,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const { isAdmin } = useAuth();
 
   const [selectedSede, setSelectedSede] = useState(defaultSede);
-  const [selectedCubiculo, setSelectedCubiculo] = useState("");
+  const [selectedCubiculo, setSelectedCubiculo] = useState<string>("");
   const [customEventsBySede, setCustomEventsBySede] = useState<Record<string, CalendarEvent[]>>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -242,7 +284,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   );
 
   const filteredBaseEvents = useMemo(
-    () => selectedCubiculo ? baseEvents.filter((e) => e.cubiculo === selectedCubiculo) : baseEvents,
+    () => selectedCubiculo ? baseEvents.filter((e) => e.cubiculoId === Number(selectedCubiculo)) : baseEvents,
     [baseEvents, selectedCubiculo],
   );
 
@@ -412,7 +454,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             >
               <option value="">Todos los consultorios</option>
               {cubiculos.map((cub) => (
-                <option key={cub} value={cub}>{cub}</option>
+                <option key={cub.id} value={cub.id}>{cub.nombre}</option>
               ))}
             </Select>
           </div>
