@@ -285,18 +285,19 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   }, [currentView]);
 
   const formattedDate = (() => {
+    const d = currentDate;
     if (currentView === "day") {
-      return momentFn(currentDate).format("D [de] MMMM [de] YYYY");
+      return `${DIAS_LARGOS[d.getDay()]}, ${d.getDate()} de ${MESES[d.getMonth()]} de ${d.getFullYear()}`;
     }
     if (currentView === "week") {
-      const start = momentFn(currentDate).startOf("week");
-      const end = momentFn(currentDate).endOf("week");
-      return `${start.format("D MMM")} – ${end.format("D MMM [de] YYYY")}`;
+      const start = momentFn(currentDate).startOf("week").toDate();
+      const end = momentFn(currentDate).endOf("week").toDate();
+      return `${start.getDate()} ${MESES[start.getMonth()]} – ${end.getDate()} ${MESES[end.getMonth()]} de ${end.getFullYear()}`;
     }
     if (currentView === "month") {
-      return momentFn(currentDate).format("MMMM [de] YYYY");
+      return `${MESES[d.getMonth()]} de ${d.getFullYear()}`;
     }
-    return momentFn(currentDate).format("D MMMM [de] YYYY");
+    return `${DIAS_LARGOS[d.getDay()]}, ${d.getDate()} de ${MESES[d.getMonth()]} de ${d.getFullYear()}`;
   })();
 
   const handleSave = (): void => {
