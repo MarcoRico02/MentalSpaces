@@ -158,7 +158,9 @@ function getEventsForSede(sede: string, data: CalendarData, mostrarNombresReserv
         const { sh, sm, eh, em } = parseTimeSlot(slotKey);
         const start = new Date(year, month - 1, day, sh, sm);
         const end = new Date(year, month - 1, day, eh, em);
-        const title = mostrarNombresReservantes ? entry.nombre : "";
+        const title = mostrarNombresReservantes
+          ? `${String(sh).padStart(2, "0")}:${String(sm).padStart(2, "0")} – ${String(eh).padStart(2, "0")}:${String(em).padStart(2, "0")}\n${entry.nombre}`
+          : "";
         events.push({ id: `${sede}-${dateKey}-${cub}-${slotKey}`, title, start, end, cubiculo: cub });
       }
     }
@@ -310,6 +312,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
 
   return (
       <div className={`flex flex-col ${className ?? ""}`}>
+        <style>{`.rbc-event-content { white-space: pre-line; }`}</style>
         <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-default bg-surface">
           <div className="flex items-center gap-1.5">
             <Select
