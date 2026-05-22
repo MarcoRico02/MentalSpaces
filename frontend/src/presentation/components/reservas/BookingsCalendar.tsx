@@ -13,6 +13,8 @@ const momentFn = (moment as unknown as { default: typeof moment }).default
 
 const localizer = momentLocalizer(momentFn);
 
+const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true;
+
 type TimeSlotEntry = { id: number; nombre: string };
 type CalendarData = Record<string, Record<string, Record<string, Record<string, TimeSlotEntry>>>>;
 
@@ -143,7 +145,7 @@ function parseTimeSlot(slot: string): { sh: number; sm: number; eh: number; em: 
   return { sh, sm, eh, em };
 }
 
-function getEventsForSede(sede: string, data: CalendarData, showNames: boolean): CalendarEvent[] {
+function getEventsForSede(sede: string, data: CalendarData, mostrarNombresReservantes: boolean): CalendarEvent[] {
   const sedeData = data[sede];
   if (!sedeData) return [];
 
@@ -155,9 +157,7 @@ function getEventsForSede(sede: string, data: CalendarData, showNames: boolean):
         const { sh, sm, eh, em } = parseTimeSlot(slotKey);
         const start = new Date(year, month - 1, day, sh, sm);
         const end = new Date(year, month - 1, day, eh, em);
-        const title = showNames
-          ? entry.nombre
-          : `${String(sh).padStart(2, "0")}:${String(sm).padStart(2, "0")} – ${String(eh).padStart(2, "0")}:${String(em).padStart(2, "0")}`;
+        const title = mostrarNombresReservantes ? entry.nombre : "";
         events.push({ id: `${sede}-${dateKey}-${cub}-${slotKey}`, title, start, end });
       }
     }
@@ -185,7 +185,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setCustomEvents([]);
+    setCustomEvents([]); //error aqui
   }, [selectedSede]);
 
   useEffect(() => {
@@ -194,9 +194,11 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
     }
   }, [modalOpen]);
 
+  const mostrarNombresReservantes = isAdmin() || DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES;
+
   const baseEvents = useMemo(
-    () => getEventsForSede(selectedSede, demoData, isAdmin()),
-    [selectedSede, isAdmin],
+    () => getEventsForSede(selectedSede, demoData, mostrarNombresReservantes),
+    [selectedSede, mostrarNombresReservantes],
   );
 
   const events = useMemo(
