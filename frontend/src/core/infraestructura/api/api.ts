@@ -161,5 +161,12 @@ export const authAPI = {
         "/reservas",
         data,
       ),
+    getByFilter: (
+      params?: import("../../dominio/tipos/api").ReservaFilterRequestDTO,
+    ) =>
+      apiClient.get<import("../../dominio/tipos/api").ReservaDTO[]>(
+        "/reservas",
+        { params },
+      ),
   },
 };

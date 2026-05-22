@@ -53,6 +53,7 @@ src/
         useAuthQuery.ts                # AuthService + login/logout mutations
         useAuthState.ts                # useQuery para /usuarios/me
         useCrearReservaMutation.ts     # Mutation para crear reservas
+        useCubiculosQuery.ts           # Queries de cubiculos por location
         useLocationMutations.ts        # CRUD de locations
         useLocationQueries.ts          # Queries de locations
         useLoginMutation.ts            # Mutation de login con toast
@@ -609,3 +610,5 @@ Schemas Zod: `loginSchema`, `usuarioRegisterSchema`, `psicologoRegisterSchema`, 
 
 ---*Última actualización: 22 Mayo 2026*  
 *Mantenedor: equipo SATI*
+
+> **Nota:** `BookingsCalendar.tsx` usa `DEBUG_USAR_DATOS_DEMO` (bool) para alternar entre datos demo en memoria (`demoData`) y consulta al backend via `GET /api/reservas` con `ReservaFilterRequestDTO`. Cuando `DEBUG_USAR_DATOS_DEMO = false`, el calendario consulta el backend usando `useLocationsQuery`, `useCubiculosActivosPorLocation` y un `useQuery` interno que calcula el rango de fechas según la vista actual (día/semana/mes/agenda).

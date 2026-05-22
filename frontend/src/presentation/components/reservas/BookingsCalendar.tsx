@@ -3,8 +3,13 @@ import { Calendar, momentLocalizer, type View } from "react-big-calendar";
 import moment from "moment";
 import { Button, Input, Select, Card, CardContent } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
+import { useLocationsQuery } from "../../../core/aplicacion/hooks/useLocationQueries";
+import { useCubiculosActivosPorLocation } from "../../../core/aplicacion/hooks/useCubiculosQuery";
+import { useQuery } from "@tanstack/react-query";
+import { authAPI } from "../../../core/infraestructura/api/api";
 import { showToast } from "../../../core/infraestructura/utilidades/toast";
 import { ReservaForm, type ReservaFormConfirmData } from "../forms/ReservaForm";
+import type { ReservaDTO, ReservaFilterRequestDTO } from "../../../core/dominio/tipos/api";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar-dark.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -14,6 +19,22 @@ const momentFn = (moment as unknown as { default: typeof moment }).default
     : moment;
 
 const localizer = momentLocalizer(momentFn);
+
+type DateRange = { inicio: string; fin: string };
+
+function calcDateRange(date: Date, view: View): DateRange {
+  const m = momentFn(date);
+  switch (view) {
+    case "day":
+      return { inicio: m.startOf("day").toISOString(), fin: m.endOf("day").toISOString() };
+    case "week":
+      return { inicio: m.startOf("week").toISOString(), fin: m.endOf("week").toISOString() };
+    case "month":
+      return { inicio: m.startOf("month").toISOString(), fin: m.endOf("month").toISOString() };
+    default:
+      return { inicio: m.startOf("day").toISOString(), fin: m.add(30, "day").toISOString() };
+  }
+}
 
 const DIAS_CORTOS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 const DIAS_LARGOS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
@@ -35,8 +56,9 @@ const formats = {
     `${String(start.getHours()).padStart(2, "0")}:${String(start.getMinutes()).padStart(2, "0")} – ${String(end.getHours()).padStart(2, "0")}:${String(end.getMinutes()).padStart(2, "0")}`,
 };
 
-const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true;
-const DEBUG_PERMITIR_EDICION = true;
+const DEBUG_USAR_DATOS_DEMO = false; //Si es true, utilizara los datos de prueba CalendarData, declarados aqui, en vez de llamar al backend.
+const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true; //Si es true, mostrata nombres completos de los usuarios en las reservas sin importar si el usuario loggeado sea admin o no.
+const DEBUG_PERMITIR_EDICION = true; //Igual pero con la edicion.
 
 type TimeSlotEntry = { id: number; nombre: string };
 type CubiculoEntry = {
@@ -210,7 +232,7 @@ function getAllCubiculos(data: CalendarData): { id: number; nombre: string; sede
 }
 
 const sedes = Object.keys(demoData);
-const defaultSede = sedes[0] ?? "";
+const defaultSede = DEBUG_USAR_DATOS_DEMO ? (sedes[0] ?? "") : "";
 
 interface BookingsCalendarProps {
   className?: string;
@@ -250,24 +272,71 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
   const mostrarNombresReservantes = isAdmin() || DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES;
   const puedeEditar = isAdmin() || DEBUG_PERMITIR_EDICION;
 
+  const { data: locations = [] } = useLocationsQuery();
+  const { data: cubiculosApi = [] } = useCubiculosActivosPorLocation(
+    !DEBUG_USAR_DATOS_DEMO && selectedSede ? Number(selectedSede) : null,
+  );
+
+  const dateRange = useMemo(
+    () => calcDateRange(currentDate, currentView),
+    [currentDate, currentView],
+  );
+
+  const { data: reservasApi = [] } = useQuery({
+    queryKey: ["reservas", "calendario", dateRange, selectedSede],
+    queryFn: async (): Promise<ReservaDTO[]> => {
+      const params: ReservaFilterRequestDTO = {
+        fechaInicio: dateRange.inicio,
+        fechaFin: dateRange.fin,
+        locationIds: selectedSede ? [Number(selectedSede)] : undefined,
+        cubiculoIds: selectedCubiculo ? [Number(selectedCubiculo)] : undefined,
+      };
+      const res = await authAPI.reservas.getByFilter(params);
+      return res.data;
+    },
+    enabled: !DEBUG_USAR_DATOS_DEMO,
+    staleTime: 1000 * 60 * 2,
+  });
+
   const allCubiculos = useMemo(
     () => getAllCubiculos(demoData).map((c) => ({ ...c, precioPorHora: 450 })),
     [],
   );
 
-  const cubiculos = useMemo(
-    () => getCubiculosForSede(selectedSede, demoData),
-    [selectedSede],
-  );
+  const cubiculos = useMemo(() => {
+    if (DEBUG_USAR_DATOS_DEMO) {
+      return getCubiculosForSede(selectedSede, demoData);
+    }
+    return cubiculosApi.map((c) => ({ id: Number(c.id), nombre: c.nombre }));
+  }, [selectedSede, cubiculosApi]);
 
   const baseEvents = useMemo(
     () => getEventsForSede(selectedSede, demoData, mostrarNombresReservantes),
     [selectedSede, mostrarNombresReservantes],
   );
 
+  const apiEvents = useMemo(
+    () => reservasApi.map((r) => ({
+      id: r.id,
+      title: mostrarNombresReservantes ? r.psicologoNombreCompleto : "",
+      start: new Date(r.inicio),
+      end: new Date(r.fin),
+      cubiculo: r.cubiculoNombre,
+      cubiculoId: r.cubiculoId,
+    })),
+    [reservasApi, mostrarNombresReservantes],
+  );
+
   const filteredBaseEvents = useMemo(
     () => selectedCubiculo ? baseEvents.filter((e) => e.cubiculoId === Number(selectedCubiculo)) : baseEvents,
     [baseEvents, selectedCubiculo],
+  );
+
+  const apiEventsFiltered = useMemo(
+    () => selectedCubiculo
+      ? apiEvents.filter((e) => e.cubiculoId === Number(selectedCubiculo))
+      : apiEvents,
+    [apiEvents, selectedCubiculo],
   );
 
   const customEvents = customEventsBySede[selectedSede] ?? [];
@@ -280,8 +349,11 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
   );
 
   const events = useMemo(
-    () => [...filteredBaseEvents, ...filteredCustomEvents],
-    [filteredBaseEvents, filteredCustomEvents],
+    () => [
+      ...(DEBUG_USAR_DATOS_DEMO ? filteredBaseEvents : apiEventsFiltered),
+      ...filteredCustomEvents,
+    ],
+    [filteredBaseEvents, apiEventsFiltered, filteredCustomEvents],
   );
 
   const moveIsInvalid = useCallback(
@@ -463,9 +535,18 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
               }}
               className="w-44"
             >
-              {sedes.map((sede) => (
-                <option key={sede} value={sede}>{sede}</option>
-              ))}
+              {DEBUG_USAR_DATOS_DEMO ? (
+                sedes.map((sede) => (
+                  <option key={sede} value={sede}>{sede}</option>
+                ))
+              ) : (
+                <>
+                  <option value="">Todas las sedes</option>
+                  {locations.map((loc) => (
+                    <option key={loc.id} value={String(loc.id)}>{loc.name}</option>
+                  ))}
+                </>
+              )}
             </Select>
             <Select
               value={selectedCubiculo}
