@@ -8,7 +8,7 @@ import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 
 // ─── Constantes de depuración ────────────────────────────────────────────────
 const DEBUG_IS_ADMIN = true;
-const debugSuscriptionPrice: number | null = null;
+const debugSuscriptionPrice: number | null = 1;
 
 // ─── Datos demo de usuarios ──────────────────────────────────────────────────
 interface DemoUsuario {
@@ -63,6 +63,7 @@ interface ReservaFormProps {
   defaultHoraInicio?: string;
   defaultHoraFin?: string;
   defaultCubiculoId?: number;
+  defaultUsuarioNombre?: string;
   cubiculos: FormCubiculo[];
   onConfirm: (data: ReservaFormConfirmData) => void;
   isSubmitting?: boolean;
@@ -77,6 +78,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
   defaultHoraInicio = "09:00",
   defaultHoraFin = "10:00",
   defaultCubiculoId,
+  defaultUsuarioNombre,
   cubiculos,
   onConfirm,
   isSubmitting = false,
@@ -85,6 +87,14 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
   const isAdmin = DEBUG_IS_ADMIN || authIsAdmin;
 
   const showDescuento = debugSuscriptionPrice !== null && debugSuscriptionPrice > 0;
+
+  const initialUsuarioId = useMemo(() => {
+    if (!defaultUsuarioNombre) return undefined;
+    const user = DEMO_USUARIOS.find((u) =>
+      u.nombre.toLowerCase().startsWith(defaultUsuarioNombre.toLowerCase())
+    );
+    return user?.id;
+  }, [defaultUsuarioNombre]);
 
   const {
     control,
@@ -96,6 +106,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
     resolver: zodResolver(reservaFormSchema),
     mode: "onChange",
     defaultValues: {
+      usuarioId: initialUsuarioId,
       fecha: defaultFecha,
       horaInicio: defaultHoraInicio,
       horaFin: defaultHoraFin,

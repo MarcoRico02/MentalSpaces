@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, forwardRef, useImperativeHandle } from "react";
 import { Calendar, momentLocalizer, type View } from "react-big-calendar";
 import moment from "moment";
 import { Button, Input, Select, Card, CardContent } from "../ui";
@@ -36,6 +36,7 @@ const formats = {
 };
 
 const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true;
+const DEBUG_PERMITIR_EDICION = true;
 
 type TimeSlotEntry = { id: number; nombre: string };
 type CubiculoEntry = {
@@ -215,10 +216,14 @@ interface BookingsCalendarProps {
   className?: string;
 }
 
-const maxCalendarioAnchuraPixeles = 800;
+export interface BookingsCalendarHandle {
+  openCreateForm: () => void;
+}
+
+const maxCalendarioAnchuraPixeles = 700;
 const minCalendarioAnchuraPixelesCard = maxCalendarioAnchuraPixeles + 100;
 
-export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className }) => {
+export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalendarProps>(({ className }, ref) => {
   const { isAdmin } = useAuth();
 
   const [selectedSede, setSelectedSede] = useState(defaultSede);
@@ -230,6 +235,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isDraggingOverlap, setDraggingOverlap] = useState(false);
   const [slotGeneration, setSlotGeneration] = useState(0);
+  const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
 
   const formatDateToInput = (date: Date) => {
     const y = date.getFullYear();
@@ -242,6 +248,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
     `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 
   const mostrarNombresReservantes = isAdmin() || DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES;
+  const puedeEditar = isAdmin() || DEBUG_PERMITIR_EDICION;
 
   const allCubiculos = useMemo(
     () => getAllCubiculos(demoData).map((c) => ({ ...c, precioPorHora: 450 })),
@@ -330,12 +337,19 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
 
   const onSelectEvent = useCallback(
       (event: CalendarEvent) => {
-        if (currentView === "month") {
+        if (currentView === "month" || currentView === "agenda") {
           setCurrentDate(event.start);
           setCurrentView("day");
+          return;
+        }
+        if (puedeEditar) {
+          setEditingEvent(event);
+          setTempSlot({ start: event.start, end: event.end });
+          setSlotGeneration(g => g + 1);
+          setModalOpen(true);
         }
       },
-      [currentView]
+      [currentView, puedeEditar]
   );
 
   const onDrillDown = useCallback(
@@ -375,6 +389,12 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
 
   const handleFormConfirm = useCallback(
     (data: ReservaFormConfirmData) => {
+      if (editingEvent) {
+        setModalOpen(false);
+        setEditingEvent(null);
+        return;
+      }
+
       const start = new Date(data.inicio);
       const end = new Date(data.fin);
 
@@ -399,12 +419,24 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
       setModalOpen(false);
       setTempSlot(null);
     },
-    [],
+    [editingEvent],
   );
 
   const handleCloseForm = useCallback(() => {
     setModalOpen(false);
+    setEditingEvent(null);
   }, []);
+
+  useImperativeHandle(ref, () => ({
+    openCreateForm: () => {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 0, 0);
+      const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
+      setTempSlot({ start, end });
+      setSlotGeneration(g => g + 1);
+      setModalOpen(true);
+    },
+  }), []);
 
   return (
       <Card className={className}>
@@ -453,6 +485,9 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             <Button variant="secondary" onClick={() => navigate("PREV")}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
+            <Button variant="secondary" onClick={() => navigate("TODAY")}>
+              Hoy
+            </Button>
             <Button variant="secondary" onClick={() => navigate("NEXT")}>
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -495,6 +530,8 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             localizer={localizer}
             culture="es"
             formats={formats}
+            min={new Date(0, 0, 0, 8, 0, 0)}
+            max={new Date(0, 0, 0, 21, 0, 0)}
             messages={{
               today: "Hoy",
               previous: "Anterior",
@@ -525,11 +562,12 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
           key={slotGeneration}
           open={modalOpen}
           onOpenChange={handleCloseForm}
-          mode="create"
+          mode={editingEvent ? "edit" : "create"}
           defaultFecha={tempSlot ? formatDateToInput(tempSlot.start) : ""}
           defaultHoraInicio={tempSlot ? formatTime(tempSlot.start) : "09:00"}
           defaultHoraFin={tempSlot ? formatTime(tempSlot.end) : "10:00"}
           defaultCubiculoId={selectedCubiculo ? Number(selectedCubiculo) : undefined}
+          defaultUsuarioNombre={editingEvent?.title}
           cubiculos={allCubiculos}
           onConfirm={handleFormConfirm}
         />
@@ -537,4 +575,5 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
       </CardContent>
       </Card>
   );
-};
+});
+BookingsCalendar.displayName = "BookingsCalendar";
