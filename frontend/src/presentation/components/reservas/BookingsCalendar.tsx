@@ -5,14 +5,27 @@ import { Button, Input, Select, Card, CardContent } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import "moment/locale/es";
+
+//import "moment/locale/es";
+
+moment.locale("es");
 
 const momentFn = (moment as unknown as { default: typeof moment }).default
     ? (moment as unknown as { default: typeof moment }).default
     : moment;
 
-moment.locale('es')
 const localizer = momentLocalizer(momentFn);
+
+const formats = {
+  agendaDateFormat: (date: Date, _culture?: string, localizer?: { format: (d: Date, f: string, c?: string) => string }) =>
+    localizer?.format(date, "ddd DD MMM", "es") ?? "",
+  agendaHeaderFormat: ({ start, end }: { start: Date; end: Date }, _culture?: string, localizer?: { format: (d: Date, f: string, c?: string) => string }) =>
+    `${localizer?.format(start, "DD MMM", "es") ?? ""} – ${localizer?.format(end, "DD MMM YYYY", "es") ?? ""}`,
+  dayFormat: (date: Date, _culture?: string, localizer?: { format: (d: Date, f: string, c?: string) => string }) =>
+    localizer?.format(date, "ddd DD", "es") ?? "",
+  weekdayFormat: (date: Date, _culture?: string, localizer?: { format: (d: Date, f: string, c?: string) => string }) =>
+    localizer?.format(date, "ddd", "es") ?? "",
+};
 
 const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true;
 
@@ -388,6 +401,21 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             dayLayoutAlgorithm="no-overlap"
             localizer={localizer}
             culture="es"
+            formats={formats}
+            messages={{
+              today: "Hoy",
+              previous: "Anterior",
+              next: "Siguiente",
+              month: "Mes",
+              week: "Semana",
+              day: "Día",
+              agenda: "Agenda",
+              date: "Fecha",
+              time: "Hora",
+              event: "Usuario",
+              noEventsInRange: "No hay usuarios en este rango",
+              showMore: (count: number) => `+${count} más`,
+            }}
             events={events}
             step={60}
             timeslots={1}
