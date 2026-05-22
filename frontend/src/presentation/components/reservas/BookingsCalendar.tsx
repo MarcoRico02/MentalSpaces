@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useRef, useMemo } from "react"
 import { Calendar, momentLocalizer, type View } from "react-big-calendar";
 import moment from "moment";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button, Input, Select } from "../ui";
+import { Button, Input, Select, Card, CardContent } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -158,9 +158,7 @@ function getEventsForSede(sede: string, data: CalendarData, mostrarNombresReserv
         const { sh, sm, eh, em } = parseTimeSlot(slotKey);
         const start = new Date(year, month - 1, day, sh, sm);
         const end = new Date(year, month - 1, day, eh, em);
-        const title = mostrarNombresReservantes
-          ? `${String(sh).padStart(2, "0")}:${String(sm).padStart(2, "0")} – ${String(eh).padStart(2, "0")}:${String(em).padStart(2, "0")}\n${entry.nombre}`
-          : "";
+        const title = mostrarNombresReservantes ? entry.nombre : "";
         events.push({ id: `${sede}-${dateKey}-${cub}-${slotKey}`, title, start, end, cubiculo: cub });
       }
     }
@@ -186,6 +184,8 @@ const defaultSede = sedes[0] ?? "";
 interface BookingsCalendarProps {
   className?: string;
 }
+
+const minCalendarioAnchuraPixeles = 700;
 
 export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className }) => {
   const { isAdmin } = useAuth();
@@ -311,8 +311,12 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   };
 
   return (
-      <div className={`flex flex-col ${className ?? ""}`}>
-        <style>{`.rbc-event-content { white-space: pre-line; }`}</style>
+      <Card className={className}>
+        <CardContent className="p-0" style={{ height: minCalendarioAnchuraPixeles + 32 }}>
+        <div className="flex flex-col h-full">
+          <style>{`.rbc-day-slot .rbc-event { flex-flow: column !important; }
+.rbc-day-slot .rbc-event-label { width: 100%; }
+.rbc-timeslot-group { min-height: 70px; }`}</style>
         <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-default bg-surface">
           <div className="flex items-center gap-1.5">
             <Select
@@ -388,7 +392,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             selectable
             onSelectSlot={onSelectSlot}
             toolbar={false}
-            style={{ minHeight: 400 }}
+            style={{ minHeight: minCalendarioAnchuraPixeles }}
         />
 
         {modalOpen && (
@@ -423,5 +427,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             </div>
         )}
       </div>
+      </CardContent>
+      </Card>
   );
 };
