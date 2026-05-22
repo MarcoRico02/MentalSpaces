@@ -3,6 +3,7 @@ import { Calendar, momentLocalizer, type View } from "react-big-calendar";
 import moment from "moment";
 import { Button, Input, Select, Card, CardContent } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
+import { showToast } from "../../../core/infraestructura/utilidades/toast";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar-dark.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -262,6 +263,16 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
       [events]
   );
 
+  const findConflictingEvent = useCallback(
+      (newStart: Date, newEnd: Date, ignoreId: number | string | null = null): CalendarEvent | undefined => {
+        return events.find((event) => {
+          if (event.id === ignoreId) return false;
+          return newStart < event.end && newEnd > event.start;
+        });
+      },
+      [events]
+  );
+
   const handleSelecting = useCallback(
       (range: { start: Date; end: Date }): boolean | undefined => {
         setDraggingOverlap(moveIsInvalid(range.start, range.end));
@@ -278,15 +289,19 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
           setCurrentView("day");
           return;
         }
-        if (moveIsInvalid(start, end)) {
-          alert("No puedes crear un evento encima de otro.");
+        const conflict = findConflictingEvent(start, end);
+        if (conflict) {
+          const inicioStr = momentFn(conflict.start).format("HH:mm");
+          const finStr = momentFn(conflict.end).format("HH:mm");
+          const cubiculo = conflict.cubiculo ?? "Desconocido";
+          showToast.error(`Hay traslape con otra reserva de ${inicioStr} a ${finStr}, en el cubículo "${cubiculo}"`);
           return;
         }
         setTempSlot({ start, end });
         setTitle("");
         setModalOpen(true);
       },
-      [moveIsInvalid, currentView]
+      [findConflictingEvent, currentView]
   );
 
   const onSelectEvent = useCallback(
