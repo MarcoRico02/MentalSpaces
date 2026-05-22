@@ -331,17 +331,34 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
       <Card className={className}>
         <CardContent className="p-0" style={{ height: minCalendarioAnchuraPixelesCard }}>
         <div className="flex flex-col h-full">
-          <style>{`.rbc-day-slot .rbc-event { flex-flow: column !important; }
+          <style dangerouslySetInnerHTML={{
+            __html: `.rbc-day-slot .rbc-event { flex-flow: column !important; }
 .rbc-day-slot .rbc-event-label { width: 100%; }
 .rbc-timeslot-group { min-height: 70px; }
 .rbc-event, .rbc-day-slot .rbc-background-event { background-color: rgb(var(--primary)) !important; }
-.dark .rbc-timeslot-group { border-color: var(--border); }
-.dark .rbc-time-content { border-color: var(--border); }
-.dark .rbc-day-slot .rbc-time-slot { border-top-color: var(--border); }
-.dark .rbc-time-gutter .rbc-label { color: var(--text-secondary); }
-.dark .rbc-day-slot { background-color: var(--bg-surface); }
+.dark .rbc-calendar { background-color: rgb(var(--bg-surface)); }
+.dark .rbc-timeslot-group { border-color: rgb(var(--border)); }
+.dark .rbc-time-content { border-color: rgb(var(--border)); }
+.dark .rbc-day-slot .rbc-time-slot { border-top-color: rgb(var(--border)); }
+.dark .rbc-time-gutter .rbc-label { color: rgb(var(--text-secondary)); }
+.dark .rbc-day-slot { background-color: rgb(var(--bg-surface)); }
 .dark .rbc-today { background-color: rgb(var(--primary) / 0.12); }
-.dark .rbc-off-range-bg { background-color: oklch(0.2 0 0); }`}</style>
+.dark .rbc-off-range-bg { background-color: rgb(var(--bg-surface-2)); }
+.dark .rbc-month-view { border-color: rgb(var(--border)); }
+.dark .rbc-month-row { border-color: rgb(var(--border)); }
+.dark .rbc-month-header { background-color: rgb(var(--bg-surface-2)); }
+.dark .rbc-header { border-color: rgb(var(--border)); color: rgb(var(--text-secondary)); }
+.dark .rbc-day-bg { background-color: rgb(var(--bg-surface)); }
+.dark .rbc-date-cell { color: rgb(var(--text-primary)); }
+.dark .rbc-date-cell a { color: rgb(var(--text-primary)); }
+.dark .rbc-row-bg { border-color: rgb(var(--border)); }
+.dark .rbc-off-range { color: rgb(var(--text-muted)); }
+.dark .rbc-agenda-view { background-color: rgb(var(--bg-surface)); }
+.dark .rbc-agenda-table { border-color: rgb(var(--border)); }
+.dark .rbc-agenda-table th { background-color: rgb(var(--bg-surface-2)); border-color: rgb(var(--border)); color: rgb(var(--text-secondary)); }
+.dark .rbc-agenda-table td { border-color: rgb(var(--border)); color: rgb(var(--text-primary)); }
+.dark .rbc-show-more { color: rgb(var(--primary)); }`,
+          }} />
         <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-default bg-surface">
           <div className="flex items-center gap-1.5">
             <Select
