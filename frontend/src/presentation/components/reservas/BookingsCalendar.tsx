@@ -202,10 +202,6 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setSelectedCubiculo("");
-  }, [selectedSede]);
-
-  useEffect(() => {
     if (modalOpen) {
       inputRef.current?.focus();
     }
@@ -322,7 +318,10 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
           <div className="flex items-center gap-1.5">
             <Select
               value={selectedSede}
-              onChange={(e) => setSelectedSede(e.target.value)}
+              onChange={(e) => {
+                setSelectedSede(e.target.value);
+                setSelectedCubiculo("");
+              }}
               className="w-44"
             >
               {sedes.map((sede) => (
