@@ -219,6 +219,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
   const [tempSlot, setTempSlot] = useState<SlotInfo | null>(null);
   const [currentView, setCurrentView] = useState<CalendarView>("day");
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [isDraggingOverlap, setDraggingOverlap] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -261,8 +262,17 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
       [events]
   );
 
+  const handleSelecting = useCallback(
+      (range: { start: Date; end: Date }): boolean | undefined => {
+        setDraggingOverlap(moveIsInvalid(range.start, range.end));
+        return undefined;
+      },
+      [moveIsInvalid]
+  );
+
   const onSelectSlot = useCallback(
       ({ start, end }: SlotInfo) => {
+        setDraggingOverlap(false);
         if (moveIsInvalid(start, end)) {
           alert("No puedes crear un evento encima de otro.");
           return;
@@ -338,6 +348,11 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
 .rbc-timeslot-group { min-height: 70px; }
 .rbc-event, .rbc-day-slot .rbc-background-event { background-color: rgb(var(--primary)) !important; }`,
           }} />
+          {isDraggingOverlap && (
+            <style dangerouslySetInnerHTML={{
+              __html: `.rbc-slot-selection { background-color: rgba(255, 0, 0, 0.3) !important; }`,
+            }} />
+          )}
         <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-default bg-surface">
           <div className="flex items-center gap-1.5">
             <Select
@@ -431,6 +446,7 @@ export const BookingsCalendar: React.FC<BookingsCalendarProps> = ({ className })
             timeslots={1}
             selectable
             onSelectSlot={onSelectSlot}
+            onSelecting={handleSelecting}
             toolbar={false}
             style={{ maxHeight: maxCalendarioAnchuraPixeles }}
         />
