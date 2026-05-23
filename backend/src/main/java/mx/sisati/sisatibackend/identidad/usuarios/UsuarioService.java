@@ -2,6 +2,7 @@ package mx.sisati.sisatibackend.identidad.usuarios;
 
 import jakarta.transaction.Transactional;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
+import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioInfoDTO;
 import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioRegisterDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -49,5 +51,11 @@ public class UsuarioService {
     @Transactional
     public void asignarFotoPerfil(Long usuarioId, UUID archivoId){
         usuarioRepository.updateFotoPerfil(usuarioId, archivoId);
+    }
+
+    public List<UsuarioInfoDTO> listPsicologos() {
+        return usuarioRepository.findPsicologos().stream()
+                .map(UsuarioInfoDTO::new)
+                .toList();
     }
 }

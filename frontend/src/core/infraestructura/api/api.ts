@@ -9,10 +9,18 @@ export const apiClient = axios.create({
   },
 });
 
-// Endpoints del backend
+  // Endpoints del backend
 export const authAPI = {
   login: (data: import("../../dominio/tipos/api").UsuarioLoginDTO) =>
     apiClient.post("/auth/login", data),
+
+  // Endpoints de usuarios
+  usuarios: {
+    getPsicologos: () =>
+      apiClient.get<import("../../dominio/tipos/api").UsuarioInfoDTO[]>(
+        "/usuarios/psicologos",
+      ),
+  },
   logout: () => apiClient.post("/auth/logout"),
   me: () => apiClient.get("/usuarios/me"),
 

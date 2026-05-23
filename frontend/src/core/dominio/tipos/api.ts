@@ -300,6 +300,8 @@ export interface ReservaCreateRequestDTO {
   /** ISO 8601: "2026-03-10T11:00:00" */
   fin: string;
   notas?: string;
+  /** Solo para admin: ID del usuario/psicólogo para quien se crea la reserva */
+  usuarioId?: number;
 }
 
 export interface ReservaDTO {

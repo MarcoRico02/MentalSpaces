@@ -4,12 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import mx.sisati.sisatibackend.archivo.ArchivoService;
 import mx.sisati.sisatibackend.identidad.usuarios.aplicacion.GestionarUsuarios;
 import mx.sisati.sisatibackend.auth.UsuarioDetails;
+import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioInfoDTO;
 import mx.sisati.sisatibackend.identidad.usuarios.dto.UsuarioMeResponseDTO;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -31,6 +34,11 @@ public class UsuarioController {
     public ResponseEntity<UsuarioMeResponseDTO> me(@AuthenticationPrincipal UsuarioDetails usuario){
         UsuarioMeResponseDTO usuarioMeResponseDTO = gestionarUsuarios.execute(usuario.getUsuario());
         return ResponseEntity.ok(usuarioMeResponseDTO);
+    }
+
+    @GetMapping("/psicologos")
+    public ResponseEntity<List<UsuarioInfoDTO>> listPsicologos() {
+        return ResponseEntity.ok(usuarioService.listPsicologos());
     }
 
     @PostMapping(path = "/foto-perfil", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

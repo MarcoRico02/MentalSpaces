@@ -7,7 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import { authAPI } from "../../../core/infraestructura/api/api";
 import { showToast } from "../../../core/infraestructura/utilidades/toast";
 import { ReservaForm, type ReservaFormConfirmData } from "../forms/ReservaForm";
-import type { ReservaDTO, ReservaFilterRequestDTO, LocationResponseDTO, CubiculoResponse } from "../../../core/dominio/tipos/api";
+import { useCrearReservaMutation } from "../../../core/aplicacion/hooks/useCrearReservaMutation";
+import type { ReservaDTO, ReservaFilterRequestDTO, LocationResponseDTO, CubiculoResponse, ReservaCreateRequestDTO } from "../../../core/dominio/tipos/api";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar-dark.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -53,7 +54,7 @@ const formats = {
   eventTimeRangeFormat: ({ start, end }: { start: Date; end: Date }) =>
     `${String(start.getHours()).padStart(2, "0")}:${String(start.getMinutes()).padStart(2, "0")} – ${String(end.getHours()).padStart(2, "0")}:${String(end.getMinutes()).padStart(2, "0")}`,
 };
-const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true;
+const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = false;
 const DEBUG_PERMITIR_EDICION = true;
 
 interface CalendarEvent {
@@ -94,10 +95,12 @@ const minCalendarioAnchuraPixelesCard = maxCalendarioAnchuraPixeles + 100;
 
 export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalendarProps>(({ className }, ref) => {
   const { isAdmin } = useAuth();
+  const crearReservaMutation = useCrearReservaMutation();
 
   const [selectedSede, setSelectedSede] = useState("");
   const [selectedCubiculo, setSelectedCubiculo] = useState<string>("");
-  const [customEventsBySede, setCustomEventsBySede] = useState<Record<string, CalendarEvent[]>>({});
+  //const [customEventsBySede, setCustomEventsBySede] = useState<Record<string, CalendarEvent[]>>({});
+  const [customEventsBySede] = useState<Record<string, CalendarEvent[]>>({});
   const [modalOpen, setModalOpen] = useState(false);
   const [tempSlot, setTempSlot] = useState<SlotInfo | null>(null);
   const [currentView, setCurrentView] = useState<CalendarView>("day");
@@ -319,30 +322,24 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
         return;
       }
 
-      const start = new Date(data.inicio);
-      const end = new Date(data.fin);
-
-      const newEvent: CalendarEvent = {
-        id: Math.random(),
-        title: data.usuarioNombre,
-        start,
-        end,
-        cubiculo: data.cubiculoNombre,
+      const payload: ReservaCreateRequestDTO = {
         cubiculoId: data.cubiculoId,
+        inicio: data.inicio,
+        fin: data.fin,
+        notas: data.notas,
+        ...(data.usuarioId ? { usuarioId: data.usuarioId } : {}),
       };
 
-      setCustomEventsBySede((prev) => ({
-        ...prev,
-        [selectedSede]: [...(prev[selectedSede] ?? []), newEvent],
-      }));
-
-      setCurrentDate(start);
-      setCurrentView("day");
-      setSelectedCubiculo(String(data.cubiculoId));
-      setModalOpen(false);
-      setTempSlot(null);
+      crearReservaMutation.mutateAsync(payload).then(() => {
+        const start = new Date(data.inicio);
+        setCurrentDate(start);
+        setCurrentView("day");
+        setSelectedCubiculo(String(data.cubiculoId));
+        setModalOpen(false);
+        setTempSlot(null);
+      }).catch(() => {});
     },
-    [editingEvent, selectedSede],
+    [editingEvent, crearReservaMutation],
   );
 
   const handleCloseForm = useCallback(() => {
@@ -486,14 +483,13 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
           key={slotGeneration}
           open={modalOpen}
           onOpenChange={handleCloseForm}
-          mode={editingEvent ? "edit" : "create"}
           defaultFecha={tempSlot ? formatDateToInput(tempSlot.start) : ""}
           defaultHoraInicio={tempSlot ? formatTime(tempSlot.start) : "09:00"}
           defaultHoraFin={tempSlot ? formatTime(tempSlot.end) : "10:00"}
           defaultCubiculoId={selectedCubiculo ? Number(selectedCubiculo) : undefined}
-          defaultUsuarioNombre={editingEvent?.title}
           cubiculos={allCubiculos}
           onConfirm={handleFormConfirm}
+          isSubmitting={crearReservaMutation.isPending}
         />
       </div>
       </CardContent>

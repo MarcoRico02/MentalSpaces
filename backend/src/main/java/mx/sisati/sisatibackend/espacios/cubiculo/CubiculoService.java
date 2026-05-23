@@ -34,6 +34,9 @@ public class CubiculoService {
         }
 
         Set<Caracteristica> caracteristicas = validateAndResolveCaracteristicas(dto.caracteristicasIds());
+        if (caracteristicas == null) {
+            caracteristicas = Set.of();
+        }
 
         Cubiculo cubiculo = new Cubiculo(
                 location,

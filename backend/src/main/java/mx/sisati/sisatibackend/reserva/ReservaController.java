@@ -1,5 +1,6 @@
 package mx.sisati.sisatibackend.reserva;
 
+import mx.sisati.sisatibackend.identidad.roles.RolNombre;
 import mx.sisati.sisatibackend.reserva.aplicacion.GestionarReservas;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateRequestDTO;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateResponseDTO;
@@ -28,7 +29,15 @@ public class ReservaController {
     public ResponseEntity<ReservaCreateResponseDTO> createReserva(
             @RequestBody ReservaCreateRequestDTO dtos,
             @AuthenticationPrincipal UsuarioDetails usuarioDetails) {
-        return ResponseEntity.ok(gestionarReservas.create(dtos, usuarioDetails.getUsuario().getId()));
+        Long usuarioId = usuarioDetails.getUsuario().getId();
+        if (dtos.usuarioId() != null) {
+            boolean isAdmin = usuarioDetails.getUsuario().getRoles().stream()
+                    .anyMatch(r -> r.getNombre() == RolNombre.ADMIN);
+            if (isAdmin) {
+                usuarioId = dtos.usuarioId();
+            }
+        }
+        return ResponseEntity.ok(gestionarReservas.create(dtos, usuarioId));
     }
 
     @GetMapping

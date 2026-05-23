@@ -2,31 +2,17 @@ import React, { useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, Clock } from "lucide-react";
 import { Button, Dialog, Input, Label, Select, Separator } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
+import { authAPI } from "../../../core/infraestructura/api/api";
+import type { UsuarioInfoDTO } from "../../../core/dominio/tipos/api";
 
-// ─── Constantes de depuración ────────────────────────────────────────────────
-const DEBUG_IS_ADMIN = true;
-const debugSuscriptionPrice: number | null = 1;
+const debugSuscriptionPrice: number | null = null;
 
-// ─── Datos demo de usuarios ──────────────────────────────────────────────────
-interface DemoUsuario {
-  id: number;
-  nombre: string;
-  tipo: "psicologo" | "propietario";
-}
-
-const DEMO_USUARIOS: DemoUsuario[] = [
-  { id: 1, nombre: "Ana García (Psicóloga)", tipo: "psicologo" },
-  { id: 2, nombre: "Carlos López (Psicólogo)", tipo: "psicologo" },
-  { id: 3, nombre: "María Fernández (Propietaria)", tipo: "propietario" },
-  { id: 4, nombre: "Juan Pérez (Propietario)", tipo: "propietario" },
-];
-
-// ─── Zod Schema ──────────────────────────────────────────────────────────────
 const reservaFormSchema = z.object({
-  usuarioId: z.number().refine((v) => v && v > 0, "Selecciona un usuario"),
+  usuarioId: z.number().optional(),
   fecha: z.string().min(1, "La fecha es requerida"),
   horaInicio: z.string().min(1, "La hora de inicio es requerida"),
   horaFin: z.string().min(1, "La hora de fin es requerida"),
@@ -36,15 +22,15 @@ const reservaFormSchema = z.object({
 
 type ReservaFormData = z.infer<typeof reservaFormSchema>;
 
-// ─── Tipos ───────────────────────────────────────────────────────────────────
 export interface ReservaFormConfirmData {
   cubiculoId: number;
   cubiculoNombre: string;
   sede: string;
-  usuarioNombre: string;
   inicio: string;
   fin: string;
   notas?: string;
+  usuarioId?: number;
+  usuarioNombre?: string;
 }
 
 interface FormCubiculo {
@@ -54,47 +40,53 @@ interface FormCubiculo {
   precioPorHora: number;
 }
 
-// ─── Props ───────────────────────────────────────────────────────────────────
 interface ReservaFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  mode?: "create" | "edit";
   defaultFecha?: string;
   defaultHoraInicio?: string;
   defaultHoraFin?: string;
   defaultCubiculoId?: number;
-  defaultUsuarioNombre?: string;
+  defaultUsuarioId?: number;
   cubiculos: FormCubiculo[];
   onConfirm: (data: ReservaFormConfirmData) => void;
   isSubmitting?: boolean;
 }
 
-// ─── Componente ──────────────────────────────────────────────────────────────
 export const ReservaForm: React.FC<ReservaFormProps> = ({
   open,
   onOpenChange,
-  mode = "create",
   defaultFecha = "",
   defaultHoraInicio = "09:00",
   defaultHoraFin = "10:00",
   defaultCubiculoId,
-  defaultUsuarioNombre,
+  defaultUsuarioId,
   cubiculos,
   onConfirm,
   isSubmitting = false,
 }) => {
-  const { isAdmin: authIsAdmin } = useAuth();
-  const isAdmin = DEBUG_IS_ADMIN || authIsAdmin;
+  const { isAdmin, user } = useAuth();
 
   const showDescuento = debugSuscriptionPrice !== null && debugSuscriptionPrice > 0;
 
+  const { data: psicologos = [] } = useQuery({
+    queryKey: ["usuarios", "psicologos"],
+    queryFn: async (): Promise<UsuarioInfoDTO[]> => {
+      const res = await authAPI.usuarios.getPsicologos();
+      return res.data;
+    },
+    enabled: isAdmin() && open,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const adminId = user?.usuarioInfoDTO.id;
+
   const initialUsuarioId = useMemo(() => {
-    if (!defaultUsuarioNombre) return undefined;
-    const user = DEMO_USUARIOS.find((u) =>
-      u.nombre.toLowerCase().startsWith(defaultUsuarioNombre.toLowerCase())
-    );
-    return user?.id;
-  }, [defaultUsuarioNombre]);
+    if (isAdmin()) {
+      return defaultUsuarioId ?? adminId;
+    }
+    return undefined;
+  }, [isAdmin, defaultUsuarioId, adminId]);
 
   const {
     control,
@@ -121,7 +113,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
   const horaFin = watch("horaFin");
 
   const cubiculoSeleccionado = cubiculos.find((c) => c.id === selectedCubiculoId);
-  const usuarioSeleccionado = DEMO_USUARIOS.find((u) => u.id === selectedUsuarioId);
+  const usuarioSeleccionado = psicologos.find((u) => u.id === selectedUsuarioId);
   const precioPorHora = cubiculoSeleccionado?.precioPorHora ?? 0;
 
   const horas = useMemo(() => {
@@ -143,10 +135,18 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
       cubiculoId: data.cubiculoId,
       cubiculoNombre: cubiculoSeleccionado?.nombre ?? "Desconocido",
       sede: cubiculoSeleccionado?.sede ?? "Desconocida",
-      usuarioNombre: usuarioSeleccionado?.nombre ?? "Sin usuario",
       inicio,
       fin,
       notas: data.notas,
+      ...(isAdmin()
+        ? {
+            usuarioId: data.usuarioId,
+            usuarioNombre:
+              usuarioSeleccionado?.fullName ??
+              user?.usuarioInfoDTO.fullName ??
+              "Sin usuario",
+          }
+        : {}),
     });
   };
 
@@ -154,13 +154,13 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
     onOpenChange(false);
   };
 
-  const formatDinero = (valor: number) => `$${valor.toFixed(2)} MXN/hora`;
+  const formatDinero = (valor: number) => `$${valor.toFixed(2)} MXN`;
 
   return (
     <Dialog
       open={open}
       onOpenChange={handleClose}
-      title={mode === "create" ? "Nueva Reserva" : "Editar Reserva"}
+      title="Nueva Reserva"
       maxWidthClassName="max-w-lg"
       footer={
         <div className="flex gap-2 justify-end">
@@ -173,14 +173,13 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
             isLoading={isSubmitting}
             disabled={isSubmitting}
           >
-            {mode === "create" ? "Confirmar reserva" : "Guardar cambios"}
+            Confirmar reserva
           </Button>
         </div>
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Usuario — solo visible para admin */}
-        {isAdmin && (
+        {isAdmin() && (
           <Controller
             name="usuarioId"
             control={control}
@@ -197,9 +196,9 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
                   error={errors.usuarioId?.message}
                 >
                   <option value="">Selecciona un usuario</option>
-                  {DEMO_USUARIOS.map((u) => (
+                  {psicologos.map((u) => (
                     <option key={u.id} value={String(u.id)}>
-                      {u.nombre}
+                      {u.fullName}
                     </option>
                   ))}
                 </Select>
@@ -208,7 +207,6 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
           />
         )}
 
-        {/* Fecha */}
         <div>
           <Label htmlFor="fecha">Fecha</Label>
           <div className="relative">
@@ -223,7 +221,6 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
           </div>
         </div>
 
-        {/* Hora inicio / Hora fin — misma fila */}
         <div className="grid grid-cols-2 gap-4">
           <Controller
             name="horaInicio"
@@ -262,7 +259,6 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
           />
         </div>
 
-        {/* Cubículo */}
         <Controller
           name="cubiculoId"
           control={control}
@@ -289,7 +285,6 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
           )}
         />
 
-        {/* Notas */}
         <div>
           <Label htmlFor="notas">Notas</Label>
           <Input
@@ -302,7 +297,6 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
 
         <Separator />
 
-        {/* Resumen de costo */}
         <div className="space-y-3 rounded-md bg-app p-4 text-sm">
           {showDescuento && (
             <div className="flex justify-between">
