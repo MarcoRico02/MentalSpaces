@@ -55,7 +55,7 @@ const formats = {
   eventTimeRangeFormat: ({ start, end }: { start: Date; end: Date }) =>
     `${String(start.getHours()).padStart(2, "0")}:${String(start.getMinutes()).padStart(2, "0")} – ${String(end.getHours()).padStart(2, "0")}:${String(end.getMinutes()).padStart(2, "0")}`,
 };
-
+//
 const DEBUG_USAR_DATOS_DEMO = false; //Si es true, utilizara los datos de prueba CalendarData, declarados aqui, en vez de llamar al backend.
 const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true; //Si es true, mostrata nombres completos de los usuarios en las reservas sin importar si el usuario loggeado sea admin o no.
 const DEBUG_PERMITIR_EDICION = true; //Igual pero con la edicion.
