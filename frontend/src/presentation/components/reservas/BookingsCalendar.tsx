@@ -3,13 +3,11 @@ import { Calendar, momentLocalizer, type View } from "react-big-calendar";
 import moment from "moment";
 import { Button, Input, Select, Card, CardContent } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
-import { useLocationsQuery } from "../../../core/aplicacion/hooks/useLocationQueries";
-import { useCubiculosActivosPorLocation } from "../../../core/aplicacion/hooks/useCubiculosQuery";
 import { useQuery } from "@tanstack/react-query";
 import { authAPI } from "../../../core/infraestructura/api/api";
 import { showToast } from "../../../core/infraestructura/utilidades/toast";
 import { ReservaForm, type ReservaFormConfirmData } from "../forms/ReservaForm";
-import type { ReservaDTO, ReservaFilterRequestDTO } from "../../../core/dominio/tipos/api";
+import type { ReservaDTO, ReservaFilterRequestDTO, LocationResponseDTO, CubiculoResponse } from "../../../core/dominio/tipos/api";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar-dark.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -55,94 +53,8 @@ const formats = {
   eventTimeRangeFormat: ({ start, end }: { start: Date; end: Date }) =>
     `${String(start.getHours()).padStart(2, "0")}:${String(start.getMinutes()).padStart(2, "0")} – ${String(end.getHours()).padStart(2, "0")}:${String(end.getMinutes()).padStart(2, "0")}`,
 };
-//
-const DEBUG_USAR_DATOS_DEMO = false; //Si es true, utilizara los datos de prueba CalendarData, declarados aqui, en vez de llamar al backend.
-const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true; //Si es true, mostrata nombres completos de los usuarios en las reservas sin importar si el usuario loggeado sea admin o no.
-const DEBUG_PERMITIR_EDICION = true; //Igual pero con la edicion.
-
-type TimeSlotEntry = { id: number; nombre: string };
-type CubiculoEntry = {
-  id: number;
-  nombre: string;
-  slots: Record<string, TimeSlotEntry>;
-};
-type CalendarData = Record<string, Record<string, Record<string, CubiculoEntry>>>;
-
-const demoData: CalendarData = {
-  "Sede Roma": {
-    "21-5-2026": {
-      "Consultorio 1": {
-        id: 1,
-        nombre: "Consultorio 1",
-        slots: {
-          "09:00-10:00": { id: 1, nombre: "Ana García" },
-          "11:00-12:00": { id: 2, nombre: "Carlos López" },
-        },
-      },
-      "Consultorio 2": {
-        id: 2,
-        nombre: "Consultorio 2",
-        slots: {
-          "10:00-11:00": { id: 3, nombre: "María Fernández" },
-          "14:00-15:00": { id: 4, nombre: "Pedro Sánchez" },
-        },
-      },
-      "Consultorio 3": {
-        id: 3,
-        nombre: "Consultorio 3",
-        slots: {
-          "08:00-09:00": { id: 5, nombre: "Laura Martínez" },
-          "13:00-14:00": { id: 6, nombre: "Diego Ramírez" },
-        },
-      },
-    },
-    "22-5-2026": {
-      "Consultorio 1": {
-        id: 1,
-        nombre: "Consultorio 1",
-        slots: {
-          "10:00-11:00": { id: 7, nombre: "Sofía Torres" },
-        },
-      },
-      "Consultorio 2": {
-        id: 2,
-        nombre: "Consultorio 2",
-        slots: {
-          "09:00-10:00": { id: 8, nombre: "Jorge Hernández" },
-          "16:00-17:00": { id: 9, nombre: "Elena Díaz" },
-        },
-      },
-    },
-  },
-  "Sede Condesa": {
-    "21-5-2026": {
-      "Consultorio A": {
-        id: 4,
-        nombre: "Consultorio A",
-        slots: {
-          "10:00-11:00": { id: 10, nombre: "Roberto Vega" },
-          "12:00-13:00": { id: 11, nombre: "Patricia Ruiz" },
-        },
-      },
-      "Consultorio B": {
-        id: 5,
-        nombre: "Consultorio B",
-        slots: {
-          "15:00-16:00": { id: 12, nombre: "Miguel Ángel" },
-        },
-      },
-    },
-    "22-5-2026": {
-      "Consultorio A": {
-        id: 4,
-        nombre: "Consultorio A",
-        slots: {
-          "09:00-10:00": { id: 13, nombre: "Lucía Mendoza" },
-        },
-      },
-    },
-  },
-};
+const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = true;
+const DEBUG_PERMITIR_EDICION = true;
 
 interface CalendarEvent {
   id: number | string;
@@ -167,72 +79,7 @@ const VIEW_OPTIONS: { key: CalendarView; label: string }[] = [
   { key: "agenda", label: "Agenda" },
 ];
 
-function parseDateKey(dateStr: string): { d: number; m: number; y: number } {
-  const [d, m, y] = dateStr.split("-").map(Number);
-  return { d, m, y };
-}
 
-function parseTimeSlot(slot: string): { sh: number; sm: number; eh: number; em: number } {
-  const [s, e] = slot.split("-");
-  const [sh, sm] = s.split(":").map(Number);
-  const [eh, em] = e.split(":").map(Number);
-  return { sh, sm, eh, em };
-}
-
-function getEventsForSede(sede: string, data: CalendarData, mostrarNombresReservantes: boolean): CalendarEvent[] {
-  const sedeData = data[sede];
-  if (!sedeData) return [];
-
-  const events: CalendarEvent[] = [];
-  for (const [dateKey, cubiculos] of Object.entries(sedeData)) {
-    const { d: day, m: month, y: year } = parseDateKey(dateKey);
-    for (const [, cubObj] of Object.entries(cubiculos)) {
-      for (const [slotKey, entry] of Object.entries(cubObj.slots)) {
-        const { sh, sm, eh, em } = parseTimeSlot(slotKey);
-        const start = new Date(year, month - 1, day, sh, sm);
-        const end = new Date(year, month - 1, day, eh, em);
-        const title = mostrarNombresReservantes ? entry.nombre : "";
-        events.push({ id: `${sede}-${dateKey}-${cubObj.nombre}-${slotKey}`, title, start, end, cubiculo: cubObj.nombre, cubiculoId: cubObj.id });
-      }
-    }
-  }
-  return events;
-}
-
-function getCubiculosForSede(sede: string, data: CalendarData): { id: number; nombre: string }[] {
-  const sedeData = data[sede];
-  if (!sedeData) return [];
-  const map = new Map<number, string>();
-  for (const cubiculos of Object.values(sedeData)) {
-    for (const cub of Object.values(cubiculos)) {
-      if (!map.has(cub.id)) {
-        map.set(cub.id, cub.nombre);
-      }
-    }
-  }
-  return Array.from(map.entries())
-    .map(([id, nombre]) => ({ id, nombre }))
-    .sort((a, b) => a.nombre.localeCompare(b.nombre));
-}
-
-function getAllCubiculos(data: CalendarData): { id: number; nombre: string; sede: string }[] {
-  const map = new Map<number, { nombre: string; sede: string }>();
-  for (const [sede, fechas] of Object.entries(data)) {
-    for (const cubiculos of Object.values(fechas)) {
-      for (const cub of Object.values(cubiculos)) {
-        if (!map.has(cub.id)) {
-          map.set(cub.id, { nombre: cub.nombre, sede });
-        }
-      }
-    }
-  }
-  return Array.from(map.entries())
-    .map(([id, { nombre, sede }]) => ({ id, nombre, sede }))
-    .sort((a, b) => a.nombre.localeCompare(b.nombre));
-}
-
-const sedes = Object.keys(demoData);
-const defaultSede = DEBUG_USAR_DATOS_DEMO ? (sedes[0] ?? "") : "";
 
 interface BookingsCalendarProps {
   className?: string;
@@ -248,7 +95,7 @@ const minCalendarioAnchuraPixelesCard = maxCalendarioAnchuraPixeles + 100;
 export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalendarProps>(({ className }, ref) => {
   const { isAdmin } = useAuth();
 
-  const [selectedSede, setSelectedSede] = useState(defaultSede);
+  const [selectedSede, setSelectedSede] = useState("");
   const [selectedCubiculo, setSelectedCubiculo] = useState<string>("");
   const [customEventsBySede, setCustomEventsBySede] = useState<Record<string, CalendarEvent[]>>({});
   const [modalOpen, setModalOpen] = useState(false);
@@ -272,10 +119,24 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
   const mostrarNombresReservantes = isAdmin() || DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES;
   const puedeEditar = isAdmin() || DEBUG_PERMITIR_EDICION;
 
-  const { data: locations = [] } = useLocationsQuery();
-  const { data: cubiculosApi = [] } = useCubiculosActivosPorLocation(
-    !DEBUG_USAR_DATOS_DEMO && selectedSede ? Number(selectedSede) : null,
-  );
+  const { data: locations = [] } = useQuery({
+    queryKey: ["locations", "active"],
+    queryFn: async (): Promise<LocationResponseDTO[]> => {
+      const res = await authAPI.locations.getAllActive();
+      return res.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const { data: cubiculosApi = [] } = useQuery({
+    queryKey: ["cubiculos", "active-public", selectedSede],
+    queryFn: async (): Promise<CubiculoResponse[]> => {
+      const res = await authAPI.cubiculos.getActiveByLocationPublic(Number(selectedSede));
+      return res.data;
+    },
+    enabled: !!selectedSede,
+    staleTime: 1000 * 60 * 5,
+  });
 
   const dateRange = useMemo(
     () => calcDateRange(currentDate, currentView),
@@ -294,25 +155,24 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
       const res = await authAPI.reservas.getByFilter(params);
       return res.data;
     },
-    enabled: !DEBUG_USAR_DATOS_DEMO,
+    enabled: true,
     staleTime: 1000 * 60 * 2,
   });
 
-  const allCubiculos = useMemo(
-    () => getAllCubiculos(demoData).map((c) => ({ ...c, precioPorHora: 450 })),
-    [],
-  );
+  const allCubiculos = useMemo(() => {
+    if (!selectedSede) return [];
+    const sedeName = locations.find(l => String(l.id) === selectedSede)?.name ?? `Sede ${selectedSede}`;
+    return cubiculosApi.map(c => ({
+      id: c.id,
+      nombre: c.nombre,
+      sede: sedeName,
+      precioPorHora: c.precio,
+    }));
+  }, [cubiculosApi, locations, selectedSede]);
 
-  const cubiculos = useMemo(() => {
-    if (DEBUG_USAR_DATOS_DEMO) {
-      return getCubiculosForSede(selectedSede, demoData);
-    }
-    return cubiculosApi.map((c) => ({ id: Number(c.id), nombre: c.nombre }));
-  }, [selectedSede, cubiculosApi]);
-
-  const baseEvents = useMemo(
-    () => getEventsForSede(selectedSede, demoData, mostrarNombresReservantes),
-    [selectedSede, mostrarNombresReservantes],
+  const cubiculos = useMemo(
+    () => cubiculosApi.map((c) => ({ id: c.id, nombre: c.nombre })),
+    [cubiculosApi],
   );
 
   const apiEvents = useMemo(
@@ -325,11 +185,6 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
       cubiculoId: r.cubiculoId,
     })),
     [reservasApi, mostrarNombresReservantes],
-  );
-
-  const filteredBaseEvents = useMemo(
-    () => selectedCubiculo ? baseEvents.filter((e) => e.cubiculoId === Number(selectedCubiculo)) : baseEvents,
-    [baseEvents, selectedCubiculo],
   );
 
   const apiEventsFiltered = useMemo(
@@ -349,11 +204,8 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
   );
 
   const events = useMemo(
-    () => [
-      ...(DEBUG_USAR_DATOS_DEMO ? filteredBaseEvents : apiEventsFiltered),
-      ...filteredCustomEvents,
-    ],
-    [filteredBaseEvents, apiEventsFiltered, filteredCustomEvents],
+    () => [...apiEventsFiltered, ...filteredCustomEvents],
+    [apiEventsFiltered, filteredCustomEvents],
   );
 
   const moveIsInvalid = useCallback(
@@ -481,17 +333,16 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
 
       setCustomEventsBySede((prev) => ({
         ...prev,
-        [data.sede]: [...(prev[data.sede] ?? []), newEvent],
+        [selectedSede]: [...(prev[selectedSede] ?? []), newEvent],
       }));
 
       setCurrentDate(start);
       setCurrentView("day");
-      setSelectedSede(data.sede);
       setSelectedCubiculo(String(data.cubiculoId));
       setModalOpen(false);
       setTempSlot(null);
     },
-    [editingEvent],
+    [editingEvent, selectedSede],
   );
 
   const handleCloseForm = useCallback(() => {
@@ -535,18 +386,10 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
               }}
               className="w-44"
             >
-              {DEBUG_USAR_DATOS_DEMO ? (
-                sedes.map((sede) => (
-                  <option key={sede} value={sede}>{sede}</option>
-                ))
-              ) : (
-                <>
-                  <option value="">Todas las sedes</option>
-                  {locations.map((loc) => (
-                    <option key={loc.id} value={String(loc.id)}>{loc.name}</option>
-                  ))}
-                </>
-              )}
+              <option value="">Todas las sedes</option>
+              {locations.map((loc) => (
+                <option key={loc.id} value={String(loc.id)}>{loc.name}</option>
+              ))}
             </Select>
             <Select
               value={selectedCubiculo}

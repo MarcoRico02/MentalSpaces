@@ -14,4 +14,6 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     Optional<Location> findByIdAndPropietarioId(Long id, Long propietarioId);
 
     Page<Location> findByPropietarioId(Long propietarioId, Pageable pageable);
+
+    List<Location> findByActiveTrue();
 }

@@ -611,4 +611,4 @@ Schemas Zod: `loginSchema`, `usuarioRegisterSchema`, `psicologoRegisterSchema`, 
 ---*Última actualización: 22 Mayo 2026*  
 *Mantenedor: equipo SATI*
 
-> **Nota:** `BookingsCalendar.tsx` usa `DEBUG_USAR_DATOS_DEMO` (bool) para alternar entre datos demo en memoria (`demoData`) y consulta al backend via `GET /api/reservas` con `ReservaFilterRequestDTO`. Cuando `DEBUG_USAR_DATOS_DEMO = false`, el calendario consulta el backend usando `useLocationsQuery`, `useCubiculosActivosPorLocation` y un `useQuery` interno que calcula el rango de fechas según la vista actual (día/semana/mes/agenda).
+> **Nota:** `BookingsCalendar.tsx` consulta sedes via `useLocationsQuery`, cubiculos activos por sede via `useCubiculosActivosPorLocation`, y reservas via `GET /api/reservas` con `ReservaFilterRequestDTO` (rango de fechas dinámico según la vista: día/semana/mes/agenda). Los cubiculos para el formulario de reserva (`ReservaForm`) se obtienen del API, incluyendo nombre, sede y precio. Las flags `DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES` y `DEBUG_PERMITIR_EDICION` controlan visibilidad de nombres y edición respectivamente.

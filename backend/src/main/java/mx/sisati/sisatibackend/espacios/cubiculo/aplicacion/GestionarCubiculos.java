@@ -102,6 +102,13 @@ public class GestionarCubiculos {
         return cubiculos.map(c -> toResponse(c, location.getId()));
     }
 
+    @Transactional(readOnly = true)
+    public List<CubiculoResponse> findActiveByLocationPublic(Long locationId) {
+        Location location = locationService.findByIdOrThrow(locationId);
+        Page<Cubiculo> cubiculos = cubiculoService.findActiveCubiculosByLocation(location, true, Pageable.unpaged());
+        return cubiculos.stream().map(c -> toResponse(c, location.getId())).toList();
+    }
+
     public void activateCubiculo(Long cubiculoId, Long id) {
         Propietario propietario = propietarioService.getByUsuarioIdOrThrow(id);
         cubiculoService.activateCubiculo(cubiculoId, propietario);

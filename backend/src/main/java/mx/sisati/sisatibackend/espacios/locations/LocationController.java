@@ -6,6 +6,7 @@ import mx.sisati.sisatibackend.espacios.locations.dto.LocationResponseDTO;
 import mx.sisati.sisatibackend.auth.UsuarioDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import java.util.List;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,6 +31,11 @@ public class LocationController {
         return ResponseEntity.ok(
                 gestionarLocations.findByPropietario(usuarioDetails.getUsuario().getId(), pageable)
         );
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<LocationResponseDTO>> findAllActive() {
+        return ResponseEntity.ok(gestionarLocations.findAllActive());
     }
 
     @GetMapping("/{id}")

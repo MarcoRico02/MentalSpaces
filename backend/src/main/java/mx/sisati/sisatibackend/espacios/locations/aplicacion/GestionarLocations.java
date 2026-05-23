@@ -75,6 +75,14 @@ public class GestionarLocations {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<LocationResponseDTO> findAllActive() {
+        return locationService.findAllActive()
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
     private LocationResponseDTO toResponseDTO(Location location) {
         return new LocationResponseDTO(
                 location.getId(),

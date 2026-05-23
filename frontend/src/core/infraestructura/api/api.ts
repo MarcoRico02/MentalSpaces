@@ -63,6 +63,10 @@ export const authAPI = {
       ),
     deactivate: (id: number) => apiClient.patch(`/locations/${id}/deactivate`),
     activate: (id: number) => apiClient.patch(`/locations/${id}/activate`),
+    getAllActive: () =>
+      apiClient.get<import("../../dominio/tipos/api").LocationResponseDTO[]>(
+        "/locations/active",
+      ),
   },
 
   // Cubículos endpoints
@@ -112,6 +116,10 @@ export const authAPI = {
       ),
     activate: (id: number) => apiClient.patch(`/cubiculos/${id}/activate`),
     deactivate: (id: number) => apiClient.patch(`/cubiculos/${id}/deactivate`),
+    getActiveByLocationPublic: (locationId: number) =>
+      apiClient.get<import("../../dominio/tipos/api").CubiculoResponse[]>(
+        `/cubiculos/location/${locationId}/active-public`,
+      ),
   },
 
   // Disponibilidades endpoints
