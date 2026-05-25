@@ -3,7 +3,7 @@ import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 import { NavItem } from "./NavItem";
 import {
   Home,
-  Calendar,
+  //Calendar,
   Plus,
   CalendarCheck,
   HelpCircle,
