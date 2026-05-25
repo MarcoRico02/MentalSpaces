@@ -65,6 +65,7 @@ interface CalendarEvent {
   end: Date;
   cubiculo?: string;
   cubiculoId?: number;
+  usuarioId?: number;
 }
 
 interface SlotInfo {
@@ -166,6 +167,7 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
       end: new Date(r.fin),
       cubiculo: r.cubiculoNombre,
       cubiculoId: r.cubiculoId,
+      usuarioId: r.psicologoId,
     })),
     [reservasApi, mostrarNombresReservantes],
   );
@@ -466,7 +468,8 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
           defaultFecha={tempSlot ? formatDateToInput(tempSlot.start) : ""}
           defaultHoraInicio={tempSlot ? formatTime(tempSlot.start) : "09:00"}
           defaultHoraFin={tempSlot ? formatTime(tempSlot.end) : "10:00"}
-          defaultCubiculoId={selectedCubiculo ? Number(selectedCubiculo) : undefined}
+          defaultCubiculoId={editingEvent?.cubiculoId ?? (selectedCubiculo ? Number(selectedCubiculo) : undefined)}
+          defaultUsuarioId={editingEvent?.usuarioId}
           defaultSedeId={selectedSede ? Number(selectedSede) : undefined}
           onConfirm={handleFormConfirm}
           isSubmitting={crearReservaMutation.isPending}
