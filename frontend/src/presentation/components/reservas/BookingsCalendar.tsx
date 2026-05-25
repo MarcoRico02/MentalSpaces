@@ -161,7 +161,7 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
   const apiEvents = useMemo(
     () => reservasApi.map((r) => ({
       id: r.id,
-      title: mostrarNombresReservantes ? r.psicologoNombreCompleto : "",
+      title: mostrarNombresReservantes ? r.psicologoNombreCompleto : "Usuario Oculto",
       start: new Date(r.inicio),
       end: new Date(r.fin),
       cubiculo: r.cubiculoNombre,
