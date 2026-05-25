@@ -2,6 +2,7 @@ export { Label } from "./Label";
 export { Input } from "./Input";
 export { Button } from "./Button";
 export { Textarea } from "./Textarea";
+export { CheckboxSelect } from "./CheckboxSelect";
 export { Select } from "./Select";
 export { Switch } from "./Switch";
 export { Separator } from "./Separator";
