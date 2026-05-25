@@ -29,7 +29,7 @@ import { LogsPage } from "../presentation/pages/logs/LogsPage";
 import { MonitoringPage} from "@/presentation/pages/system/SystemMonitoringPage.tsx";
 import { TrustLevelPage} from "@/presentation/pages/trust-level/TrustLevelPage.tsx";
 import { SubscriptionManagementPage } from "../presentation/pages/account/SubscriptionManagementPage";
-import { PruebaBookingsCalendar } from "../presentation/pages/bookings/PruebaBookingsCalendar";
+import { BookingCalendarPage } from "../presentation/pages/bookings/BookingCalendarPage";
 import { MyAppointmentsPage } from "../presentation/pages/bookings/MyAppointmentsPage";
 
 export const AppRoutes: React.FC = () => {
@@ -251,10 +251,10 @@ export const AppRoutes: React.FC = () => {
         <Route path="/admin/bookings" element={<Navigate to="/bookings" replace />} />
 
         <Route
-          path="/booking-calendar-test"
+          path="/booking-calendar"
           element={
             <ProtectedRoute>
-              <PruebaBookingsCalendar />
+              <BookingCalendarPage />
             </ProtectedRoute>
           }
         />

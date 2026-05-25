@@ -41,8 +41,8 @@ export const NavigationMenu: React.FC = () => {
         FAQs
       </NavItem>
 
-      <NavItem to="/booking-calendar-test" icon={CalendarDays}>
-        Prueba Calendario
+      <NavItem to="/booking-calendar" icon={CalendarDays}>
+        Calendario
       </NavItem>
     </nav>
   );
