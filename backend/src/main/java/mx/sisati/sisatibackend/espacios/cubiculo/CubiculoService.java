@@ -34,6 +34,9 @@ public class CubiculoService {
         }
 
         Set<Caracteristica> caracteristicas = validateAndResolveCaracteristicas(dto.caracteristicasIds());
+        if (caracteristicas == null) {
+            caracteristicas = Set.of();
+        }
 
         Cubiculo cubiculo = new Cubiculo(
                 location,
@@ -113,6 +116,10 @@ public class CubiculoService {
             throw new ServiceException(this.getClass(), "CUBICULO_NO_DISPONIBLE");
         }
         return cubiculo;
+    }
+
+    public List<Cubiculo> findAllActive() {
+        return cubiculoRepository.findByActiveTrue();
     }
 
     public void deactivateAllCubiculosByLocation(Location location) {

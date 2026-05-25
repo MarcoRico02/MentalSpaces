@@ -6,7 +6,8 @@ public record ReservaCreateRequestDTO(
         Long cubiculoId,
         LocalDateTime inicio,
         LocalDateTime fin,
-        String notas
+        String notas,
+        Long usuarioId
 ) {
 
 }

@@ -11,6 +11,7 @@ import mx.sisati.sisatibackend.reserva.ReservaService;
 import mx.sisati.sisatibackend.reserva.ReservaRepository;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateRequestDTO;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateResponseDTO;
+import mx.sisati.sisatibackend.reserva.dto.ReservaFilterRequestDTO;
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 import mx.sisati.sisatibackend.espacios.cubiculo.CubiculoService;
 import mx.sisati.sisatibackend.espacios.disponibilidad.DisponibilidadService;
@@ -22,6 +23,7 @@ import mx.sisati.sisatibackend.identidad.roles.RolNombre;
 import mx.sisati.sisatibackend.finanzas.pago.PagoService;
 import mx.sisati.sisatibackend.finanzas.pago.EstadoPago;
 import mx.sisati.sisatibackend.finanzas.pago.dto.ActualizarEstadoPagoRequest;
+import mx.sisati.sisatibackend.reserva.dto.ReservaDTO;
 import mx.sisati.sisatibackend.validador.reserva.creacion.ReservaValidadorCreacionService;
 import org.springframework.stereotype.Service;
 
@@ -79,6 +81,11 @@ public class GestionarReservas {
         Reserva reserva = reservaService.crearReserva(cubiculo, psicologo, createDTO.inicio(), createDTO.fin(), createDTO.notas());
         PagoResponse pagoResponse = pagoReservaService.crearPagoParaReserva(reserva, 15);
         return new ReservaCreateResponseDTO(reserva, cubiculo, pagoResponse);
+    }
+
+    public List<ReservaDTO> getReservas(ReservaFilterRequestDTO filtro) {
+        List<Reserva> reservas = reservaService.buscarReservasPorFiltros(filtro);
+        return reservas.stream().map(ReservaDTO::fromEntity).toList();
     }
 
     //@Transactional

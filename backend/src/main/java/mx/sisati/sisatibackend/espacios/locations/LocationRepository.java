@@ -3,6 +3,7 @@ package mx.sisati.sisatibackend.espacios.locations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +15,9 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     Optional<Location> findByIdAndPropietarioId(Long id, Long propietarioId);
 
     Page<Location> findByPropietarioId(Long propietarioId, Pageable pageable);
+
+    List<Location> findByActiveTrue();
+
+    @Query("SELECT DISTINCT l FROM Location l JOIN Cubiculo c ON c.location.id = l.id WHERE l.active = true AND c.active = true")
+    List<Location> findActiveWithActiveCubiculos();
 }

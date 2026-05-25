@@ -77,6 +77,19 @@ public class LocationService {
                 );
     }
 
+    public List<Location> findAllActive() {
+        return locationRepository.findByActiveTrue();
+    }
+
+    public List<Location> findActiveWithActiveCubiculos() {
+        return locationRepository.findActiveWithActiveCubiculos();
+    }
+
+    public Location findByIdOrThrow(Long locationId) {
+        return locationRepository.findById(locationId)
+                .orElseThrow(() -> new ServiceException(this.getClass(), "Locación no encontrada"));
+    }
+
     public void activateLocation(Long locationId, Propietario propietario) {
         Location location = locationRepository
                 .findByIdAndPropietarioId(locationId, propietario.getId())

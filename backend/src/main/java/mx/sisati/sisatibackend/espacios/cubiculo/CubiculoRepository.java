@@ -21,6 +21,8 @@ public interface CubiculoRepository extends JpaRepository<Cubiculo, Long> {
     Optional<Cubiculo> findByIdAndLocationId(Long id, Long locationId);
 
     List<Cubiculo> findByLocation(Location location);
+
+    List<Cubiculo> findByActiveTrue();
     
     /**
      * Busca un cubículo por ID con sus características cargadas mediante JOIN FETCH.

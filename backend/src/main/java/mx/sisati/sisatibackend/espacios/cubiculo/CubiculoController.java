@@ -5,6 +5,7 @@ import mx.sisati.sisatibackend.espacios.cubiculo.dto.*;
 import mx.sisati.sisatibackend.auth.UsuarioDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import java.util.List;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -55,6 +56,18 @@ public class CubiculoController {
 
         Page<CubiculoResponse> cubiculos = gestionarCubiculo.findActivedCubiculosByLocation(locationId, usuarioDetails.getUsuario().getId(), pageable);
         return ResponseEntity.ok(cubiculos);
+    }
+
+    @GetMapping("/location/{locationId}/active-public")
+    public ResponseEntity<List<CubiculoResponse>> findActiveByLocationPublic(
+            @PathVariable Long locationId) {
+
+        return ResponseEntity.ok(gestionarCubiculo.findActiveByLocationPublic(locationId));
+    }
+
+    @GetMapping("/active-public")
+    public ResponseEntity<List<CubiculoResponse>> findAllActivePublic() {
+        return ResponseEntity.ok(gestionarCubiculo.findAllActivePublic());
     }
 
     @PatchMapping("/{id}/activate")

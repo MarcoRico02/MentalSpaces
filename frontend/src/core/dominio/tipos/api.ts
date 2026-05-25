@@ -302,6 +302,8 @@ export interface ReservaCreateRequestDTO {
   /** ISO 8601: "2026-03-10T11:00:00" */
   fin: string;
   notas?: string;
+  /** Solo para admin: ID del usuario/psicólogo para quien se crea la reserva */
+  usuarioId?: number;
 }
 
 export interface ReservaDTO {
@@ -309,11 +311,28 @@ export interface ReservaDTO {
   cubiculoId: number;
   cubiculoNombre: string;
   psicologoId: number;
+  psicologoNombreCompleto: string;
   inicio: string;
   fin: string;
   notas?: string;
   estadoReserva: EstadoReserva;
   createdAt: string;
+}
+
+export const FiltroTemporal = {
+  FUTURA: "FUTURA",
+  PASADA: "PASADA",
+  CANCELADA: "CANCELADA",
+} as const;
+export type FiltroTemporal = (typeof FiltroTemporal)[keyof typeof FiltroTemporal];
+
+export interface ReservaFilterRequestDTO {
+  fechaInicio?: string;
+  fechaFin?: string;
+  cubiculoIds?: number[];
+  locationIds?: number[];
+  usuarioIds?: number[];
+  filtroTemporal?: FiltroTemporal;
 }
 
 export interface PagoResponse {

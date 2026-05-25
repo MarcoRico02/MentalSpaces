@@ -3,12 +3,15 @@ import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
 import { NavItem } from "./NavItem";
 import {
   Home,
+  Calendar,
+  Plus,
   CalendarCheck,
   HelpCircle,
   FileText,
   CreditCard,
   FileDown,
   Building,
+  CalendarDays,
 } from "lucide-react";
 
 export const NavigationMenu: React.FC = () => {
@@ -23,6 +26,10 @@ export const NavigationMenu: React.FC = () => {
         Mis Reservas
       </NavItem>
 
+      <NavItem to="/new-booking" icon={Plus}>
+        Nueva Reserva
+      </NavItem>
+
       <NavItem to="/profile" icon={FileText}>
         Mi Perfil
       </NavItem>
@@ -32,6 +39,10 @@ export const NavigationMenu: React.FC = () => {
       {/* Help */}
       <NavItem to="/faq" icon={HelpCircle}>
         FAQs
+      </NavItem>
+
+      <NavItem to="/booking-calendar-test" icon={CalendarDays}>
+        Prueba Calendario
       </NavItem>
     </nav>
   );

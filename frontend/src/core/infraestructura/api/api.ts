@@ -9,10 +9,18 @@ export const apiClient = axios.create({
   },
 });
 
-// Endpoints del backend
+  // Endpoints del backend
 export const authAPI = {
   login: (data: import("../../dominio/tipos/api").UsuarioLoginDTO) =>
     apiClient.post("/auth/login", data),
+
+  // Endpoints de usuarios
+  usuarios: {
+    getPsicologos: () =>
+      apiClient.get<import("../../dominio/tipos/api").UsuarioInfoDTO[]>(
+        "/usuarios/psicologos",
+      ),
+  },
   logout: () => apiClient.post("/auth/logout"),
   me: () => apiClient.get("/usuarios/me"),
 
@@ -63,6 +71,14 @@ export const authAPI = {
       ),
     deactivate: (id: number) => apiClient.patch(`/locations/${id}/deactivate`),
     activate: (id: number) => apiClient.patch(`/locations/${id}/activate`),
+    getAllActive: () =>
+      apiClient.get<import("../../dominio/tipos/api").LocationResponseDTO[]>(
+        "/locations/active",
+      ),
+    getActiveWithActiveCubiculos: () =>
+      apiClient.get<import("../../dominio/tipos/api").LocationResponseDTO[]>(
+        "/locations/with-active-cubiculos",
+      ),
   },
 
   // Cubículos endpoints
@@ -112,6 +128,14 @@ export const authAPI = {
       ),
     activate: (id: number) => apiClient.patch(`/cubiculos/${id}/activate`),
     deactivate: (id: number) => apiClient.patch(`/cubiculos/${id}/deactivate`),
+    getActiveByLocationPublic: (locationId: number) =>
+      apiClient.get<import("../../dominio/tipos/api").CubiculoResponse[]>(
+        `/cubiculos/location/${locationId}/active-public`,
+      ),
+    getAllActivePublic: () =>
+      apiClient.get<import("../../dominio/tipos/api").CubiculoResponse[]>(
+        "/cubiculos/active-public",
+      ),
   },
 
   // Disponibilidades endpoints
@@ -210,5 +234,12 @@ export const authAPI = {
       ),
     deletePregunta: (id: number) =>
       apiClient.delete(`/faqs/preguntas/${id}`),
+    getByFilter: (
+      params?: import("../../dominio/tipos/api").ReservaFilterRequestDTO,
+    ) =>
+      apiClient.get<import("../../dominio/tipos/api").ReservaDTO[]>(
+        "/reservas",
+        { params },
+      ),
   },
 };
