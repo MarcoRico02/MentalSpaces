@@ -383,7 +383,7 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
               }}
               className="w-44"
             >
-              <option value="">Todas las sedes</option>
+                {/*<option value="">Todas las sedes</option>*/}
               {locations.map((loc) => (
                 <option key={loc.id} value={String(loc.id)}>{loc.name}</option>
               ))}
@@ -393,7 +393,7 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
               onChange={(e) => setSelectedCubiculo(e.target.value)}
               className="w-44"
             >
-              <option value="">Todos los consultorios</option>
+                {/*<option value="">Todos los consultorios</option>*/}
               {cubiculos.map((cub) => (
                 <option key={cub.id} value={cub.id}>{cub.nombre}</option>
               ))}
