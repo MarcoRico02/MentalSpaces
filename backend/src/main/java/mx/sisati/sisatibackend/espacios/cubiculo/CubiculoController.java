@@ -65,6 +65,11 @@ public class CubiculoController {
         return ResponseEntity.ok(gestionarCubiculo.findActiveByLocationPublic(locationId));
     }
 
+    @GetMapping("/active-public")
+    public ResponseEntity<List<CubiculoResponse>> findAllActivePublic() {
+        return ResponseEntity.ok(gestionarCubiculo.findAllActivePublic());
+    }
+
     @PatchMapping("/{id}/activate")
     public ResponseEntity<Void> activate(
             @PathVariable Long id,

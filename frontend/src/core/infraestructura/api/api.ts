@@ -75,6 +75,10 @@ export const authAPI = {
       apiClient.get<import("../../dominio/tipos/api").LocationResponseDTO[]>(
         "/locations/active",
       ),
+    getActiveWithActiveCubiculos: () =>
+      apiClient.get<import("../../dominio/tipos/api").LocationResponseDTO[]>(
+        "/locations/with-active-cubiculos",
+      ),
   },
 
   // Cubículos endpoints
@@ -127,6 +131,10 @@ export const authAPI = {
     getActiveByLocationPublic: (locationId: number) =>
       apiClient.get<import("../../dominio/tipos/api").CubiculoResponse[]>(
         `/cubiculos/location/${locationId}/active-public`,
+      ),
+    getAllActivePublic: () =>
+      apiClient.get<import("../../dominio/tipos/api").CubiculoResponse[]>(
+        "/cubiculos/active-public",
       ),
   },
 

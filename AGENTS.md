@@ -52,14 +52,19 @@ src/
         useAuth.ts                     # Re-export de AuthContext
         useAuthQuery.ts                # AuthService + login/logout mutations
         useAuthState.ts                # useQuery para /usuarios/me
+        useActiveLocationsQuery.ts     # Locations activas (array directo, pública)
+        useAllCubiculosActivosQuery.ts # Todos los cubiculos activos (pública, sin filtro por sede)
         useCrearReservaMutation.ts     # Mutation para crear reservas
+        useCubiculosPublicosQuery.ts   # Cubiculos activos públicos por location
         useCubiculosQuery.ts           # Queries de cubiculos por location
         useLocationMutations.ts        # CRUD de locations
         useLocationQueries.ts          # Queries de locations
+        useLocationsWithActiveCubiculosQuery.ts  # Locations con al menos un cubiculo activo
         useLoginMutation.ts            # Mutation de login con toast
         useLogoutMutation.ts           # Mutation de logout con toast
         usePropietarioRegisterMutation.ts
         usePsicologoRegisterMutation.ts
+        useReservasCalendarioQuery.ts  # Reservas por rango de fechas (calendario)
         useReservasQuery.ts            # Query de reservas con filtro opcional (FUTURA/PASADA/CANCELADA)
         useRoles.ts                    # Helper de roles (hasRole, isAdmin, etc.)
     infraestructura/
@@ -611,4 +616,4 @@ Schemas Zod: `loginSchema`, `usuarioRegisterSchema`, `psicologoRegisterSchema`, 
 ---*Última actualización: 22 Mayo 2026*  
 *Mantenedor: equipo SATI*
 
-> **Nota:** `BookingsCalendar.tsx` consulta sedes via `useLocationsQuery`, cubiculos activos por sede via `useCubiculosActivosPorLocation`, y reservas via `GET /api/reservas` con `ReservaFilterRequestDTO` (rango de fechas dinámico según la vista: día/semana/mes/agenda). Los cubiculos para el formulario de reserva (`ReservaForm`) se obtienen del API, incluyendo nombre, sede y precio. Las flags `DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES` y `DEBUG_PERMITIR_EDICION` controlan visibilidad de nombres y edición respectivamente.
+> **Nota:** `BookingsCalendar.tsx` consulta sedes via `useActiveLocationsQuery`, cubiculos activos por sede via `useCubiculosPublicosQuery`, y reservas via `useReservasCalendarioQuery`. El formulario `ReservaForm` es independiente: obtiene cubiculos via `useAllCubiculosActivosQuery` y sedes via `useActiveLocationsQuery`. El calendario solo pre-selecciona campos via props (`defaultSedeId`, `defaultCubiculoId`, `defaultFecha`, etc.). Las flags `DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES` y `DEBUG_PERMITIR_EDICION` controlan visibilidad de nombres y edición respectivamente.

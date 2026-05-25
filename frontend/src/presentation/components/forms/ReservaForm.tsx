@@ -6,6 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, Clock } from "lucide-react";
 import { Button, Dialog, Input, Label, Select, Separator } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
+import { useActiveLocationsQuery } from "../../../core/aplicacion/hooks/useActiveLocationsQuery";
+import { useAllCubiculosActivosQuery } from "../../../core/aplicacion/hooks/useAllCubiculosActivosQuery";
 import { authAPI } from "../../../core/infraestructura/api/api";
 import type { UsuarioInfoDTO } from "../../../core/dominio/tipos/api";
 
@@ -33,13 +35,6 @@ export interface ReservaFormConfirmData {
   usuarioNombre?: string;
 }
 
-interface FormCubiculo {
-  id: number;
-  nombre: string;
-  sede: string;
-  precioPorHora: number;
-}
-
 interface ReservaFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -48,7 +43,7 @@ interface ReservaFormProps {
   defaultHoraFin?: string;
   defaultCubiculoId?: number;
   defaultUsuarioId?: number;
-  cubiculos: FormCubiculo[];
+  defaultSedeId?: number;
   onConfirm: (data: ReservaFormConfirmData) => void;
   isSubmitting?: boolean;
 }
@@ -61,7 +56,6 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
   defaultHoraFin = "10:00",
   defaultCubiculoId,
   defaultUsuarioId,
-  cubiculos,
   onConfirm,
   isSubmitting = false,
 }) => {
@@ -80,6 +74,19 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
   });
 
   const adminId = user?.usuarioInfoDTO.id;
+
+  const { data: locations = [] } = useActiveLocationsQuery();
+  const { data: cubiculosApi = [] } = useAllCubiculosActivosQuery();
+
+  const cubiculosConSede = useMemo(
+    () => cubiculosApi.map((c) => ({
+      id: c.id,
+      nombre: c.nombre,
+      sede: locations.find((l) => l.id === c.locationId)?.name ?? "Desconocida",
+      precioPorHora: c.precio,
+    })),
+    [cubiculosApi, locations],
+  );
 
   const initialUsuarioId = useMemo(() => {
     if (isAdmin()) {
@@ -112,7 +119,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
   const horaInicio = watch("horaInicio");
   const horaFin = watch("horaFin");
 
-  const cubiculoSeleccionado = cubiculos.find((c) => c.id === selectedCubiculoId);
+  const cubiculoSeleccionado = cubiculosConSede.find((c) => c.id === selectedCubiculoId);
   const usuarioSeleccionado = psicologos.find((u) => u.id === selectedUsuarioId);
   const precioPorHora = cubiculoSeleccionado?.precioPorHora ?? 0;
 
@@ -195,7 +202,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
                   }}
                   error={errors.usuarioId?.message}
                 >
-                  <option value="">Selecciona un usuario</option>
+                  {/*<option value="">Selecciona un usuario</option>*/}
                   {psicologos.map((u) => (
                     <option key={u.id} value={String(u.id)}>
                       {u.fullName}
@@ -275,9 +282,9 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
                 error={errors.cubiculoId?.message}
               >
                 <option value="">Selecciona un cubículo</option>
-                {cubiculos.map((c) => (
+                {cubiculosConSede.map((c) => (
                   <option key={c.id} value={String(c.id)}>
-                    {c.nombre} · {c.sede} · ${c.precioPorHora}/h
+                    {c.nombre} · {c.sede}
                   </option>
                 ))}
               </Select>

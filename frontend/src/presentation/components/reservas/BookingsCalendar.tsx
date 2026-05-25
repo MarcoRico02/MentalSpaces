@@ -1,14 +1,15 @@
-import { useState, useCallback, useMemo, forwardRef, useImperativeHandle } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import { Calendar, momentLocalizer, type View } from "react-big-calendar";
 import moment from "moment";
 import { Button, Input, Select, Card, CardContent } from "../ui";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
-import { useQuery } from "@tanstack/react-query";
-import { authAPI } from "../../../core/infraestructura/api/api";
 import { showToast } from "../../../core/infraestructura/utilidades/toast";
 import { ReservaForm, type ReservaFormConfirmData } from "../forms/ReservaForm";
 import { useCrearReservaMutation } from "../../../core/aplicacion/hooks/useCrearReservaMutation";
-import type { ReservaDTO, ReservaFilterRequestDTO, LocationResponseDTO, CubiculoResponse, ReservaCreateRequestDTO } from "../../../core/dominio/tipos/api";
+import { useLocationsWithActiveCubiculosQuery } from "../../../core/aplicacion/hooks/useLocationsWithActiveCubiculosQuery";
+import { useCubiculosPublicosQuery } from "../../../core/aplicacion/hooks/useCubiculosPublicosQuery";
+import { useReservasCalendarioQuery } from "../../../core/aplicacion/hooks/useReservasCalendarioQuery";
+import type { ReservaCreateRequestDTO } from "../../../core/dominio/tipos/api";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar-dark.css";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -122,56 +123,35 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
   const mostrarNombresReservantes = isAdmin() || DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES;
   const puedeEditar = isAdmin() || DEBUG_PERMITIR_EDICION;
 
-  const { data: locations = [] } = useQuery({
-    queryKey: ["locations", "active"],
-    queryFn: async (): Promise<LocationResponseDTO[]> => {
-      const res = await authAPI.locations.getAllActive();
-      return res.data;
-    },
-    staleTime: 1000 * 60 * 5,
-  });
+  const { data: locations = [] } = useLocationsWithActiveCubiculosQuery();
 
-  const { data: cubiculosApi = [] } = useQuery({
-    queryKey: ["cubiculos", "active-public", selectedSede],
-    queryFn: async (): Promise<CubiculoResponse[]> => {
-      const res = await authAPI.cubiculos.getActiveByLocationPublic(Number(selectedSede));
-      return res.data;
-    },
-    enabled: !!selectedSede,
-    staleTime: 1000 * 60 * 5,
-  });
+  const autoSelectedSede = useRef(false);
+
+  useEffect(() => {
+    if (locations.length > 0 && !autoSelectedSede.current) {
+      autoSelectedSede.current = true;
+      const id = requestAnimationFrame(() => {
+        setSelectedSede(String(locations[0].id));
+      });
+      return () => cancelAnimationFrame(id);
+    }
+  }, [locations]);
+
+  const { data: cubiculosApi = [] } = useCubiculosPublicosQuery(
+    selectedSede ? Number(selectedSede) : null,
+  );
 
   const dateRange = useMemo(
     () => calcDateRange(currentDate, currentView),
     [currentDate, currentView],
   );
 
-  const { data: reservasApi = [] } = useQuery({
-    queryKey: ["reservas", "calendario", dateRange, selectedSede],
-    queryFn: async (): Promise<ReservaDTO[]> => {
-      const params: ReservaFilterRequestDTO = {
-        fechaInicio: dateRange.inicio,
-        fechaFin: dateRange.fin,
-        locationIds: selectedSede ? [Number(selectedSede)] : undefined,
-        cubiculoIds: selectedCubiculo ? [Number(selectedCubiculo)] : undefined,
-      };
-      const res = await authAPI.reservas.getByFilter(params);
-      return res.data;
-    },
-    enabled: true,
-    staleTime: 1000 * 60 * 2,
+  const { data: reservasApi = [] } = useReservasCalendarioQuery({
+    fechaInicio: dateRange.inicio,
+    fechaFin: dateRange.fin,
+    locationIds: selectedSede ? [Number(selectedSede)] : undefined,
+    cubiculoIds: selectedCubiculo ? [Number(selectedCubiculo)] : undefined,
   });
-
-  const allCubiculos = useMemo(() => {
-    if (!selectedSede) return [];
-    const sedeName = locations.find(l => String(l.id) === selectedSede)?.name ?? `Sede ${selectedSede}`;
-    return cubiculosApi.map(c => ({
-      id: c.id,
-      nombre: c.nombre,
-      sede: sedeName,
-      precioPorHora: c.precio,
-    }));
-  }, [cubiculosApi, locations, selectedSede]);
 
   const cubiculos = useMemo(
     () => cubiculosApi.map((c) => ({ id: c.id, nombre: c.nombre })),
@@ -487,7 +467,7 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
           defaultHoraInicio={tempSlot ? formatTime(tempSlot.start) : "09:00"}
           defaultHoraFin={tempSlot ? formatTime(tempSlot.end) : "10:00"}
           defaultCubiculoId={selectedCubiculo ? Number(selectedCubiculo) : undefined}
-          cubiculos={allCubiculos}
+          defaultSedeId={selectedSede ? Number(selectedSede) : undefined}
           onConfirm={handleFormConfirm}
           isSubmitting={crearReservaMutation.isPending}
         />

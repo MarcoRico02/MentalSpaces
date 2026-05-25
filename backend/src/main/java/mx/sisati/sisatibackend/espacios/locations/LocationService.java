@@ -81,6 +81,10 @@ public class LocationService {
         return locationRepository.findByActiveTrue();
     }
 
+    public List<Location> findActiveWithActiveCubiculos() {
+        return locationRepository.findActiveWithActiveCubiculos();
+    }
+
     public Location findByIdOrThrow(Long locationId) {
         return locationRepository.findById(locationId)
                 .orElseThrow(() -> new ServiceException(this.getClass(), "Locación no encontrada"));

@@ -83,6 +83,14 @@ public class GestionarLocations {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<LocationResponseDTO> findActiveWithActiveCubiculos() {
+        return locationService.findActiveWithActiveCubiculos()
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
     private LocationResponseDTO toResponseDTO(Location location) {
         return new LocationResponseDTO(
                 location.getId(),

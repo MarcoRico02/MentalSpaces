@@ -38,6 +38,11 @@ public class LocationController {
         return ResponseEntity.ok(gestionarLocations.findAllActive());
     }
 
+    @GetMapping("/with-active-cubiculos")
+    public ResponseEntity<List<LocationResponseDTO>> findActiveWithActiveCubiculos() {
+        return ResponseEntity.ok(gestionarLocations.findActiveWithActiveCubiculos());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<LocationResponseDTO> findById(
             @PathVariable Long id,

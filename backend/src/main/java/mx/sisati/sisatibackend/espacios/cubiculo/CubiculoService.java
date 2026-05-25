@@ -118,6 +118,10 @@ public class CubiculoService {
         return cubiculo;
     }
 
+    public List<Cubiculo> findAllActive() {
+        return cubiculoRepository.findByActiveTrue();
+    }
+
     public void deactivateAllCubiculosByLocation(Location location) {
         Page<Cubiculo> cubiculosPage;
         int page = 0;
