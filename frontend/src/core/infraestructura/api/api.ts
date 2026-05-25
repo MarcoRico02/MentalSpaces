@@ -190,6 +190,13 @@ export const authAPI = {
         data,
       ),
     cancelar: (id: number) => apiClient.delete(`/reservas/${id}`),
+    getByFilter: (
+      params?: import("../../dominio/tipos/api").ReservaFilterRequestDTO,
+    ) =>
+      apiClient.get<import("../../dominio/tipos/api").ReservaDTO[]>(
+        "/reservas/search",
+        { params },
+      ),
   },
 
   // FAQs endpoints
@@ -234,12 +241,5 @@ export const authAPI = {
       ),
     deletePregunta: (id: number) =>
       apiClient.delete(`/faqs/preguntas/${id}`),
-    getByFilter: (
-      params?: import("../../dominio/tipos/api").ReservaFilterRequestDTO,
-    ) =>
-      apiClient.get<import("../../dominio/tipos/api").ReservaDTO[]>(
-        "/reservas",
-        { params },
-      ),
   },
 };

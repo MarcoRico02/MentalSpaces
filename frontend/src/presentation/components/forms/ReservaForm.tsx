@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -100,6 +100,7 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<ReservaFormData>({
     resolver: zodResolver(reservaFormSchema),
@@ -113,6 +114,12 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
       notas: "",
     },
   });
+
+  useEffect(() => {
+    if (cubiculosConSede.length > 0 && defaultCubiculoId != null) {
+      setValue("cubiculoId", defaultCubiculoId);
+    }
+  }, [cubiculosConSede.length > 0, defaultCubiculoId, setValue]);
 
   const selectedCubiculoId = watch("cubiculoId");
   const selectedUsuarioId = watch("usuarioId");
@@ -272,22 +279,28 @@ export const ReservaForm: React.FC<ReservaFormProps> = ({
           render={({ field }) => (
             <div>
               <Label htmlFor="cubiculoId">Cubículo</Label>
-              <Select
-                id="cubiculoId"
-                value={field.value != null ? String(field.value) : ""}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  field.onChange(val ? Number(val) : undefined);
-                }}
-                error={errors.cubiculoId?.message}
-              >
-                <option value="">Selecciona un cubículo</option>
-                {cubiculosConSede.map((c) => (
-                  <option key={c.id} value={String(c.id)}>
-                    {c.nombre} · {c.sede}
-                  </option>
-                ))}
-              </Select>
+              {cubiculosConSede.length > 0 ? (
+                <Select
+                  id="cubiculoId"
+                  value={field.value != null ? String(field.value) : ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    field.onChange(val ? Number(val) : undefined);
+                  }}
+                  error={errors.cubiculoId?.message}
+                >
+                  <option value="">Selecciona un cubículo</option>
+                  {cubiculosConSede.map((c) => (
+                    <option key={c.id} value={String(c.id)}>
+                      {c.nombre} · {c.sede}
+                    </option>
+                  ))}
+                </Select>
+              ) : (
+                <Select id="cubiculoId" value="" disabled>
+                  <option value="">Cargando cubículos...</option>
+                </Select>
+              )}
             </div>
           )}
         />

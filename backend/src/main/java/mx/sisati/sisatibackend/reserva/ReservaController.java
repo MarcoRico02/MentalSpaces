@@ -8,7 +8,6 @@ import mx.sisati.sisatibackend.reserva.dto.FiltroTemporal;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateRequestDTO;
 import mx.sisati.sisatibackend.reserva.dto.ReservaCreateResponseDTO;
 import mx.sisati.sisatibackend.reserva.dto.ReservaFilterRequestDTO;
-import mx.sisati.sisatibackend.auth.UsuarioDetails;
 import mx.sisati.sisatibackend.reserva.dto.ReservaDTO;
 import org.springframework.format.annotation.DateTimeFormat;
 import mx.sisati.sisatibackend.reserva.dto.ReservaConsultaResponseDTO;
@@ -58,7 +57,7 @@ public class ReservaController {
         return ResponseEntity.ok(gestionarReservas.create(dtos, usuarioId));
     }
 
-    @GetMapping
+    @GetMapping("/search")
     public ResponseEntity<List<ReservaDTO>> getReservas(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin,
