@@ -56,7 +56,7 @@ const formats = {
     `${String(start.getHours()).padStart(2, "0")}:${String(start.getMinutes()).padStart(2, "0")} – ${String(end.getHours()).padStart(2, "0")}:${String(end.getMinutes()).padStart(2, "0")}`,
 };
 const DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES = false;
-const DEBUG_PERMITIR_EDICION = true;
+const DEBUG_PERMITIR_EDICION = false;
 
 interface CalendarEvent {
   id: number | string;
