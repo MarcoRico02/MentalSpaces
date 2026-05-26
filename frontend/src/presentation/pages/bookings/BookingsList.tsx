@@ -130,7 +130,11 @@ export function BookingsList() {
               <Input
                 type="date"
                 value={fechaDesde}
-                onChange={(e) => setFechaDesde(e.target.value)}
+                onChange={(e) => {
+                  const nueva = e.target.value;
+                  setFechaDesde(nueva);
+                  if (fechaHasta < nueva) setFechaHasta(nueva);
+                }}
               />
             </div>
           </div>
@@ -144,6 +148,7 @@ export function BookingsList() {
               <Input
                 type="date"
                 value={fechaHasta}
+                min={fechaDesde}
                 onChange={(e) => setFechaHasta(e.target.value)}
               />
             </div>
