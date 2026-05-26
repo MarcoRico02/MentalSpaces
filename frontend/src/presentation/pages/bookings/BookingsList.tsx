@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   AlertTriangle,
   CalendarDays,
@@ -14,6 +15,7 @@ import {
   Card,
   CardContent,
   CheckboxSelect,
+  Skeleton,
   Table,
   TBody,
   TD,
@@ -23,147 +25,10 @@ import {
 } from "../../components/ui";
 import { Input } from "../../components/ui/Input";
 import { useAuth } from "../../../core/aplicacion/hooks/useAuth";
-
-interface ReservaMock {
-  id: number;
-  cubiculoId: number;
-  cubiculoNombre: string;
-  psicologoId: number;
-  psicologoNombreCompleto: string;
-  inicio: string;
-  fin: string;
-  precio: number;
-  pagado: boolean;
-}
-
-const MOCK_RESERVAS: ReservaMock[] = [
-  {
-    id: 1,
-    cubiculoId: 1,
-    cubiculoNombre: "Consultorio A",
-    psicologoId: 1,
-    psicologoNombreCompleto: "María García López",
-    inicio: "2026-05-25T09:00:00",
-    fin: "2026-05-25T10:00:00",
-    precio: 500,
-    pagado: true,
-  },
-  {
-    id: 2,
-    cubiculoId: 2,
-    cubiculoNombre: "Consultorio B",
-    psicologoId: 2,
-    psicologoNombreCompleto: "Juan Pérez Hernández",
-    inicio: "2026-05-25T11:00:00",
-    fin: "2026-05-25T12:30:00",
-    precio: 750,
-    pagado: false,
-  },
-  {
-    id: 3,
-    cubiculoId: 1,
-    cubiculoNombre: "Consultorio A",
-    psicologoId: 3,
-    psicologoNombreCompleto: "Ana Martínez Ruiz",
-    inicio: "2026-05-26T08:00:00",
-    fin: "2026-05-26T09:00:00",
-    precio: 500,
-    pagado: true,
-  },
-  {
-    id: 4,
-    cubiculoId: 3,
-    cubiculoNombre: "Consultorio C",
-    psicologoId: 1,
-    psicologoNombreCompleto: "María García López",
-    inicio: "2026-05-26T14:00:00",
-    fin: "2026-05-26T15:00:00",
-    precio: 600,
-    pagado: false,
-  },
-  {
-    id: 5,
-    cubiculoId: 2,
-    cubiculoNombre: "Consultorio B",
-    psicologoId: 4,
-    psicologoNombreCompleto: "Carlos Sánchez Torres",
-    inicio: "2026-05-27T10:00:00",
-    fin: "2026-05-27T11:00:00",
-    precio: 750,
-    pagado: true,
-  },
-  {
-    id: 6,
-    cubiculoId: 1,
-    cubiculoNombre: "Consultorio A",
-    psicologoId: 2,
-    psicologoNombreCompleto: "Juan Pérez Hernández",
-    inicio: "2026-05-27T16:00:00",
-    fin: "2026-05-27T17:30:00",
-    precio: 500,
-    pagado: true,
-  },
-  {
-    id: 7,
-    cubiculoId: 3,
-    cubiculoNombre: "Consultorio C",
-    psicologoId: 5,
-    psicologoNombreCompleto: "Laura Jiménez Díaz",
-    inicio: "2026-05-28T09:00:00",
-    fin: "2026-05-28T10:00:00",
-    precio: 600,
-    pagado: false,
-  },
-  {
-    id: 8,
-    cubiculoId: 1,
-    cubiculoNombre: "Consultorio A",
-    psicologoId: 3,
-    psicologoNombreCompleto: "Ana Martínez Ruiz",
-    inicio: "2026-05-28T12:00:00",
-    fin: "2026-05-28T13:00:00",
-    precio: 500,
-    pagado: true,
-  },
-  {
-    id: 9,
-    cubiculoId: 4,
-    cubiculoNombre: "Consultorio D",
-    psicologoId: 6,
-    psicologoNombreCompleto: "Pedro Ramírez Ortiz",
-    inicio: "2026-05-29T15:00:00",
-    fin: "2026-05-29T16:00:00",
-    precio: 800,
-    pagado: true,
-  },
-  {
-    id: 10,
-    cubiculoId: 2,
-    cubiculoNombre: "Consultorio B",
-    psicologoId: 4,
-    psicologoNombreCompleto: "Carlos Sánchez Torres",
-    inicio: "2026-05-29T17:00:00",
-    fin: "2026-05-29T18:00:00",
-    precio: 750,
-    pagado: false,
-  },
-];
-
-const USUARIOS = [
-  { value: 1, label: "María García López" },
-  { value: 2, label: "Juan Pérez Hernández" },
-  { value: 3, label: "Ana Martínez Ruiz" },
-  { value: 4, label: "Carlos Sánchez Torres" },
-  { value: 5, label: "Laura Jiménez Díaz" },
-  { value: 6, label: "Pedro Ramírez Ortiz" },
-];
-
-const CUBICULOS = [
-  { value: 1, label: "Consultorio A" },
-  { value: 2, label: "Consultorio B" },
-  { value: 3, label: "Consultorio C" },
-  { value: 4, label: "Consultorio D" },
-];
+import { useAllCubiculosActivosQuery } from "../../../core/aplicacion/hooks/useAllCubiculosActivosQuery";
+import { useReservasCalendarioQuery } from "../../../core/aplicacion/hooks/useReservasCalendarioQuery";
+import { authAPI } from "../../../core/infraestructura/api/api";
+import type { ReservaDTO, UsuarioInfoDTO } from "../../../core/dominio/tipos/api";
 
 function formatHora(iso: string): string {
   const d = new Date(iso);
@@ -193,48 +58,59 @@ function getDiaKey(iso: string): string {
 }
 
 export function BookingsList() {
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
   const today = new Date().toISOString().split("T")[0];
   const [fechaDesde, setFechaDesde] = useState(today);
   const [fechaHasta, setFechaHasta] = useState(today);
   const [selectedUsuarios, setSelectedUsuarios] = useState<number[]>([]);
   const [selectedCubiculos, setSelectedCubiculos] = useState<number[]>([]);
 
+  const { data: psicologos = [] } = useQuery({
+    queryKey: ["usuarios", "psicologos"],
+    queryFn: async (): Promise<UsuarioInfoDTO[]> => {
+      const res = await authAPI.usuarios.getPsicologos();
+      return res.data;
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const { data: cubiculos = [] } = useAllCubiculosActivosQuery();
+
+  const {
+    data: reservas = [],
+    isLoading,
+    isError,
+  } = useReservasCalendarioQuery({
+    fechaInicio: `${fechaDesde}T00:00:00`,
+    fechaFin: `${fechaHasta}T23:59:59`,
+    cubiculoIds: selectedCubiculos.length > 0 ? selectedCubiculos : undefined,
+    usuarioIds: selectedUsuarios.length > 0 ? selectedUsuarios : undefined,
+  });
+
+  const psicologosOptions = useMemo(
+    () => psicologos.map((u) => ({ value: u.id, label: u.fullName })),
+    [psicologos],
+  );
+
+  const cubiculosOptions = useMemo(
+    () => cubiculos.map((c) => ({ value: c.id, label: c.nombre })),
+    [cubiculos],
+  );
+
   const handleLimpiar = () => {
     setSelectedUsuarios([]);
     setSelectedCubiculos([]);
   };
 
-  const reservasFiltradas = useMemo(() => {
-    let result = [...MOCK_RESERVAS];
-
-    if (fechaDesde) {
-      result = result.filter((r) => getDiaKey(r.inicio) >= fechaDesde);
-    }
-    if (fechaHasta) {
-      result = result.filter((r) => getDiaKey(r.inicio) <= fechaHasta);
-    }
-    if (selectedUsuarios.length > 0) {
-      result = result.filter((r) => selectedUsuarios.includes(r.psicologoId));
-    }
-    if (selectedCubiculos.length > 0) {
-      result = result.filter((r) => selectedCubiculos.includes(r.cubiculoId));
-    }
-
-    result.sort((a, b) => a.inicio.localeCompare(b.inicio));
-
-    return result;
-  }, [fechaDesde, fechaHasta, selectedUsuarios, selectedCubiculos]);
-
   const reservasAgrupadas = useMemo(() => {
-    const groups: Record<string, ReservaMock[]> = {};
-    for (const r of reservasFiltradas) {
+    const groups: Record<string, ReservaDTO[]> = {};
+    for (const r of reservas) {
       const dia = getDiaKey(r.inicio);
       if (!groups[dia]) groups[dia] = [];
       groups[dia].push(r);
     }
     return Object.entries(groups).sort(([a], [b]) => a.localeCompare(b));
-  }, [reservasFiltradas]);
+  }, [reservas]);
 
   return (
     <div className="space-y-6">
@@ -280,10 +156,9 @@ export function BookingsList() {
             </label>
             <CheckboxSelect<number>
               label="Seleccionar usuarios"
-              options={USUARIOS}
+              options={psicologosOptions}
               selected={selectedUsuarios}
               onChange={setSelectedUsuarios}
-              panelClassName="w-86"
             />
           </div>
 
@@ -294,10 +169,9 @@ export function BookingsList() {
             </label>
             <CheckboxSelect<number>
               label="Seleccionar cubículos"
-              options={CUBICULOS}
+              options={cubiculosOptions}
               selected={selectedCubiculos}
               onChange={setSelectedCubiculos}
-              panelClassName="w-128"
             />
           </div>
 
@@ -312,7 +186,16 @@ export function BookingsList() {
 
       <Card>
         <CardContent className="p-0">
-          {reservasFiltradas.length === 0 ? (
+          {isLoading ? (
+            <div className="p-4">
+              <Skeleton lines={5} />
+            </div>
+          ) : isError ? (
+            <EmptyState
+              title="Error al cargar reservas"
+              description="Ocurrió un error al obtener los datos. Intenta de nuevo más tarde."
+            />
+          ) : reservas.length === 0 ? (
             <EmptyState
               title="No se encontraron reservas"
               description="Intenta ajustar los filtros para ver más resultados."
@@ -328,8 +211,8 @@ export function BookingsList() {
                 </TR>
               </THead>
               <TBody>
-                {reservasAgrupadas.map(([diaKey, reservas]) => (
-                  <FragmentGroup key={diaKey} diaKey={diaKey} reservas={reservas} isAdmin={isAdmin()} />
+                {reservasAgrupadas.map(([diaKey, reservasDia]) => (
+                  <FragmentGroup key={diaKey} diaKey={diaKey} reservas={reservasDia} isAdmin={isAdmin()} currentUserId={user?.usuarioInfoDTO.id ?? 0} />
                 ))}
               </TBody>
             </Table>
@@ -344,10 +227,12 @@ function FragmentGroup({
   diaKey,
   reservas,
   isAdmin,
+  currentUserId,
 }: {
   diaKey: string;
-  reservas: ReservaMock[];
+  reservas: ReservaDTO[];
   isAdmin: boolean;
+  currentUserId: number;
 }) {
   return (
     <>
@@ -356,28 +241,36 @@ function FragmentGroup({
           {formatFechaCabecera(diaKey)}
         </TD>
       </TR>
-      {reservas.map((r) => (
-        <TR key={r.id}>
-          <TD className="whitespace-nowrap">
-            {formatHora(r.inicio)} - {formatHora(r.fin)}
-          </TD>
-          <TD>{r.cubiculoNombre}</TD>
-          <TD>
-            <span className="inline-flex items-center gap-1.5">
-              <User className="h-4 w-4 text-secondary shrink-0" />
-              {isAdmin ? "Usuario oculto" : r.psicologoNombreCompleto}
-            </span>
-          </TD>
-          <TD className="whitespace-nowrap">
-            <span className="inline-flex items-center gap-1.5">
-              {!r.pagado && (
-                <AlertTriangle className="h-4 w-4 text-yellow-500 shrink-0" />
+      {reservas.map((r) => {
+        const esPropia = r.psicologoId === currentUserId;
+        const puedeVerDetalle = isAdmin || esPropia;
+        return (
+          <TR key={r.id}>
+            <TD className="whitespace-nowrap">
+              {formatHora(r.inicio)} - {formatHora(r.fin)}
+            </TD>
+            <TD>{r.cubiculoNombre}</TD>
+            <TD>
+              <span className="inline-flex items-center gap-1.5">
+                <User className="h-4 w-4 text-secondary shrink-0" />
+                {puedeVerDetalle ? r.psicologoNombreCompleto : "Usuario oculto"}
+              </span>
+            </TD>
+            <TD className="whitespace-nowrap">
+              {puedeVerDetalle ? (
+                <span className="inline-flex items-center gap-1.5">
+                  {!r.pagado && (
+                    <AlertTriangle className="h-4 w-4 text-yellow-500 shrink-0" />
+                  )}
+                  {formatPrecio(r.precio)}
+                </span>
+              ) : (
+                <span className="text-secondary">—</span>
               )}
-              {formatPrecio(r.precio)}
-            </span>
-          </TD>
-        </TR>
-      ))}
+            </TD>
+          </TR>
+        );
+      })}
     </>
   );
 }

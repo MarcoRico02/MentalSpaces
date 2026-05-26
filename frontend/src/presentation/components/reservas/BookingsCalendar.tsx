@@ -66,6 +66,8 @@ interface CalendarEvent {
   cubiculo?: string;
   cubiculoId?: number;
   usuarioId?: number;
+  precio?: number;
+  pagado?: boolean;
 }
 
 interface SlotInfo {
@@ -96,7 +98,7 @@ const maxCalendarioAnchuraPixeles = 700;
 const minCalendarioAnchuraPixelesCard = maxCalendarioAnchuraPixeles + 100;
 
 export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalendarProps>(({ className }, ref) => {
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
   const crearReservaMutation = useCrearReservaMutation();
 
   const [selectedSede, setSelectedSede] = useState("");
@@ -121,7 +123,7 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
   const formatTime = (date: Date) =>
     `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 
-  const mostrarNombresReservantes = isAdmin() || DEBUG_MOSTRAR_NOMBRES_DE_RESERVANTES;
+  const currentUserId = user?.usuarioInfoDTO.id ?? 0;
   const puedeEditar = isAdmin() || DEBUG_PERMITIR_EDICION;
 
   const { data: locations = [] } = useLocationsWithActiveCubiculosQuery();
@@ -162,14 +164,16 @@ export const BookingsCalendar = forwardRef<BookingsCalendarHandle, BookingsCalen
   const apiEvents = useMemo(
     () => reservasApi.map((r) => ({
       id: r.id,
-      title: mostrarNombresReservantes ? r.psicologoNombreCompleto : "Usuario Oculto",
+      title: isAdmin() || r.psicologoId === currentUserId ? r.psicologoNombreCompleto : "Usuario Oculto",
       start: new Date(r.inicio),
       end: new Date(r.fin),
       cubiculo: r.cubiculoNombre,
       cubiculoId: r.cubiculoId,
       usuarioId: r.psicologoId,
+      precio: r.precio,
+      pagado: r.pagado,
     })),
-    [reservasApi, mostrarNombresReservantes],
+    [reservasApi, isAdmin, currentUserId],
   );
 
   const apiEventsFiltered = useMemo(
