@@ -23,6 +23,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,11 +58,11 @@ class ReservaServiceTest {
 
     @BeforeEach
     void setUp() {
-        when(psicologo.getUsuario()).thenReturn(usuario);
-        when(usuario.getFullName()).thenReturn("Test Psychologist");
-        when(cubiculo.getId()).thenReturn(CUBICULO_ID);
-        when(cubiculo.getNombre()).thenReturn("Test Cubiculo");
-        when(psicologo.getId()).thenReturn(1L);
+        lenient().when(psicologo.getUsuario()).thenReturn(usuario);
+        lenient().when(usuario.getFullName()).thenReturn("Test Psychologist");
+        lenient().when(cubiculo.getId()).thenReturn(CUBICULO_ID);
+        lenient().when(cubiculo.getNombre()).thenReturn("Test Cubiculo");
+        lenient().when(psicologo.getId()).thenReturn(1L);
     }
 
     private Reserva crearReserva(LocalDateTime inicio, LocalDateTime fin) {
