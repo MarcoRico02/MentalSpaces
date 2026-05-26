@@ -12,6 +12,7 @@ import {
   FileDown,
   Building,
   CalendarDays,
+  List,
 } from "lucide-react";
 
 export const NavigationMenu: React.FC = () => {
@@ -43,6 +44,10 @@ export const NavigationMenu: React.FC = () => {
 
       <NavItem to="/booking-calendar" icon={CalendarDays}>
         Calendario
+      </NavItem>
+
+      <NavItem to="/booking-list" icon={List}>
+        Lista de Reservas
       </NavItem>
     </nav>
   );

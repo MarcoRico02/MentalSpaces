@@ -31,6 +31,7 @@ import { TrustLevelPage} from "@/presentation/pages/trust-level/TrustLevelPage.t
 import { SubscriptionManagementPage } from "../presentation/pages/account/SubscriptionManagementPage";
 import { BookingCalendarPage } from "../presentation/pages/bookings/BookingCalendarPage";
 import { MyAppointmentsPage } from "../presentation/pages/bookings/MyAppointmentsPage";
+import { BookingsList } from "../presentation/pages/bookings/BookingsList";
 
 export const AppRoutes: React.FC = () => {
   const { isLoading } = useAuth();
@@ -255,6 +256,15 @@ export const AppRoutes: React.FC = () => {
           element={
             <ProtectedRoute>
               <BookingCalendarPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/booking-list"
+          element={
+            <ProtectedRoute>
+              <BookingsList />
             </ProtectedRoute>
           }
         />
