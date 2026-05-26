@@ -39,7 +39,7 @@ export function CheckboxSelect<T extends string | number>({
             <span>{`${selected.length} seleccionado${selected.length !== 1 ? "s" : ""}`}</span>
           )}
         </ListboxButton>
-        <ListboxOptions anchor="bottom" className={`z-50 border border-default rounded-md bg-surface shadow-lg max-h-60 overflow-y-auto ${panelClassName}`}>
+        <ListboxOptions anchor="bottom start" className={`z-50 border border-default rounded-md bg-surface shadow-lg max-h-60 overflow-y-auto ${panelClassName}`}>
           {options.map((opt) => {
             const isSelected = selected.includes(opt.value);
             return (

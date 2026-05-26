@@ -283,6 +283,7 @@ export function BookingsList() {
               options={USUARIOS}
               selected={selectedUsuarios}
               onChange={setSelectedUsuarios}
+              panelClassName="w-86"
             />
           </div>
 
@@ -296,7 +297,7 @@ export function BookingsList() {
               options={CUBICULOS}
               selected={selectedCubiculos}
               onChange={setSelectedCubiculos}
-              panelClassName="w-56"
+              panelClassName="w-128"
             />
           </div>
 
