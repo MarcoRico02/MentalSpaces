@@ -6,6 +6,7 @@ import mx.sisati.sisatibackend.identidad.psicologos.Psicologo;
 import mx.sisati.sisatibackend.identidad.usuarios.Usuario;
 import mx.sisati.sisatibackend.reserva.dto.FiltroTemporal;
 import mx.sisati.sisatibackend.reserva.dto.ReservaConsultaResponseDTO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -53,6 +54,15 @@ class ReservaServiceTest {
     private static final String NOTAS = "Sesión de terapia semanal";
     private static final Long USUARIO_ID = 1L;
     private static final LocalDateTime NOW = LocalDateTime.of(2026, 5, 7, 8, 0);
+
+    @BeforeEach
+    void setUp() {
+        when(psicologo.getUsuario()).thenReturn(usuario);
+        when(usuario.getFullName()).thenReturn("Test Psychologist");
+        when(cubiculo.getId()).thenReturn(CUBICULO_ID);
+        when(cubiculo.getNombre()).thenReturn("Test Cubiculo");
+        when(psicologo.getId()).thenReturn(1L);
+    }
 
     private Reserva crearReserva(LocalDateTime inicio, LocalDateTime fin) {
         return new Reserva(cubiculo, psicologo, inicio, fin, NOTAS);
