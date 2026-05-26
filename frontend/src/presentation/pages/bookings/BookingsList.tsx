@@ -28,8 +28,8 @@ interface ReservaMock {
   id: number;
   cubiculoId: number;
   cubiculoNombre: string;
-  usuarioId: number;
-  usuarioNombre: string;
+  psicologoId: number;
+  psicologoNombreCompleto: string;
   inicio: string;
   fin: string;
   precio: number;
@@ -41,8 +41,8 @@ const MOCK_RESERVAS: ReservaMock[] = [
     id: 1,
     cubiculoId: 1,
     cubiculoNombre: "Consultorio A",
-    usuarioId: 1,
-    usuarioNombre: "María García López",
+    psicologoId: 1,
+    psicologoNombreCompleto: "María García López",
     inicio: "2026-05-25T09:00:00",
     fin: "2026-05-25T10:00:00",
     precio: 500,
@@ -52,8 +52,8 @@ const MOCK_RESERVAS: ReservaMock[] = [
     id: 2,
     cubiculoId: 2,
     cubiculoNombre: "Consultorio B",
-    usuarioId: 2,
-    usuarioNombre: "Juan Pérez Hernández",
+    psicologoId: 2,
+    psicologoNombreCompleto: "Juan Pérez Hernández",
     inicio: "2026-05-25T11:00:00",
     fin: "2026-05-25T12:30:00",
     precio: 750,
@@ -63,8 +63,8 @@ const MOCK_RESERVAS: ReservaMock[] = [
     id: 3,
     cubiculoId: 1,
     cubiculoNombre: "Consultorio A",
-    usuarioId: 3,
-    usuarioNombre: "Ana Martínez Ruiz",
+    psicologoId: 3,
+    psicologoNombreCompleto: "Ana Martínez Ruiz",
     inicio: "2026-05-26T08:00:00",
     fin: "2026-05-26T09:00:00",
     precio: 500,
@@ -74,8 +74,8 @@ const MOCK_RESERVAS: ReservaMock[] = [
     id: 4,
     cubiculoId: 3,
     cubiculoNombre: "Consultorio C",
-    usuarioId: 1,
-    usuarioNombre: "María García López",
+    psicologoId: 1,
+    psicologoNombreCompleto: "María García López",
     inicio: "2026-05-26T14:00:00",
     fin: "2026-05-26T15:00:00",
     precio: 600,
@@ -85,8 +85,8 @@ const MOCK_RESERVAS: ReservaMock[] = [
     id: 5,
     cubiculoId: 2,
     cubiculoNombre: "Consultorio B",
-    usuarioId: 4,
-    usuarioNombre: "Carlos Sánchez Torres",
+    psicologoId: 4,
+    psicologoNombreCompleto: "Carlos Sánchez Torres",
     inicio: "2026-05-27T10:00:00",
     fin: "2026-05-27T11:00:00",
     precio: 750,
@@ -96,8 +96,8 @@ const MOCK_RESERVAS: ReservaMock[] = [
     id: 6,
     cubiculoId: 1,
     cubiculoNombre: "Consultorio A",
-    usuarioId: 2,
-    usuarioNombre: "Juan Pérez Hernández",
+    psicologoId: 2,
+    psicologoNombreCompleto: "Juan Pérez Hernández",
     inicio: "2026-05-27T16:00:00",
     fin: "2026-05-27T17:30:00",
     precio: 500,
@@ -107,8 +107,8 @@ const MOCK_RESERVAS: ReservaMock[] = [
     id: 7,
     cubiculoId: 3,
     cubiculoNombre: "Consultorio C",
-    usuarioId: 5,
-    usuarioNombre: "Laura Jiménez Díaz",
+    psicologoId: 5,
+    psicologoNombreCompleto: "Laura Jiménez Díaz",
     inicio: "2026-05-28T09:00:00",
     fin: "2026-05-28T10:00:00",
     precio: 600,
@@ -118,8 +118,8 @@ const MOCK_RESERVAS: ReservaMock[] = [
     id: 8,
     cubiculoId: 1,
     cubiculoNombre: "Consultorio A",
-    usuarioId: 3,
-    usuarioNombre: "Ana Martínez Ruiz",
+    psicologoId: 3,
+    psicologoNombreCompleto: "Ana Martínez Ruiz",
     inicio: "2026-05-28T12:00:00",
     fin: "2026-05-28T13:00:00",
     precio: 500,
@@ -129,8 +129,8 @@ const MOCK_RESERVAS: ReservaMock[] = [
     id: 9,
     cubiculoId: 4,
     cubiculoNombre: "Consultorio D",
-    usuarioId: 6,
-    usuarioNombre: "Pedro Ramírez Ortiz",
+    psicologoId: 6,
+    psicologoNombreCompleto: "Pedro Ramírez Ortiz",
     inicio: "2026-05-29T15:00:00",
     fin: "2026-05-29T16:00:00",
     precio: 800,
@@ -140,8 +140,8 @@ const MOCK_RESERVAS: ReservaMock[] = [
     id: 10,
     cubiculoId: 2,
     cubiculoNombre: "Consultorio B",
-    usuarioId: 4,
-    usuarioNombre: "Carlos Sánchez Torres",
+    psicologoId: 4,
+    psicologoNombreCompleto: "Carlos Sánchez Torres",
     inicio: "2026-05-29T17:00:00",
     fin: "2026-05-29T18:00:00",
     precio: 750,
@@ -215,7 +215,7 @@ export function BookingsList() {
       result = result.filter((r) => getDiaKey(r.inicio) <= fechaHasta);
     }
     if (selectedUsuarios.length > 0) {
-      result = result.filter((r) => selectedUsuarios.includes(r.usuarioId));
+      result = result.filter((r) => selectedUsuarios.includes(r.psicologoId));
     }
     if (selectedCubiculos.length > 0) {
       result = result.filter((r) => selectedCubiculos.includes(r.cubiculoId));
@@ -365,7 +365,7 @@ function FragmentGroup({
           <TD>
             <span className="inline-flex items-center gap-1.5">
               <User className="h-4 w-4 text-secondary shrink-0" />
-              {isAdmin ? "Usuario oculto" : r.usuarioNombre}
+              {isAdmin ? "Usuario oculto" : r.psicologoNombreCompleto}
             </span>
           </TD>
           <TD className="whitespace-nowrap">

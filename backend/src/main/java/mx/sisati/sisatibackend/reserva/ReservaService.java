@@ -3,6 +3,8 @@ package mx.sisati.sisatibackend.reserva;
 import jakarta.persistence.criteria.Predicate;
 import mx.sisati.sisatibackend.espacios.cubiculo.Cubiculo;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
+import mx.sisati.sisatibackend.finanzas.pagoReserva.PagoReserva;
+import mx.sisati.sisatibackend.finanzas.pagoReserva.PagoReservaRepository;
 import mx.sisati.sisatibackend.identidad.psicologos.Psicologo;
 import mx.sisati.sisatibackend.reserva.dto.ReservaFilterRequestDTO;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,11 +16,14 @@ import mx.sisati.sisatibackend.configuracionSistema.ConfiguracionSistemaService;
 import mx.sisati.sisatibackend.configuracionSistema.TipoUso;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.time.Duration;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ReservaService {
@@ -26,11 +31,13 @@ public class ReservaService {
     private final ReservaRepository reservaRepository;
     private final Clock clock;
     private final ConfiguracionSistemaService configuracionSistemaService;
+    private final PagoReservaRepository pagoReservaRepository;
 
-    public ReservaService(ReservaRepository reservaRepository, Clock clock, ConfiguracionSistemaService configuracionSistemaService) {
+    public ReservaService(ReservaRepository reservaRepository, Clock clock, ConfiguracionSistemaService configuracionSistemaService, PagoReservaRepository pagoReservaRepository) {
         this.reservaRepository = reservaRepository;
         this.clock = clock;
         this.configuracionSistemaService = configuracionSistemaService;
+        this.pagoReservaRepository = pagoReservaRepository;
     }
 
     public Reserva getByIdOrThrow(Long id) {
@@ -109,7 +116,8 @@ public class ReservaService {
     public ReservaConsultaResponseDTO getReservas(Usuario usuario) {
         List<Reserva> reservasPropias = reservaRepository.findByPsicologoId(usuario.getId());
         List<Reserva> reservasEnMisCubiculos = reservaRepository.findByPropietarioId(usuario.getId());
-        return ReservaConsultaResponseDTO.fromEntity(reservasPropias, reservasEnMisCubiculos);
+        Map<Long, PagoReserva> pagoMap = buildPagoMap(reservasPropias, reservasEnMisCubiculos);
+        return ReservaConsultaResponseDTO.fromEntity(reservasPropias, reservasEnMisCubiculos, pagoMap);
     }
 
     public ReservaConsultaResponseDTO getReservas(Usuario usuario, FiltroTemporal filtro) {
@@ -131,7 +139,8 @@ public class ReservaService {
             default -> throw new ServiceException(this.getClass(), "FILTRO_NO_SOPORTADO");
         };
 
-        return ReservaConsultaResponseDTO.fromEntity(reservasPropias, reservasEnMisCubiculos);
+        Map<Long, PagoReserva> pagoMap = buildPagoMap(reservasPropias, reservasEnMisCubiculos);
+        return ReservaConsultaResponseDTO.fromEntity(reservasPropias, reservasEnMisCubiculos, pagoMap);
     }
 
     /**
@@ -173,6 +182,15 @@ public class ReservaService {
      * Permite al dueño cancelar cualquier reserva sin validación de tiempo.
      * Realiza la transición de estado mediante la entidad y persiste el cambio.
      */
+    private Map<Long, PagoReserva> buildPagoMap(List<Reserva> reservasPropias, List<Reserva> reservasEnMisCubiculos) {
+        List<Long> reservaIds = Stream.concat(reservasPropias.stream(), reservasEnMisCubiculos.stream())
+                .map(Reserva::getId)
+                .toList();
+        if (reservaIds.isEmpty()) return Map.of();
+        return pagoReservaRepository.findByReservaIdIn(reservaIds).stream()
+                .collect(Collectors.toMap(pr -> pr.getReserva().getId(), Function.identity()));
+    }
+
     public void cancelarComoRolDueno(Reserva reserva) {
         // La entidad valida estados no permitidos (por ejemplo FINALIZADA o ya CANCELADA)
         // TODO: Ah, por sus huevos JAJAJA

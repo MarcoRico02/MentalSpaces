@@ -317,6 +317,8 @@ export interface ReservaDTO {
   notas?: string;
   estadoReserva: EstadoReserva;
   createdAt: string;
+  precio: number;
+  pagado: boolean;
 }
 
 export const FiltroTemporal = {

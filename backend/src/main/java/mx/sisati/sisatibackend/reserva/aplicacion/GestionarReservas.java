@@ -5,6 +5,8 @@ import mx.sisati.sisatibackend.configuracionSistema.ConfiguracionSistema;
 import mx.sisati.sisatibackend.configuracionSistema.ConfiguracionSistemaService;
 import mx.sisati.sisatibackend.configuracionSistema.TipoUso;
 import mx.sisati.sisatibackend.finanzas.pago.dto.PagoResponse;
+import mx.sisati.sisatibackend.finanzas.pagoReserva.PagoReserva;
+import mx.sisati.sisatibackend.finanzas.pagoReserva.PagoReservaRepository;
 import mx.sisati.sisatibackend.finanzas.pagoReserva.PagoReservaService;
 import mx.sisati.sisatibackend.reserva.Reserva;
 import mx.sisati.sisatibackend.reserva.ReservaService;
@@ -28,6 +30,9 @@ import mx.sisati.sisatibackend.validador.reserva.creacion.ReservaValidadorCreaci
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import mx.sisati.sisatibackend.excepciones.ServiceException;
 
 @Service
@@ -43,6 +48,7 @@ public class GestionarReservas {
     private final ReservaRepository reservaRepository;
     private final PagoService pagoService;
     private final ReservaValidadorCreacionService reservaValidadorCreacionService;
+    private final PagoReservaRepository pagoReservaRepository;
 
     public GestionarReservas(
             CubiculoService cubiculoService,
@@ -55,7 +61,8 @@ public class GestionarReservas {
             UsuarioService usuarioService,
             ReservaRepository reservaRepository,
             PagoService pagoService,
-            ReservaValidadorCreacionService reservaValidadorCreacionService
+            ReservaValidadorCreacionService reservaValidadorCreacionService,
+            PagoReservaRepository pagoReservaRepository
     ) {
         this.cubiculoService = cubiculoService;
         this.disponibilidadService = disponibilidadService;
@@ -68,6 +75,7 @@ public class GestionarReservas {
         this.reservaRepository = reservaRepository;
         this.pagoService = pagoService;
         this.reservaValidadorCreacionService = reservaValidadorCreacionService;
+        this.pagoReservaRepository = pagoReservaRepository;
     }
 
     @Transactional
@@ -85,7 +93,14 @@ public class GestionarReservas {
 
     public List<ReservaDTO> getReservas(ReservaFilterRequestDTO filtro) {
         List<Reserva> reservas = reservaService.buscarReservasPorFiltros(filtro);
-        return reservas.stream().map(ReservaDTO::fromEntity).toList();
+        if (reservas.isEmpty()) return List.of();
+        List<Long> reservaIds = reservas.stream().map(Reserva::getId).toList();
+        List<PagoReserva> pagos = pagoReservaRepository.findByReservaIdIn(reservaIds);
+        Map<Long, PagoReserva> pagoMap = pagos.stream()
+                .collect(Collectors.toMap(pr -> pr.getReserva().getId(), Function.identity()));
+        return reservas.stream()
+                .map(r -> ReservaDTO.fromEntity(r, pagoMap.get(r.getId())))
+                .toList();
     }
 
     //@Transactional

@@ -38,4 +38,7 @@ public interface PagoReservaRepository extends JpaRepository<PagoReserva, UUID> 
         AND pr.estado IN ('PENDIENTE', 'PROCESANDO')
     """)
     boolean existsPagosPendientesByDeudor(@Param("psicologo") Psicologo psicologo);
+
+    @Query("SELECT pr FROM PagoReserva pr WHERE pr.reserva.id IN :reservaIds")
+    List<PagoReserva> findByReservaIdIn(@Param("reservaIds") List<Long> reservaIds);
 }
